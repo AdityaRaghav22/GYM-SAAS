@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Member Details | Gym SaaS{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+  <!-- Member Info -->
+  <div class="col-md-4">
+    <div class="card shadow-sm mb-3">
+      <div class="card-header bg-primary text-white">
+        Member Info
+      </div>
+
+      <div class="card-body">
+        <form
+          method="POST"
+          action="{{ url_for('api_v1.member.update_member', member_id=member.id) }}"
+        >
+          <div class="mb-2">
+            <label>Name</label>
+            <input
+              type="text"
+              name="name"
+              class="form-control"
+              value="{{ member.name }}"
+              required
+            >
+          </div>
+
+          <div class="mb-2">
+            <label>Phone</label>
+            <input
+              type="text"
+              name="phone_number"
+              class="form-control"
+              value="{{ member.phone_number }}"
+              required
+            >
+          </div>
+
+          <button class="btn btn-success w-100 mt-2">
+            Update
+          </button>
+        </form>
+      </div>
+
+      {% if member.is_active %}
+      <div class="card-footer">
+        <form
+          method="POST"
+          action="{{ url_for('api_v1.member.deactivate_member', member_id=member.id) }}"
+          onsubmit="return confirm('Deactivate this member?');"
+        >
+          <button class="btn btn-sm btn-outline-danger w-100">
+            Deactivate Member
+          </button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Memberships -->
+  <div class="col-md-4">
+    <div class="card shadow-sm mb-3">
+      <div class="card-header bg-dark text-white">
+        Memberships
+      </div>
+
+      <div class="card-body">
+        {% for m in memberships %}
+          <div class="border rounded p-2 mb-2">
+            <div><strong>Plan:</strong> {{ m.plan_name }}</div>
+            <div><strong>Valid till:</strong> {{ m.end_date }}</div>
+
+            <form
+              method="POST"
+              action="{{ url_for('api_v1.membership.renew_membership', membership_id=m.id) }}"
+              class="mt-2"
+            >
+              <select
+                name="payment_method"
+                class="form-select form-select-sm mb-1"
+                required
+              >
+                <option value="cash">Cash</option>
+                <option value="upi">UPI</option>
+                <option value="card">Card</option>
+              </select>
+
+              <button class="btn btn-sm btn-outline-success w-100">
+                Renew
+              </button>
+            </form>
+          </div>
+        {% else %}
+          <p class="text-muted">No active memberships</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Create Membership -->
+    <div class="card shadow-sm">
+      <div class="card-header bg-success text-white">
+        New Membership
+      </div>
+
+      <div class="card-body">
+        <form
+          method="POST"
+          action="{{ url_for('api_v1.membership.create_membership') }}"
+        >
+          <input type="hidden" name="member_id" value="{{ member.id }}">
+
+          <div class="mb-2">
+            <label>Plan</label>
+            <select name="plan_id" class="form-select" required>
+              {% for plan in plans %}
+                <option value="{{ plan.id }}">
+                  {{ plan.name }} – ₹{{ plan.price }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label>Payment Method</label>
+            <select name="payment_method" class="form-select" required>
+              <option value="cash">Cash</option>
+              <option value="upi">UPI</option>
+              <option value="card">Card</option>
+            </select>
+          </div>
+
+          <button class="btn btn-success w-100">
+            Create Membership
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payments -->
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-header bg-secondary text-white">
+        Payments
+      </div>
+
+      <div class="card-body">
+        {% for p in payments %}
+          <div class="border rounded p-2 mb-2">
+            <div>₹{{ p.amount }}</div>
+            <div class="text-muted small">{{ p.payment_method }}</div>
+          </div>
+        {% else %}
+          <p class="text-muted">No payments</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

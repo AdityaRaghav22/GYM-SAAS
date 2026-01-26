@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Payments | Gym SaaS{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4>Payments</h4>
+</div>
+
+<table class="table table-bordered table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>Amount</th>
+      <th>Method</th>
+      <th>Date</th>
+      <th width="120">Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for payment in payments %}
+    <tr>
+      <td>₹{{ payment.amount }}</td>
+      <td>{{ payment.payment_method }}</td>
+      <td>{{ payment.created_at }}</td>
+      <td>
+        <a
+          href="{{ url_for('api_v1.payment.payment_details', payment_id=payment.id) }}"
+          class="btn btn-sm btn-outline-primary"
+        >
+          View
+        </a>
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="4" class="text-center text-muted">
+        No payments found
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

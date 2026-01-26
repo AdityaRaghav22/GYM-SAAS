@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-JWT-Extended
+python-dotenv
+psycopg2-binary
+Flask-Bcrypt==1.0.1

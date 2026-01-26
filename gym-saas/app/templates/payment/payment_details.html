@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Payment Details | Gym SaaS{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-6">
+
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        Payment Details
+      </div>
+
+      <div class="card-body">
+        <p><strong>Amount:</strong> ₹{{ payment.amount }}</p>
+        <p><strong>Method:</strong> {{ payment.payment_method }}</p>
+        <p><strong>Date:</strong> {{ payment.created_at }}</p>
+
+        <hr>
+
+        <h6>Membership</h6>
+        <p><strong>Plan:</strong> {{ membership.plan_name }}</p>
+        <p><strong>Member:</strong> {{ membership.member_name }}</p>
+        <p><strong>Valid Till:</strong> {{ membership.end_date }}</p>
+      </div>
+
+      <div class="card-footer text-end">
+        <a
+          href="{{ url_for('api_v1.payment.list_payment') }}"
+          class="btn btn-sm btn-secondary"
+        >
+          Back to Payments
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
