@@ -82,7 +82,7 @@ class GymAuthService:
                                                "is_active": gym.is_active
                                            },
                                            expires_delta=timedelta(minutes=15))
-        refresh_token = create_refresh_token(identity=gym.id)
+        refresh_token = create_refresh_token(identity=gym.id, expires_delta= timedelta(days=30))
 
         return {
             "access_token": access_token,

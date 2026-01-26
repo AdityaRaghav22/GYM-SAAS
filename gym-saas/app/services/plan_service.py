@@ -27,11 +27,25 @@ class PlanService:
     if not name_valid:
       return None, name_error
 
+    try:
+      duration_months = int(duration_months)
+
+    except (TypeError, ValueError):
+      return None, "Duration must be a positive integer"
+      
     duration_valid, duration_error = validate_duration_months(duration_months)
+    
     if not duration_valid:
       return None, duration_error
 
-    price_valid, price_error = validate_price(price)
+    try:
+      price = Decimal(price)
+      
+    except (TypeError, ValueError):
+      return None, "Price must be a positive number"
+      
+    price_valid, _, price_error = validate_price(price)
+    
     if not price_valid:
       return None, price_error
 
@@ -39,10 +53,12 @@ class PlanService:
       return None, "Description cannot exceed 2000 characters"
 
     existing_plan = Plan.query.filter(Plan.gym_id == gym_id, Plan.name == name,
-                                      Plan.is_active.is_(True)).first()
+                                      Plan.is_active.is_(False)).first()
 
     if existing_plan:
-      return None, "Plan already exists"
+      existing_plan.is_active = True
+      db.session.commit()
+      return None, "Plan reactivated successfully"
 
     try:
       plan = Plan(id=generate_id(),
@@ -138,7 +154,7 @@ class PlanService:
       plan.duration_months = duration_months
 
     if price is not None:
-      price_valid, price_error = validate_price(price)
+      price_valid,_, price_error = validate_price(price)
       if not price_valid:
         return None, price_error
       plan.price = Decimal(price)

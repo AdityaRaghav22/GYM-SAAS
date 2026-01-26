@@ -17,7 +17,9 @@ def create_plan():
         flash(err or "Invalid gym ID", "error")
         return redirect(url_for("api_v1.dashboard.home"))
 
+    
     data = request.form
+    # duration_months = int(data.get("duration_months"))
     plan, error = PlanService.create_plan(
         gym_id,
         data.get("name"),

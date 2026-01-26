@@ -1,6 +1,7 @@
 import re
 import uuid
 from datetime import datetime
+from decimal import Decimal, InvalidOperation
 
 def validate_email(email):
   pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -45,18 +46,23 @@ def validate_role(role):
 
 def validate_duration_months(duration_months):
   if not isinstance(duration_months, int) or duration_months <= 0:
-    return False, "Duration must be a positive integer"
+    return False, "Duration must be a positive integer error from validate_duration_months"
 
   if duration_months > 12:
     return False, "Duration cannot exceed 12 months"
-
+    
   return True, None
 
 def  validate_price(price):
-  if not isinstance(price, (int, float)) or price <= 0:
-     return False, "Price must be a positive number"
+  try:
+    price = Decimal(price)
+  except (TypeError, ValueError, InvalidOperation):
+    return False, None, "Price must be a valid number"
 
-  return True, None
+  if price <= 0:
+    return False, None, "Price must be a positive number"
+
+  return True, price, None
 
 def validate_date(date_str):
   try:

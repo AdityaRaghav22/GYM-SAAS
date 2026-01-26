@@ -96,7 +96,7 @@
         {% for m in memberships %}
           {% if m.plan_id == plan.id %}
           <div class="border rounded p-2 mb-2">
-            <div><strong>Member:</strong> {{ m.member_name }}</div>
+            <div><strong>Member:</strong> {{ m.member.name }}</div>
             <div><strong>Ends:</strong> {{ m.end_date }}</div>
           </div>
           {% endif %}

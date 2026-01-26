@@ -8,6 +8,13 @@ def create_app():
     app.config.from_object(DevelopmentConfig)
     app.config.from_pyfile("config.py", silent=True)
 
+    # 🔐 JWT COOKIE CONFIG (CRITICAL)
+    app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+    app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
+    app.config["JWT_REFRESH_COOKIE_PATH"] = "/"
+    app.config["JWT_COOKIE_SECURE"] = False      # REQUIRED for Replit
+    app.config["JWT_COOKIE_CSRF_PROTECT"] = False
+
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
