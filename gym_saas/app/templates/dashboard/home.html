@@ -1,73 +1,138 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}Dashboard | Gym SaaS{% endblock %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | IronCloud</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-{% block content %}
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8fafc;
+    }
+  </style>
+</head>
 
-<h3 class="mb-4">Dashboard</h3>
+<body class="p-6 md:p-10">
 
-<!-- Quick Actions -->
-<div class="row mb-4">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Dashboard</h1>
+        <p class="text-slate-500 text-sm mt-1">Quick access to your gym's core operations.</p>
+      </div>
+      <div
+        class="flex items-center gap-2 text-sm font-medium text-slate-500 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm">
+        <i class="far fa-calendar"></i>
+        <span>Today is October 24, 2023</span>
+      </div>
+    </div>
 
-  <div class="col-md-3">
-    <div class="card shadow-sm text-center">
-      <div class="card-body">
-        <h5>Members</h5>
-        <p class="text-muted">Manage gym members</p>
-        <a href="{{ url_for('api_v1.member.list_member') }}" class="btn btn-primary w-100">
+    <!-- Quick Actions Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+      <!-- Members Card -->
+      <div class="group bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+        <div
+          class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+          <i class="fas fa-users text-xl"></i>
+        </div>
+        <h5 class="text-lg font-bold text-slate-800 mb-1">Members</h5>
+        <p class="text-slate-500 text-sm mb-6">Manage profiles and track attendance records.</p>
+        <a href="#"
+          class="inline-flex items-center justify-center w-full py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100">
           View Members
         </a>
       </div>
-    </div>
-  </div>
 
-  <div class="col-md-3">
-    <div class="card shadow-sm text-center">
-      <div class="card-body">
-        <h5>Plans</h5>
-        <p class="text-muted">Membership plans</p>
-        <a href="{{ url_for('api_v1.plan.list_plan') }}" class="btn btn-success w-100">
+      <!-- Plans Card -->
+      <div class="group bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+        <div
+          class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+          <i class="fas fa-layer-group text-xl"></i>
+        </div>
+        <h5 class="text-lg font-bold text-slate-800 mb-1">Plans</h5>
+        <p class="text-slate-500 text-sm mb-6">Configure pricing and membership levels.</p>
+        <a href="#"
+          class="inline-flex items-center justify-center w-full py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-bold hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-100">
           View Plans
         </a>
       </div>
-    </div>
-  </div>
 
-  <div class="col-md-3">
-    <div class="card shadow-sm text-center">
-      <div class="card-body">
-        <h5>Memberships</h5>
-        <p class="text-muted">Active memberships</p>
-        <a href="{{ url_for('api_v1.membership.list_membership') }}" class="btn btn-dark w-100">
+      <!-- Memberships Card -->
+      <div class="group bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+        <div
+          class="w-12 h-12 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center mb-4 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+          <i class="fas fa-id-card text-xl"></i>
+        </div>
+        <h5 class="text-lg font-bold text-slate-800 mb-1">Memberships</h5>
+        <p class="text-slate-500 text-sm mb-6">Monitor active contracts and expirations.</p>
+        <a href="#"
+          class="inline-flex items-center justify-center w-full py-2.5 bg-slate-800 text-white rounded-xl text-sm font-bold hover:bg-slate-900 transition-colors shadow-lg shadow-slate-200">
           View Memberships
         </a>
       </div>
-    </div>
-  </div>
 
-  <div class="col-md-3">
-    <div class="card shadow-sm text-center">
-      <div class="card-body">
-        <h5>Payments</h5>
-        <p class="text-muted">Payment history</p>
-        <a href="{{ url_for('api_v1.payment.list_payment') }}" class="btn btn-secondary w-100">
+      <!-- Payments Card -->
+      <div class="group bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+        <div
+          class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+          <i class="fas fa-receipt text-xl"></i>
+        </div>
+        <h5 class="text-lg font-bold text-slate-800 mb-1">Payments</h5>
+        <p class="text-slate-500 text-sm mb-6">Track revenue and payment history.</p>
+        <a href="#"
+          class="inline-flex items-center justify-center w-full py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors">
           View Payments
         </a>
+      </div>
+
+    </div>
+
+    <!-- Welcome Banner Section -->
+    <div
+      class="relative bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-3xl p-8 md:p-12 text-white overflow-hidden shadow-xl shadow-indigo-100">
+      <!-- Decorative SVG circles -->
+      <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-64 h-64 bg-white/10 rounded-full blur-3xl">
+      </div>
+      <div class="absolute bottom-0 right-0 translate-y-1/2 w-48 h-48 bg-indigo-400/20 rounded-full blur-2xl"></div>
+
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+        <div class="max-w-xl">
+          <h2 class="text-3xl font-bold mb-3 flex items-center gap-3">
+            Welcome back! 👋
+          </h2>
+          <p class="text-indigo-100 leading-relaxed text-lg">
+            Everything is running smoothly. Your gym system is designed to simplify daily operations so you can focus on
+            your members' fitness goals.
+          </p>
+        </div>
+        <div class="flex-shrink-0">
+          <button
+            class="bg-white text-indigo-700 px-6 py-3 rounded-2xl font-bold hover:bg-indigo-50 transition-all shadow-lg flex items-center gap-2">
+            <i class="fas fa-lightbulb"></i>
+            Quick Tutorial
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer / System Status -->
+    <div class="mt-12 flex flex-col md:flex-row justify-between items-center text-xs text-slate-400 gap-4">
+      <p>© 2023 IronCloud Gym SaaS. All systems operational.</p>
+      <div class="flex items-center gap-6 font-medium">
+        <a href="#" class="hover:text-slate-600">Documentation</a>
+        <a href="#" class="hover:text-slate-600">Support</a>
+        <a href="#" class="hover:text-slate-600">Account Settings</a>
       </div>
     </div>
   </div>
 
-</div>
+</body>
 
-<!-- Welcome Card -->
-<div class="card shadow-sm">
-  <div class="card-body">
-    <h5>Welcome 👋</h5>
-    <p class="text-muted mb-0">
-      Use the dashboard to manage members, plans, memberships, and payments.
-      This system is designed to simplify daily gym operations.
-    </p>
-  </div>
-</div>
-
-{% endblock %}
+</html>

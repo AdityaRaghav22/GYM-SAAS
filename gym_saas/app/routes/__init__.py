@@ -1,5 +1,5 @@
 from flask import Blueprint
-from . import gym_auth, member, plans, membership, payment, dashboard, publix
+from . import gym_auth, member, plans, membership, payment, dashboard
 
 api_v1 = Blueprint("api_v1", __name__, url_prefix="")
 
