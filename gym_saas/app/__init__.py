@@ -1,6 +1,6 @@
 from flask import Flask
 from .extensions import db, migrate, jwt
-from config import DevelopmentConfig
+from gym_saas.config import DevelopmentConfig
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
