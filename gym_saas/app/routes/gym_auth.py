@@ -73,7 +73,7 @@ def login():
         flash(error or "Authentication failed.", "error")
         return render_template("gym/login.html")
 
-    response = redirect(url_for("api_v1.dashboard.index"))
+    response = redirect(url_for("api_v1.dashboard.home"))
     response = cast(Response, response)
 
     set_access_cookies(response, tokens["access_token"])
