@@ -19,8 +19,8 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
-    from app import models
-    from app.routes import api_v1
+    from . import models
+    from .routes import api_v1
     app.register_blueprint(api_v1)
 
     return app
