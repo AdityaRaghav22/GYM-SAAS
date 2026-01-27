@@ -6,8 +6,8 @@ from flask_jwt_extended import (
     set_refresh_cookies,
     unset_jwt_cookies,
 )
-from app.services.gym_auth_service import GymAuthService
-from app.utils.route_validation import validate_register, validate_login
+from gym_saas.app.services.gym_auth_service import GymAuthService
+from gym_saas.app.utils.route_validation import validate_register, validate_login
 from typing import cast
 
 gym_auth_bp = Blueprint("gym_auth", __name__)

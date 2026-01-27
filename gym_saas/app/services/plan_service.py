@@ -1,8 +1,8 @@
-from app.extensions import db
-from app.models import Gym, Plan
-from app.utils.validation import (validate_id, validate_name,
+from gym_saas.app.extensions import db
+from gym_saas.app.models import Gym, Plan
+from gym_saas.app.utils.validation import (validate_id, validate_name,
                                   validate_duration_months, validate_price)
-from app.utils.generate_id import generate_id
+from gym_saas.app.utils.generate_id import generate_id
 from sqlalchemy.exc import IntegrityError
 from decimal import Decimal
 from typing import Optional

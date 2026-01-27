@@ -1,7 +1,7 @@
-from app.extensions import db
-from app.models import Membership, Member, Plan
-from app.utils.validation import validate_id
-from app.utils.generate_id import generate_id
+from gym_saas.app.extensions import db
+from gym_saas.app.models import Membership, Member, Plan
+from gym_saas.app.utils.validation import validate_id
+from gym_saas.app.utils.generate_id import generate_id
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
 

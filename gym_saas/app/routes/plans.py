@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.services.plan_service import PlanService
-from app.services.membership_service import MembershipService
-from app.services.payment_service import PaymentService
-from app.utils.validation import validate_id
+from gym_saas.app.services.plan_service import PlanService
+from gym_saas.app.services.membership_service import MembershipService
+from gym_saas.app.services.payment_service import PaymentService
+from gym_saas.app.utils.validation import validate_id
 from decimal import Decimal
 
 plan_bp = Blueprint("plan", __name__)

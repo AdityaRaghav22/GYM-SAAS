@@ -1,10 +1,10 @@
-from app.extensions import db, bcrypt
-from app.models import Gym
+from gym_saas.app.extensions import db, bcrypt
+from gym_saas.app.models import Gym
 from flask_jwt_extended import create_access_token, create_refresh_token
 from datetime import timedelta
-from app.utils.validation import (validate_email, validate_password,
+from gym_saas.app.utils.validation import (validate_email, validate_password,
                                   validate_phone_number, validate_name)
-from app.utils.generate_id import generate_id
+from gym_saas.app.utils.generate_id import generate_id
 from sqlalchemy.exc import IntegrityError
 
 

@@ -1,7 +1,7 @@
-from app.extensions import db
-from app.models import Gym, Member
-from app.utils.validation import validate_id, validate_name, validate_phone_number
-from app.utils.generate_id import generate_id
+from gym_saas.app.extensions import db
+from gym_saas.app.models import Gym, Member
+from gym_saas.app.utils.validation import validate_id, validate_name, validate_phone_number
+from gym_saas.app.utils.generate_id import generate_id
 from sqlalchemy.exc import IntegrityError
 from typing import Optional
 

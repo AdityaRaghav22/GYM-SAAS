@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.services.payment_service import PaymentService
-from app.services.membership_service import MembershipService
-from app.utils.validation import validate_id
+from gym_saas.app.services.payment_service import PaymentService
+from gym_saas.app.services.membership_service import MembershipService
+from gym_saas.app.utils.validation import validate_id
 
 payment_bp = Blueprint("payment", __name__)
 
