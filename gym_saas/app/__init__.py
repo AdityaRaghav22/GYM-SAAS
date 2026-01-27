@@ -24,6 +24,9 @@ def create_app():
     from . import models
     from .routes import api_v1
     app.register_blueprint(api_v1)
+    from gym_saas.app.routes.public import public_bp
+    app.register_blueprint(public_bp)
+
 
     # create tables (MVP only)
     with app.app_context():

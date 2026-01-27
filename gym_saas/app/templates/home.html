@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IronCloud | Gym Management Made Simple</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
+</head>
+
+<body class="bg-white text-slate-900">
+
+<!-- ================= NAVBAR ================= -->
+<nav class="fixed top-0 w-full bg-white/80 backdrop-blur border-b border-slate-100 z-50">
+  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white">
+        <i class="fas fa-dumbbell"></i>
+      </div>
+      <span class="font-extrabold text-xl">IronCloud</span>
+    </div>
+
+    <div class="hidden md:flex gap-8 text-sm font-semibold text-slate-600">
+      <a href="#features" class="hover:text-indigo-600">Features</a>
+      <a href="#pricing" class="hover:text-indigo-600">Pricing</a>
+      <a href="#contact" class="hover:text-indigo-600">Contact</a>
+    </div>
+
+    <div class="flex gap-4">
+      <a href="/login" class="text-sm font-semibold text-slate-600 hover:text-slate-900">
+        Login
+      </a>
+      <a href="/register"
+         class="bg-slate-900 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-slate-800">
+        Start Free Trial
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<section class="pt-32 pb-24 bg-gradient-to-br from-indigo-50 to-white px-6">
+  <div class="max-w-7xl mx-auto text-center">
+    <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
+      Run your gym.<br>
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500">
+        We’ll handle the system.
+      </span>
+    </h1>
+
+    <p class="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-10">
+      Manage members, plans, payments, and renewals from one powerful dashboard built for modern gyms.
+    </p>
+
+    <div class="flex flex-col sm:flex-row justify-center gap-4">
+      <a href="/register"
+         class="bg-indigo-600 text-white px-8 py-4 rounded-2xl text-lg font-bold hover:bg-indigo-700">
+        Get Started Free
+      </a>
+      <a href="/login"
+         class="bg-white border border-slate-200 px-8 py-4 rounded-2xl text-lg font-bold hover:bg-slate-50">
+        View Dashboard
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section id="features" class="py-24 bg-slate-50 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-indigo-600 font-bold uppercase tracking-widest text-sm mb-3">
+        Core Features
+      </h2>
+      <h3 class="text-4xl md:text-5xl font-extrabold">
+        Built for gym owners, not spreadsheets.
+      </h3>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+      <!-- Feature -->
+      <div class="bg-white p-8 rounded-3xl border shadow-sm hover:shadow-xl transition">
+        <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+          <i class="fas fa-users text-2xl"></i>
+        </div>
+        <h4 class="text-xl font-bold mb-2">Member Management</h4>
+        <p class="text-slate-500">
+          Track members, subscriptions, status, renewals, and activity — all in one place.
+        </p>
+      </div>
+
+      <!-- Feature -->
+      <div class="bg-white p-8 rounded-3xl border shadow-sm hover:shadow-xl transition">
+        <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+          <i class="fas fa-id-card text-2xl"></i>
+        </div>
+        <h4 class="text-xl font-bold mb-2">Plans & Memberships</h4>
+        <p class="text-slate-500">
+          Create flexible plans, durations, pricing, and manage upgrades or expiries effortlessly.
+        </p>
+      </div>
+
+      <!-- Feature -->
+      <div class="bg-white p-8 rounded-3xl border shadow-sm hover:shadow-xl transition">
+        <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+          <i class="fas fa-credit-card text-2xl"></i>
+        </div>
+        <h4 class="text-xl font-bold mb-2">Payments & Billing</h4>
+        <p class="text-slate-500">
+          Record payments, track dues, and maintain clean accounting for every membership.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRICING ================= -->
+<section id="pricing" class="py-24 px-6">
+  <div class="max-w-7xl mx-auto text-center mb-16">
+    <h2 class="text-4xl font-extrabold mb-4">Simple pricing.</h2>
+    <p class="text-slate-500">Start free. Upgrade when you grow.</p>
+  </div>
+
+  <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+
+    <!-- Starter -->
+    <div class="p-8 border rounded-3xl">
+      <h3 class="uppercase text-xs font-bold text-slate-500 mb-2">Starter Gym</h3>
+      <p class="text-4xl font-extrabold mb-6">₹0</p>
+      <ul class="space-y-3 text-sm mb-8">
+        <li>✔ Up to 50 members</li>
+        <li>✔ Membership tracking</li>
+        <li>✔ Basic billing</li>
+      </ul>
+      <a href="/register" class="block border rounded-xl py-3 font-bold hover:bg-slate-50">
+        Start Free
+      </a>
+    </div>
+
+    <!-- Pro -->
+    <div class="p-8 border-2 border-indigo-600 rounded-3xl shadow-xl">
+      <h3 class="uppercase text-xs font-bold text-indigo-600 mb-2">Pro Gym</h3>
+      <p class="text-4xl font-extrabold mb-6">₹1999/mo</p>
+      <ul class="space-y-3 text-sm mb-8 font-medium">
+        <li>✔ Unlimited members</li>
+        <li>✔ Payments & reports</li>
+        <li>✔ Admin dashboard</li>
+        <li>✔ Priority support</li>
+      </ul>
+      <a href="/register"
+         class="block bg-indigo-600 text-white rounded-xl py-3 font-bold hover:bg-indigo-700">
+        Start Trial
+      </a>
+    </div>
+
+    <!-- Enterprise -->
+    <div class="p-8 border rounded-3xl">
+      <h3 class="uppercase text-xs font-bold text-slate-500 mb-2">Enterprise</h3>
+      <p class="text-4xl font-extrabold mb-6">Custom</p>
+      <p class="text-sm text-slate-500 mb-8">
+        Multi-branch gyms, franchises, and custom integrations.
+      </p>
+      <a href="#contact" class="block border rounded-xl py-3 font-bold hover:bg-slate-50">
+        Contact Sales
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="contact" class="bg-slate-900 text-slate-400 py-16 px-6">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-8">
+    <p>© 2026 IronCloud. Built for gym owners.</p>
+    <div class="flex gap-6">
+      <a href="#" class="hover:text-white">Privacy</a>
+      <a href="#" class="hover:text-white">Terms</a>
+      <a href="#" class="hover:text-white">Support</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
