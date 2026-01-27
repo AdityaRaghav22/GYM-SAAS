@@ -22,6 +22,16 @@ def create_app():
     from . import models
     from .routes import api_v1
     app.register_blueprint(api_v1)
+    
+    db.init_app(app)
+    migrate.init_app(app, db)
+
+    with app.app_context():
+        db.create_all()
+
+    app = Flask(__name__)
+    app.config.from_object(DevelopmentConfig)
+
 
     return app
 
