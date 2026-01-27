@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
@@ -8,5 +10,12 @@ class Config:
 
 class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.getenv(
-        "postgresql://gym_saas_user:xHWJYc8vNh4eITlHEGmKFEq3s5Nqi0vE@dpg-d5s9g615pdvs739h8ds0-a/gym_saas"
+        "DATABASE_URL",
+        "sqlite:///local.db"
     )
+
+    # Render / SQLAlchemy fix
+    if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace(
+            "postgres://", "postgresql://", 1
+        )
