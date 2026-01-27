@@ -55,7 +55,6 @@ def register():
     flash("Registration successful. Please log in.", "success")
     return redirect(url_for("api_v1.gym_auth.login_page"))
 
-
 @gym_auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.form
@@ -74,11 +73,14 @@ def login():
         flash(error or "Authentication failed.", "error")
         return render_template("gym/login.html")
 
-    response = redirect(url_for("api_v1.dashboard.home"))
+    response = redirect(url_for("api_v1.dashboard.index"))
     response = cast(Response, response)
+
     set_access_cookies(response, tokens["access_token"])
     set_refresh_cookies(response, tokens["refresh_token"])
+
     return response
+
 
 @gym_auth_bp.route("/logout", methods=["POST"])
 def logout():
@@ -87,6 +89,7 @@ def logout():
     unset_jwt_cookies(response)
     flash("Logged out successfully.", "success")
     return response
+
 
 # =========================
 # PROFILE
