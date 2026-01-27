@@ -8,5 +8,5 @@ class Config:
 
 class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL", "sqlite:///gym.db"
+        "postgresql://gym_saas_user:xHWJYc8vNh4eITlHEGmKFEq3s5Nqi0vE@dpg-d5s9g615pdvs739h8ds0-a/gym_saas"
     )
