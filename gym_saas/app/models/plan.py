@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column
-from app.extensions import db
+from gym_saas.app.extensions import db
 from sqlalchemy import Numeric
 from decimal import Decimal
 from datetime import datetime

@@ -1,6 +1,6 @@
 from sqlalchemy import DateTime
 from sqlalchemy.orm import Mapped, mapped_column
-from ..extensions import db
+from gym_saas.app.extensions import db
 from datetime import datetime
 
 
