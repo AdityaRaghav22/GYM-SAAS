@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 class Config:
@@ -9,10 +10,7 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL",
-        "sqlite:///local.db"
-    )
+    SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URL"]
 
     # Render / SQLAlchemy fix
     if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
