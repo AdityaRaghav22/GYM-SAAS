@@ -45,5 +45,26 @@
   {% block content %}{% endblock %}
 </div>
 
+  <script>
+    async function silentRefresh() {
+      try {
+        const res = await fetch(
+          "{{ url_for('api_v1.gym_auth.refresh') }}",
+          {
+            method: "POST",
+            credentials: "include"
+          }
+        );
+
+        if (!res.ok) {
+          window.location.href = "{{ url_for('api_v1.gym_auth.login_page') }}";
+        }
+      } catch (err) {
+        window.location.href = "{{ url_for('api_v1.gym_auth.login_page') }}";
+      }
+    }
+  </script>
+
+  
 </body>
 </html>
