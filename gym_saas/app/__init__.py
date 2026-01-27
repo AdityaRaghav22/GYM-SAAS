@@ -17,6 +17,8 @@ def create_app():
     if app.config.get("ENV") == "production":
         app.config["JWT_COOKIE_SECURE"] = True
         app.config["JWT_COOKIE_SAMESITE"] = "None"
+    else:
+        app.config["JWT_COOKIE_SECURE"] = False
 
     # init extensions (ONLY once)
     db.init_app(app)
