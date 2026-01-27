@@ -8,30 +8,25 @@ def create_app():
     app.config.from_object(DevelopmentConfig)
     app.config.from_pyfile("config.py", silent=True)
 
-    # 🔐 JWT COOKIE CONFIG (CRITICAL)
+    # 🔐 JWT COOKIE CONFIG
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
     app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
     app.config["JWT_REFRESH_COOKIE_PATH"] = "/"
-    app.config["JWT_COOKIE_SECURE"] = False      # REQUIRED for Replit
+    app.config["JWT_COOKIE_SECURE"] = False
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
+    # init extensions (ONLY once)
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
 
+    # import AFTER init
     from . import models
     from .routes import api_v1
     app.register_blueprint(api_v1)
-    
-    db.init_app(app)
-    migrate.init_app(app, db)
 
+    # create tables (MVP only)
     with app.app_context():
         db.create_all()
 
-    app = Flask(__name__)
-    app.config.from_object(DevelopmentConfig)
-
-
     return app
-
