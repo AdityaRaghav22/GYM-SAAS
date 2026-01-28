@@ -19,14 +19,21 @@ gym_auth_bp = Blueprint("gym_auth", __name__)
 
 @gym_auth_bp.route("/register", methods=["GET"])
 def register_page():
-    return render_template("gym/register.html")
-
+    try:
+        verify_jwt_in_request()
+        return redirect(url_for("api_v1.dashboard.home"))
+    except:
+        return render_template("gym/register.html")
 
 @gym_auth_bp.route("/login", methods=["GET"])
 def login_page():
-    return render_template("gym/login.html")
-
-
+    try:
+        verify_jwt_in_request()
+        return redirect(url_for("api_v1.dashboard.home"))
+    except:
+        return render_template("gym/login.html")
+    
+    
 # =========================
 # AUTH ACTIONS
 # =========================
@@ -73,25 +80,14 @@ def login():
         flash(error or "Authentication failed.", "error")
         return render_template("gym/login.html")
 
-    try:
-        verify_jwt_in_request()
-        response = redirect(url_for("api_v1.dashboard.home"))
-        response = cast(Response, response)
-        
-        set_access_cookies(response, tokens["access_token"])
-        set_refresh_cookies(response, tokens["refresh_token"])
-        
-        return redirect(url_for("api_v1.dashboard.home"))
-        
-    except Exception:
-        response = redirect(url_for("api_v1.gym_auth.login_page"))
-        response = cast(Response, response)
-        
-        set_access_cookies(response, tokens["access_token"])
-        set_refresh_cookies(response, tokens["refresh_token"])
-        
-        return response
-        
+    response = redirect(url_for("api_v1.dashboard.home"))
+    response = cast(Response, response)
+
+    set_access_cookies(response, tokens["access_token"])
+    set_refresh_cookies(response, tokens["refresh_token"])
+    
+    return response
+
 @gym_auth_bp.route("/logout", methods=["POST"])
 def logout():
     response = redirect(url_for("api_v1.gym_auth.login_page"))
@@ -100,11 +96,9 @@ def logout():
     flash("Logged out successfully.", "success")
     return response
 
-
 # =========================
 # PROFILE
 # =========================
-
 
 @gym_auth_bp.route("/profile", methods=["GET"])
 @jwt_required()
@@ -117,7 +111,6 @@ def profile():
         return redirect(url_for("api_v1.dashboard.home"))
 
     return render_template("gym/profile.html", gym=gym)
-
 
 @gym_auth_bp.route("/update", methods=["POST"])
 @jwt_required()
@@ -141,7 +134,6 @@ def update():
 
     return redirect(url_for("api_v1.gym_auth.profile"))
 
-
 @gym_auth_bp.route("/delete", methods=["POST"])
 @jwt_required()
 def delete():
@@ -161,7 +153,6 @@ def delete():
     unset_jwt_cookies(response)
     flash(result["message"], "success")
     return response
-
 
 @gym_auth_bp.route("/refresh", methods=["GET", "POST"])
 @jwt_required(refresh=True)
