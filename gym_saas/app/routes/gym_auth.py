@@ -5,11 +5,11 @@ from flask_jwt_extended import (
     set_access_cookies,
     set_refresh_cookies,
     unset_jwt_cookies,
+    verify_jwt_in_request
 )
 from gym_saas.app.services.gym_auth_service import GymAuthService
 from gym_saas.app.utils.route_validation import validate_register, validate_login
 from typing import cast
-from gym_saas.app import jwt
 
 gym_auth_bp = Blueprint("gym_auth", __name__)
 
@@ -73,15 +73,25 @@ def login():
         flash(error or "Authentication failed.", "error")
         return render_template("gym/login.html")
 
-    response = redirect(url_for("api_v1.dashboard.home"))
-    response = cast(Response, response)
-
-    set_access_cookies(response, tokens["access_token"])
-    set_refresh_cookies(response, tokens["refresh_token"])
-
-    return response
-
-
+    try:
+        verify_jwt_in_request()
+        response = redirect(url_for("api_v1.dashboard.home"))
+        response = cast(Response, response)
+        
+        set_access_cookies(response, tokens["access_token"])
+        set_refresh_cookies(response, tokens["refresh_token"])
+        
+        return redirect(url_for("api_v1.dashboard.home"))
+        
+    except Exception:
+        response = redirect(url_for("api_v1.gym_auth.login_page"))
+        response = cast(Response, response)
+        
+        set_access_cookies(response, tokens["access_token"])
+        set_refresh_cookies(response, tokens["refresh_token"])
+        
+        return response
+        
 @gym_auth_bp.route("/logout", methods=["POST"])
 def logout():
     response = redirect(url_for("api_v1.gym_auth.login_page"))
