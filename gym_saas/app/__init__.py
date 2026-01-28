@@ -22,6 +22,12 @@ def create_app():
 
     # inside create_app(), AFTER jwt.init_app(app)
 
+
+    # init extensions (ONLY once)
+    db.init_app(app)
+    migrate.init_app(app, db)
+    jwt.init_app(app)
+
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
         return redirect(url_for("api_v1.gym_auth.refresh"))
@@ -30,13 +36,9 @@ def create_app():
     def expired_callback(jwt_header, jwt_payload):
         return redirect(url_for("api_v1.gym_auth.refresh"))
 
-    # init extensions (ONLY once)
-    db.init_app(app)
-    migrate.init_app(app, db)
-    jwt.init_app(app)
-
-    @jwt.expired_token_loader
-    def expired_token_callback(jwt_header, jwt_payload): return redirect(url_for("api_v1.gym_auth.refresh"))
+    @jwt.invalid_token_loader
+    def invalid_token_callback(reason):
+        return redirect(url_for("api_v1.gym_auth.login_page"))
         
     # import AFTER init
     from . import models
