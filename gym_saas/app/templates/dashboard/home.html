@@ -4,16 +4,22 @@
 
 {% block content %}
 
-<h3 class="mb-4">Dashboard</h3>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="fw-bold">Dashboard</h3>
+  <span class="badge bg-primary-subtle text-primary px-3 py-2">
+    Gym Control Panel
+  </span>
+</div>
 
 <!-- Quick Actions -->
-<div class="row mb-4">
+<div class="row g-4 mb-4">
 
   <div class="col-md-3">
-    <div class="card shadow-sm text-center">
-      <div class="card-body">
-        <h5>Members</h5>
-        <p class="text-muted">Manage gym members</p>
+    <div class="card dashboard-card shadow-sm h-100">
+      <div class="card-body text-center">
+        <div class="icon-box bg-primary text-white mb-3">👥</div>
+        <h5 class="fw-semibold">Members</h5>
+        <p class="text-muted small">Manage gym members</p>
         <a href="{{ url_for('api_v1.member.list_member') }}" class="btn btn-primary w-100">
           View Members
         </a>
@@ -22,10 +28,11 @@
   </div>
 
   <div class="col-md-3">
-    <div class="card shadow-sm text-center">
-      <div class="card-body">
-        <h5>Plans</h5>
-        <p class="text-muted">Membership plans</p>
+    <div class="card dashboard-card shadow-sm h-100">
+      <div class="card-body text-center">
+        <div class="icon-box bg-success text-white mb-3">📋</div>
+        <h5 class="fw-semibold">Plans</h5>
+        <p class="text-muted small">Membership plans</p>
         <a href="{{ url_for('api_v1.plan.list_plan') }}" class="btn btn-success w-100">
           View Plans
         </a>
@@ -34,10 +41,11 @@
   </div>
 
   <div class="col-md-3">
-    <div class="card shadow-sm text-center">
-      <div class="card-body">
-        <h5>Memberships</h5>
-        <p class="text-muted">Active memberships</p>
+    <div class="card dashboard-card shadow-sm h-100">
+      <div class="card-body text-center">
+        <div class="icon-box bg-dark text-white mb-3">🏷️</div>
+        <h5 class="fw-semibold">Memberships</h5>
+        <p class="text-muted small">Active memberships</p>
         <a href="{{ url_for('api_v1.membership.list_membership') }}" class="btn btn-dark w-100">
           View Memberships
         </a>
@@ -46,10 +54,11 @@
   </div>
 
   <div class="col-md-3">
-    <div class="card shadow-sm text-center">
-      <div class="card-body">
-        <h5>Payments</h5>
-        <p class="text-muted">Payment history</p>
+    <div class="card dashboard-card shadow-sm h-100">
+      <div class="card-body text-center">
+        <div class="icon-box bg-secondary text-white mb-3">💳</div>
+        <h5 class="fw-semibold">Payments</h5>
+        <p class="text-muted small">Payment history</p>
         <a href="{{ url_for('api_v1.payment.list_payment') }}" class="btn btn-secondary w-100">
           View Payments
         </a>
@@ -60,9 +69,9 @@
 </div>
 
 <!-- Welcome Card -->
-<div class="card shadow-sm">
-  <div class="card-body">
-    <h5>Welcome 👋</h5>
+<div class="card shadow-sm border-0">
+  <div class="card-body p-4">
+    <h5 class="fw-bold mb-2">Welcome 👋</h5>
     <p class="text-muted mb-0">
       Use the dashboard to manage members, plans, memberships, and payments.
       This system is designed to simplify daily gym operations.
