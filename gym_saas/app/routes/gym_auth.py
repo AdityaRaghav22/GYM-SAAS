@@ -9,13 +9,13 @@ from flask_jwt_extended import (
 from gym_saas.app.services.gym_auth_service import GymAuthService
 from gym_saas.app.utils.route_validation import validate_register, validate_login
 from typing import cast
+from gym_saas.app import jwt
 
 gym_auth_bp = Blueprint("gym_auth", __name__)
 
 # =========================
 # GET PAGES
 # =========================
-
 
 @gym_auth_bp.route("/register", methods=["GET"])
 def register_page():
@@ -153,7 +153,7 @@ def delete():
     return response
 
 
-@gym_auth_bp.route("/refresh", methods=["POST"])
+@gym_auth_bp.route("/refresh", methods=["GET", "POST"])
 @jwt_required(refresh=True)
 def refresh():
     identity = get_jwt_identity()
@@ -166,7 +166,7 @@ def refresh():
         flash("Session expired. Please log in again.", "error")
         return response
 
-    response = redirect(request.referrer or url_for("api_v1.dashboard.home"))
+    response = redirect(url_for("api_v1.dashboard.home"))
     response = cast(Response, response)
     set_access_cookies(response, tokens["access_token"])
 

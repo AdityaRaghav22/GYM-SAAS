@@ -20,6 +20,16 @@ def create_app():
     else:
         app.config["JWT_COOKIE_SECURE"] = False
 
+    # inside create_app(), AFTER jwt.init_app(app)
+
+    @jwt.unauthorized_loader
+    def unauthorized_callback(reason):
+        return redirect(url_for("api_v1.gym_auth.refresh"))
+
+    @jwt.expired_token_loader
+    def expired_callback(jwt_header, jwt_payload):
+        return redirect(url_for("api_v1.gym_auth.refresh"))
+
     # init extensions (ONLY once)
     db.init_app(app)
     migrate.init_app(app, db)
