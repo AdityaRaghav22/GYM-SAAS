@@ -10,7 +10,8 @@ def create_app():
     app.config.from_pyfile("config.py", silent=True)
 
     # 🔐 JWT COOKIE CONFIG
-    app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+    app.config["JWT_TOKEN_LOCATION"] = ["headers"]
+    app.config["JWT_TOKEN_LOCATION"] = ["headers","cookies"]
     app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
     app.config["JWT_REFRESH_COOKIE_PATH"] = "/"
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
