@@ -44,13 +44,16 @@
         <a href="{{ url_for('api_v1.dashboard.home') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
             <i class="fas fa-th-large w-5"></i> Dashboard
         </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+        <a href="{{ url_for('api_v1.member.list_member') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
             <i class="fas fa-users w-5"></i> Members
         </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
-            <i class="fas fa-layer-group w-5"></i> Membership Plans
+        <a href="{{ url_for('api_v1.membership.list_membership') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+            <i class="fas fa-users w-5"></i> Memberships
         </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+        <a href="{{ url_for('api_v1.plan.list_plan') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+            <i class="fas fa-layer-group w-5"></i> Plans
+        </a>
+        <a href="{{ url_for('api_v1.payment.list_payment') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
             <i class="fas fa-credit-card w-5"></i> Payments
         </a>
         <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
