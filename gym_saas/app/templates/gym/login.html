@@ -1,116 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gym Login | Iron & Grace</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-  <style>
-    body, html {
-      height: 100%;
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      /* Replace the URL below with a high-quality gym photo */
-      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                  url('https://plus.unsplash.com/premium_vector-1683121882279-a86a4aff8bae?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-      background-size: cover;
-      background-position: center;
-    }
-
-    .glass-card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
-      color: white;
-    }
-
-    .form-control {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: white;
-      padding: 12px;
-      border-radius: 10px;
-    }
-
-    .form-control:focus {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: #0d6efd;
-      color: white;
-      box-shadow: none;
-    }
-
-    .btn-primary {
-      padding: 12px;
-      font-weight: 600;
-      border-radius: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: 0.3s;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(13, 110, 253, 0.4);
-    }
-
-    .register-link {
-      color: #adb5bd;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    .register-link:hover {
-      color: white;
-    }
-
-    .brand-logo {
-      font-weight: 800;
-      letter-spacing: -1px;
-      text-transform: uppercase;
-    }
-  </style>
-</head>
-<body>
-
-<div class="container d-flex justify-content-center align-items-center vh-100">
-  <div class="card glass-card p-5 shadow-lg" style="width: 100%; max-width: 450px;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Anchor Gym</title>
     
-    <div class="text-center mb-4">
-      <h2 class="brand-logo">Login To Your Account </h2>
-      <p class="text-secondary small">Welcome back, athlete.</p>
+    <!-- Scripts & Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Custom "Blocky" Pattern */
+        .grid-pattern {
+            background-color: #f1f5f9;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* Neo-Brutalist Input Styling */
+        .input-block {
+            border: 2px solid #0f172a;
+            box-shadow: 4px 4px 0px 0px #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        .input-block:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 4px 4px 0px 0px #4f46e5;
+            transform: translate(-2px, -2px);
+        }
+
+        /* Neo-Brutalist Button */
+        .btn-blocky {
+            border: 2px solid #0f172a;
+            box-shadow: 6px 6px 0px 0px #0f172a;
+            transition: all 0.1s ease;
+        }
+        .btn-blocky:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0px 0px #0f172a;
+        }
+        .btn-blocky:active {
+            transform: translate(6px, 6px);
+            box-shadow: 0px 0px 0px 0px #0f172a;
+        }
+    </style>
+</head>
+<body class="grid-pattern flex items-center justify-center min-h-screen p-6">
+
+    <!-- Main Card Container -->
+    <div class="w-full max-w-5xl bg-white border-2 border-slate-900 shadow-[12px_12px_0px_0px_rgba(15,23,42,1)] grid md:grid-cols-2 overflow-hidden">
+        
+        <!-- Left Section: Form -->
+        <div class="p-8 md:p-12 flex flex-col justify-center order-2 md:order-1 relative bg-white">
+            
+            <!-- Logo -->
+            <div class="flex items-center gap-2 mb-10">
+                <div class="w-10 h-10 bg-indigo-600 border-2 border-slate-900 flex items-center justify-center text-white shadow-[3px_3px_0px_0px_#000]">
+                    <i class="fas fa-dumbbell"></i>
+                </div>
+                <span class="font-extrabold text-2xl tracking-tighter text-slate-900">ANCHOR.</span>
+            </div>
+
+            <div class="mb-8">
+                <h2 class="text-4xl font-extrabold text-slate-900 mb-2 uppercase tracking-tight">Welcome Back</h2>
+                <p class="text-slate-500 font-bold">Enter your credentials to access the dashboard.</p>
+            </div>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="mb-6 p-4 border-2 border-red-900 bg-red-50 text-red-900 font-bold flex items-center gap-3 shadow-[4px_4px_0px_0px_rgba(127,29,29,0.2)]">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Login Form -->
+            <form method="POST" class="space-y-6">
+                <div>
+                    <label class="block text-xs font-black text-slate-900 uppercase tracking-widest mb-2">Email Address</label>
+                    <input type="email" name="email" class="w-full p-4 bg-slate-50 text-slate-900 font-bold rounded-none input-block" placeholder="coach@ironcloud.com" required>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-xs font-black text-slate-900 uppercase tracking-widest">Password</label>
+                        <a href="#" class="text-xs font-bold text-indigo-600 hover:underline">Forgot?</a>
+                    </div>
+                    <input type="password" name="password" class="w-full p-4 bg-slate-50 text-slate-900 font-bold rounded-none input-block" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 text-white font-black uppercase tracking-widest py-4 btn-blocky mt-4 flex justify-center items-center gap-2">
+                    Sign In <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="mt-8 text-center">
+                <p class="text-slate-500 font-bold text-sm">
+                    Don't have an account? 
+                    <a href="{{ url_for('api_v1.gym_auth.register_page') }}" class="text-indigo-700 underline decoration-2 decoration-indigo-400 underline-offset-4 hover:bg-indigo-100 transition-colors">Register here</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Section: Image/Visual -->
+        <div class="relative hidden md:block border-l-2 border-slate-900 order-1 md:order-2 bg-slate-100">
+            <!-- Background Image -->
+            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop" 
+                 class="absolute inset-0 w-full h-full object-cover grayscale contrast-125" alt="Gym Background">
+            
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-indigo-900/40 mix-blend-multiply"></div>
+            
+            <!-- Decorative Elements -->
+            <div class="absolute inset-0 p-12 flex flex-col justify-between z-10">
+                <div class="w-16 h-16 border-4 border-white opacity-50"></div>
+                
+                <div class="bg-white border-2 border-slate-900 p-6 shadow-[8px_8px_0px_0px_#000] max-w-xs transform rotate-2">
+                    <div class="flex gap-1 text-indigo-600 mb-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="font-bold text-slate-900 italic">"The most robust system we've used. It just works."</p>
+                    <p class="mt-4 text-xs font-black text-slate-400 uppercase tracking-widest">— Iron Gyms NYC</p>
+                </div>
+            </div>
+        </div>
+
     </div>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% for category, message in messages %}
-        <div class="alert alert-danger py-2 border-0 bg-danger text-white small">{{ message }}</div>
-      {% endfor %}
-    {% endwith %}
-
-    <form method="POST">
-      <div class="mb-3">
-        <label class="form-label small fw-bold">EMAIL ADDRESS</label>
-        <input type="email" name="email" class="form-control" placeholder="name@example.com" required>
-      </div>
-
-      <div class="mb-4">
-        <label class="form-label small fw-bold">PASSWORD</label>
-        <input type="password" name="password" class="form-control" placeholder="••••••••" required>
-      </div>
-
-      <button class="btn btn-primary w-100 mb-3">Sign In</button>
-    </form>
-
-    <div class="text-center mt-2">
-      <span class="small text-secondary">New to the club?</span>
-      <a href="{{ url_for('api_v1.gym_auth.register_page') }}" class="small register-link ms-1 fw-bold">
-        Create an account
-      </a>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
