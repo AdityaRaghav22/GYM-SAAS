@@ -104,8 +104,7 @@ class PlanService:
     if not plan_id_valid:
       return None, plan_id_error
 
-    plan = Plan.query.filter(Plan.id == plan_id, Plan.gym_id == gym_id,
-                             Plan.is_active.is_(True)).first()
+    plan = Plan.query.filter(Plan.id == plan_id, Plan.gym_id == gym_id).first()
 
     if not plan:
       return None, "Plan does not exist"
