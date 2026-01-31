@@ -200,6 +200,12 @@
                 <span class="receipt-value">{{ membership.end_date }}</span>
             </div>
 
+            <a
+                  href="{{ url_for('api_v1.payment.list_payment') }}"
+                  class="btn btn-sm btn-secondary">
+                  Back to Payments
+            </a>
+            
         </div>
 
         <!-- Total -->
