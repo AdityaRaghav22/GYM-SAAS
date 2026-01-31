@@ -1,46 +1,161 @@
 {% extends "base.html" %}
 
-{% block title %}Payments | Gym SaaS{% endblock %}
+{% block title %}Plan Payments | Gym SaaS{% endblock %}
 
 {% block content %}
+<!-- Importing Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h4>Payments</h4>
-</div>
+<style>
+    /* --- Theme Configuration --- */
+    :root {
+        --bg-color: #f0f0f0;
+        --card-bg: #ffffff;
+        --primary: #3b82f6;
+        --text-main: #18181b;
+        --border-color: #000000;
+        --border-width: 3px;
+        --shadow-depth: 6px;
+        --success-bg: #4ade80;
+        --danger-bg: #fee2e2;
+        --danger-text: #ef4444;
+        --secondary-bg: #e5e7eb;
+    }
 
-<table class="table table-bordered table-hover">
-  <thead class="table-dark">
-    <tr>
-      <th>Amount</th>
-      <th>Method</th>
-      <th>Date</th>
-      <th width="120">Action</th>
-    </tr>
-  </thead>
+    body {
+        font-family: 'Space Grotesk', sans-serif;
+        background-color: var(--bg-color);
+        background-image: radial-gradient(#000000 1px, transparent 1px);
+        background-size: 20px 20px;
+        color: var(--text-main);
+    }
 
-  <tbody>
-    {% for payment in payments %}
-    <tr>
-      <td>₹{{ payment.amount }}</td>
-      <td>{{ payment.payment_method }}</td>
-      <td>{{ payment.created_at }}</td>
-      <td>
-        <a
-          href="{{ url_for('api_v1.payment.payment_details', payment_id=payment.id) }}"
-          class="btn btn-sm btn-outline-primary"
-        >
-          View
+    /* --- Layout --- */
+    .boxy-container {
+        width: 100%;
+        max-width: 800px; /* Reduced width since it's a single column now */
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    /* --- Card Styles --- */
+    .boxy-card {
+        background: var(--card-bg);
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: var(--shadow-depth) var(--shadow-depth) 0px var(--border-color);
+        margin-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .card-header-boxy {
+        border-bottom: var(--border-width) solid var(--border-color);
+        padding: 1rem;
+        font-family: 'Space Mono', monospace;
+        font-weight: 700;
+        text-transform: uppercase;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Header Colors */
+    .header-blue { background: var(--primary); color: white; }
+    .header-dark { background: var(--text-main); color: white; }
+    .header-grey { background: var(--secondary-bg); color: black; }
+
+    .card-body-boxy {
+        padding: 1.5rem;
+        flex-grow: 1;
+    }
+
+    /* --- Buttons --- */
+    .btn-blocky {
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid var(--border-color);
+        font-family: 'Space Mono', monospace;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.1s;
+        text-align: center;
+    }
+
+    .btn-blocky:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 6px 6px 0px var(--border-color);
+    }
+
+    /* --- List Items --- */
+    .sub-item {
+        border: 2px solid var(--border-color);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .empty-state {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        padding: 1rem;
+        border: 2px dashed #ccc;
+    }
+
+</style>
+
+<div class="boxy-container">
+    
+    <!-- Breadcrumb -->
+    <div style="margin-bottom: 2rem;">
+        <a href="{{ url_for('api_v1.plan.list_plans') }}" style="text-decoration: none; color: black; font-family: 'Space Mono', monospace; font-weight: bold; border: 2px solid black; padding: 0.5rem 1rem; background: white; box-shadow: 3px 3px 0px black; display: inline-block;">
+            &larr; BACK TO PLANS
         </a>
-      </td>
-    </tr>
-    {% else %}
-    <tr>
-      <td colspan="4" class="text-center text-muted">
-        No payments found
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    </div>
+
+    <!-- Payments Card -->
+    <div class="boxy-card">
+        <div class="card-header-boxy header-grey">
+            <span>{{ plan.name }} Revenue</span>
+            <span>$</span>
+        </div>
+        <div class="card-body-boxy">
+            {% set ns_pay = namespace(found=false) %}
+            {% for p in payments %}
+                {% if p.plan_id == plan.id %}
+                    {% set ns_pay.found = true %}
+                    <div class="sub-item" style="border-left: 5px solid black;">
+                        <div style="font-weight: bold; font-size: 1.1rem; font-family: 'Space Mono', monospace;">
+                            ₹{{ p.amount }}
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="text-transform: uppercase; font-size: 0.8rem; background: #eee; padding: 2px 6px; border: 1px solid #999; display: inline-block; margin-bottom: 4px;">
+                                {{ p.payment_method }}
+                            </div>
+                            <div style="font-size: 0.8rem; color: #666;">
+                                {{ p.created_at }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {% if not ns_pay.found %}
+                <div class="empty-state">
+                    No payments recorded for this plan.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
 
 {% endblock %}
