@@ -1,3 +1,4 @@
+from sqlalchemy import false
 from gym_saas.app.extensions import db
 from gym_saas.app.models import Gym, Member
 from gym_saas.app.utils.validation import validate_id, validate_name, validate_phone_number
@@ -30,10 +31,12 @@ class MemberService:
       return None, phone_error
       
     existing_member = Member.query.filter(
-        Member.gym_id == gym_id, Member.phone_number == phone_number).first()
+        Member.gym_id == gym_id, Member.phone_number == phone_number, Member.is_active.is_(False)).first()
 
     if existing_member:
-      return None, "Member already exists"
+      existing_member.is_active = True
+      db.session.commit()
+      return None, "Member reactivated successfully"
 
     try:
       member = Member(id=generate_id(),

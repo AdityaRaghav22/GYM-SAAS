@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Plan Payments | Gym SaaS{% endblock %}
+{% block title %}Payment Details | Gym SaaS{% endblock %}
 
 {% block content %}
 <!-- Importing Google Fonts -->
@@ -18,10 +18,7 @@
         --border-color: #000000;
         --border-width: 3px;
         --shadow-depth: 6px;
-        --success-bg: #4ade80;
-        --danger-bg: #fee2e2;
-        --danger-text: #ef4444;
-        --secondary-bg: #e5e7eb;
+        --receipt-bg: #fff;
     }
 
     body {
@@ -32,129 +29,191 @@
         color: var(--text-main);
     }
 
-    /* --- Layout --- */
     .boxy-container {
         width: 100%;
-        max-width: 800px; /* Reduced width since it's a single column now */
+        max-width: 500px; /* Narrower for receipt look */
         margin: 2rem auto;
         padding: 0 1rem;
     }
 
-    /* --- Card Styles --- */
     .boxy-card {
-        background: var(--card-bg);
+        background: var(--receipt-bg);
         border: var(--border-width) solid var(--border-color);
         box-shadow: var(--shadow-depth) var(--shadow-depth) 0px var(--border-color);
-        margin-bottom: 2rem;
+        position: relative;
         display: flex;
         flex-direction: column;
-        height: 100%;
     }
 
     .card-header-boxy {
+        background: var(--primary);
+        color: white;
         border-bottom: var(--border-width) solid var(--border-color);
-        padding: 1rem;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .card-header-boxy h2 {
+        margin: 0;
         font-family: 'Space Mono', monospace;
-        font-weight: 700;
+        font-size: 1.5rem;
         text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .receipt-body {
+        padding: 2rem;
+        font-family: 'Space Mono', monospace;
+    }
+
+    /* Receipt Rows */
+    .receipt-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        align-items: baseline;
+    }
+
+    .receipt-label {
+        color: #666;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+    }
+
+    .receipt-value {
+        font-weight: bold;
+        text-align: right;
+        font-size: 1.1rem;
+    }
+
+    .dashed-line {
+        border-bottom: 2px dashed var(--border-color);
+        margin: 1.5rem 0;
+        position: relative;
+    }
+
+    /* Total Section */
+    .total-section {
+        background: #f0f0f0;
+        border-top: var(--border-width) solid var(--border-color);
+        padding: 1.5rem 2rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
-    /* Header Colors */
-    .header-blue { background: var(--primary); color: white; }
-    .header-dark { background: var(--text-main); color: white; }
-    .header-grey { background: var(--secondary-bg); color: black; }
-
-    .card-body-boxy {
-        padding: 1.5rem;
-        flex-grow: 1;
+    .total-label {
+        font-weight: bold;
+        font-size: 1.2rem;
+        text-transform: uppercase;
     }
 
-    /* --- Buttons --- */
-    .btn-blocky {
+    .total-amount {
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        font-size: 2rem;
+    }
+
+    /* Button */
+    .btn-back {
         display: block;
         width: 100%;
-        padding: 0.75rem;
-        border: 2px solid var(--border-color);
+        background: white;
+        color: black;
+        border: 2px solid black;
+        padding: 1rem;
+        text-align: center;
+        text-decoration: none;
         font-family: 'Space Mono', monospace;
-        font-weight: 700;
+        font-weight: bold;
         text-transform: uppercase;
-        cursor: pointer;
+        margin-top: 1.5rem;
+        box-shadow: 4px 4px 0px black;
         transition: all 0.1s;
-        text-align: center;
     }
 
-    .btn-blocky:hover {
+    .btn-back:hover {
         transform: translate(-2px, -2px);
-        box-shadow: 6px 6px 0px var(--border-color);
+        box-shadow: 6px 6px 0px black;
+        background: #eef2ff;
     }
 
-    /* --- List Items --- */
-    .sub-item {
-        border: 2px solid var(--border-color);
-        padding: 1rem;
-        margin-bottom: 1rem;
-        background: #fff;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .empty-state {
-        text-align: center;
-        color: #666;
-        font-style: italic;
-        padding: 1rem;
-        border: 2px dashed #ccc;
+    .btn-back:active {
+        transform: translate(2px, 2px);
+        box-shadow: 0px 0px 0px black;
     }
 
+    /* Decorative jagged bottom edge using css gradient */
+    .jagged-edge {
+        height: 15px;
+        width: 100%;
+        background: linear-gradient(45deg, transparent 33.333%, #ffffff 33.333%, #ffffff 66.667%, transparent 66.667%), linear-gradient(-45deg, transparent 33.333%, #ffffff 33.333%, #ffffff 66.667%, transparent 66.667%);
+        background-size: 20px 40px;
+        position: absolute;
+        bottom: -15px;
+        left: 0;
+        /* Matches shadow depth roughly */
+        filter: drop-shadow(0px 6px 0px black); 
+        z-index: -1; 
+    }
 </style>
 
 <div class="boxy-container">
-    
-    <!-- Breadcrumb -->
-    <div style="margin-bottom: 2rem;">
-        <a href="api_v1.payment.payment_details', payment_id=payment.id) }}" style="text-decoration: none; color: black; font-family: 'Space Mono', monospace; font-weight: bold; border: 2px solid black; padding: 0.5rem 1rem; background: white; box-shadow: 3px 3px 0px black; display: inline-block;">
-            &larr; BACK TO PLANS
-        </a>
-    </div>
 
-    <!-- Payments Card -->
     <div class="boxy-card">
-        <div class="card-header-boxy header-grey">
-            <span>{{ plan.name }} Revenue</span>
-            <span>$</span>
+        <!-- Header -->
+        <div class="card-header-boxy">
+            <h2>Payment Receipt</h2>
+            <div style="font-size: 0.8rem; margin-top: 5px; opacity: 0.8;">ID: #{{ payment.id }}</div>
         </div>
-        <div class="card-body-boxy">
-            {% set ns_pay = namespace(found=false) %}
-            {% for p in payments %}
-                {% if p.plan_id == plan.id %}
-                    {% set ns_pay.found = true %}
-                    <div class="sub-item" style="border-left: 5px solid black;">
-                        <div style="font-weight: bold; font-size: 1.1rem; font-family: 'Space Mono', monospace;">
-                            ₹{{ p.amount }}
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="text-transform: uppercase; font-size: 0.8rem; background: #eee; padding: 2px 6px; border: 1px solid #999; display: inline-block; margin-bottom: 4px;">
-                                {{ p.payment_method }}
-                            </div>
-                            <div style="font-size: 0.8rem; color: #666;">
-                                {{ p.created_at }}
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
 
-            {% if not ns_pay.found %}
-                <div class="empty-state">
-                    No payments recorded for this plan.
-                </div>
-            {% endif %}
+        <!-- Body -->
+        <div class="receipt-body">
+            
+            <!-- Date & Method -->
+            <div class="receipt-row">
+                <span class="receipt-label">Date</span>
+                <span class="receipt-value">{{ payment.created_at }}</span>
+            </div>
+            <div class="receipt-row">
+                <span class="receipt-label">Method</span>
+                <span class="receipt-value" style="text-transform: uppercase;">{{ payment.payment_method }}</span>
+            </div>
+
+            <div class="dashed-line"></div>
+
+            <!-- Details -->
+            <div style="margin-bottom: 0.5rem; font-weight: bold; text-transform: uppercase;">Details</div>
+            
+            <div class="receipt-row">
+                <span class="receipt-label">Member</span>
+                <span class="receipt-value">{{ membership.member.name }}</span>
+            </div>
+            
+            <div class="receipt-row">
+                <span class="receipt-label">Plan</span>
+                <span class="receipt-value">{{ membership.plan.name }}</span>
+            </div>
+
+            <div class="receipt-row">
+                <span class="receipt-label">Valid Until</span>
+                <span class="receipt-value">{{ membership.end_date }}</span>
+            </div>
+
         </div>
+
+        <!-- Total -->
+        <div class="total-section">
+            <span class="total-label">Total Paid</span>
+            <span class="total-amount">₹{{ payment.amount }}</span>
+        </div>
+        
     </div>
+
+    <!-- Navigation -->
+    <a href="{{ url_for('api_v1.payment.list_payment') }}" class="btn-back">
+        &larr; Return to History
+    </a>
 
 </div>
 

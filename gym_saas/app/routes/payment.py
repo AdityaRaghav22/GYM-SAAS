@@ -60,4 +60,5 @@ def payment_details(payment_id):
         payment=payment,
         membership=membership
     )
-    
+
+

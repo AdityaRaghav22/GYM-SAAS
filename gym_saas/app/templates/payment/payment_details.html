@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Payment Details | Gym SaaS{% endblock %}
+{% block title %}Payments | Gym SaaS{% endblock %}
 
 {% block content %}
 <!-- Importing Google Fonts -->
@@ -18,7 +18,8 @@
         --border-color: #000000;
         --border-width: 3px;
         --shadow-depth: 6px;
-        --receipt-bg: #fff;
+        --header-bg: #000000;
+        --header-text: #ffffff;
     }
 
     body {
@@ -29,191 +30,186 @@
         color: var(--text-main);
     }
 
+    /* --- Layout --- */
     .boxy-container {
         width: 100%;
-        max-width: 500px; /* Narrower for receipt look */
+        max-width: 1000px;
         margin: 2rem auto;
         padding: 0 1rem;
     }
 
+    /* --- Card & Header --- */
     .boxy-card {
-        background: var(--receipt-bg);
+        background: var(--card-bg);
         border: var(--border-width) solid var(--border-color);
         box-shadow: var(--shadow-depth) var(--shadow-depth) 0px var(--border-color);
+        margin-bottom: 3rem;
         position: relative;
-        display: flex;
-        flex-direction: column;
     }
 
     .card-header-boxy {
-        background: var(--primary);
-        color: white;
+        background: var(--header-bg);
+        color: var(--header-text);
         border-bottom: var(--border-width) solid var(--border-color);
-        padding: 1.5rem;
-        text-align: center;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 
     .card-header-boxy h2 {
         margin: 0;
-        font-family: 'Space Mono', monospace;
-        font-size: 1.5rem;
+        font-size: 1.25rem;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-    }
-
-    .receipt-body {
-        padding: 2rem;
         font-family: 'Space Mono', monospace;
     }
 
-    /* Receipt Rows */
-    .receipt-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-        align-items: baseline;
+    .card-body-boxy {
+        padding: 0; /* No padding for table to reach edges */
     }
 
-    .receipt-label {
-        color: #666;
-        font-size: 0.85rem;
-        text-transform: uppercase;
+    /* --- Table Styling --- */
+    .table-responsive {
+        overflow-x: auto;
     }
 
-    .receipt-value {
-        font-weight: bold;
-        text-align: right;
-        font-size: 1.1rem;
-    }
-
-    .dashed-line {
-        border-bottom: 2px dashed var(--border-color);
-        margin: 1.5rem 0;
-        position: relative;
-    }
-
-    /* Total Section */
-    .total-section {
-        background: #f0f0f0;
-        border-top: var(--border-width) solid var(--border-color);
-        padding: 1.5rem 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .total-label {
-        font-weight: bold;
-        font-size: 1.2rem;
-        text-transform: uppercase;
-    }
-
-    .total-amount {
-        font-family: 'Space Grotesk', sans-serif;
-        font-weight: 700;
-        font-size: 2rem;
-    }
-
-    /* Button */
-    .btn-back {
-        display: block;
+    .boxy-table {
         width: 100%;
+        border-collapse: collapse;
+        font-family: 'Space Mono', monospace;
+        font-size: 0.9rem;
+    }
+
+    .boxy-table th {
+        background: var(--primary);
+        color: white;
+        text-align: left;
+        padding: 1rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+        border-right: 2px solid var(--border-color);
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+    
+    .boxy-table th:last-child {
+        border-right: none;
+    }
+
+    .boxy-table td {
+        border-bottom: 2px solid var(--border-color);
+        border-right: 2px solid var(--border-color);
+        padding: 1rem;
+        background: white;
+        font-family: 'Space Grotesk', sans-serif;
+        color: var(--text-main);
+        vertical-align: middle;
+    }
+
+    .boxy-table td:last-child {
+        border-right: none;
+    }
+
+    .boxy-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .boxy-table tr:hover td {
+        background: #fff9db; /* Light yellow hover effect */
+    }
+
+    /* --- Buttons --- */
+    .btn-view {
+        display: inline-block;
+        text-decoration: none;
         background: white;
         color: black;
         border: 2px solid black;
-        padding: 1rem;
-        text-align: center;
-        text-decoration: none;
-        font-family: 'Space Mono', monospace;
+        padding: 0.25rem 1rem;
+        font-size: 0.8rem;
         font-weight: bold;
         text-transform: uppercase;
-        margin-top: 1.5rem;
-        box-shadow: 4px 4px 0px black;
-        transition: all 0.1s;
+        box-shadow: 3px 3px 0px var(--primary);
+        transition: transform 0.1s, box-shadow 0.1s;
     }
 
-    .btn-back:hover {
-        transform: translate(-2px, -2px);
-        box-shadow: 6px 6px 0px black;
+    .btn-view:hover {
+        transform: translate(-1px, -1px);
+        box-shadow: 4px 4px 0px var(--primary);
         background: #eef2ff;
     }
 
-    .btn-back:active {
-        transform: translate(2px, 2px);
-        box-shadow: 0px 0px 0px black;
+    .btn-view:active {
+        transform: translate(1px, 1px);
+        box-shadow: 1px 1px 0px var(--primary);
     }
 
-    /* Decorative jagged bottom edge using css gradient */
-    .jagged-edge {
-        height: 15px;
-        width: 100%;
-        background: linear-gradient(45deg, transparent 33.333%, #ffffff 33.333%, #ffffff 66.667%, transparent 66.667%), linear-gradient(-45deg, transparent 33.333%, #ffffff 33.333%, #ffffff 66.667%, transparent 66.667%);
-        background-size: 20px 40px;
-        position: absolute;
-        bottom: -15px;
-        left: 0;
-        /* Matches shadow depth roughly */
-        filter: drop-shadow(0px 6px 0px black); 
-        z-index: -1; 
-    }
 </style>
 
 <div class="boxy-container">
 
     <div class="boxy-card">
-        <!-- Header -->
+        <!-- Header Section -->
         <div class="card-header-boxy">
-            <h2>Payment Receipt</h2>
-            <div style="font-size: 0.8rem; margin-top: 5px; opacity: 0.8;">ID: #{{ payment.id }}</div>
-        </div>
-
-        <!-- Body -->
-        <div class="receipt-body">
-            
-            <!-- Date & Method -->
-            <div class="receipt-row">
-                <span class="receipt-label">Date</span>
-                <span class="receipt-value">{{ payment.created_at }}</span>
-            </div>
-            <div class="receipt-row">
-                <span class="receipt-label">Method</span>
-                <span class="receipt-value" style="text-transform: uppercase;">{{ payment.payment_method }}</span>
-            </div>
-
-            <div class="dashed-line"></div>
-
-            <!-- Details -->
-            <div style="margin-bottom: 0.5rem; font-weight: bold; text-transform: uppercase;">Details</div>
-            
-            <div class="receipt-row">
-                <span class="receipt-label">Member</span>
-                <span class="receipt-value">{{ membership.member.name }}</span>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <!-- Simple CSS Icon: Dollar Sign representation -->
+                <div style="width: 24px; height: 24px; background: white; border: 2px solid white; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-family: 'Space Mono'; line-height: 1;">
+                    $
+                </div>
+                <h2>Payments History</h2>
             </div>
             
-            <div class="receipt-row">
-                <span class="receipt-label">Plan</span>
-                <span class="receipt-value">{{ membership.plan.name }}</span>
+            <div style="font-family: 'Space Mono', monospace; font-size: 0.9rem;">
+                RECORDS: {{ payments|length }}
             </div>
-
-            <div class="receipt-row">
-                <span class="receipt-label">Valid Until</span>
-                <span class="receipt-value">{{ membership.end_date }}</span>
-            </div>
-
         </div>
 
-        <!-- Total -->
-        <div class="total-section">
-            <span class="total-label">Total Paid</span>
-            <span class="total-amount">₹{{ payment.amount }}</span>
+        <!-- Table Section -->
+        <div class="card-body-boxy">
+            <div class="table-responsive">
+                <table class="boxy-table">
+                    <thead>
+                        <tr>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Date</th>
+                            <th width="120">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in payments %}
+                        <tr>
+                            <td style="font-weight: 700; font-size: 1.1em;">
+                                ₹{{ payment.amount }}
+                            </td>
+                            <td style="text-transform: uppercase;">
+                                {{ payment.payment_method }}
+                            </td>
+                            <td>
+                                {{ payment.created_at }}
+                            </td>
+                            <td>
+                                <a
+                                    href="{{ url_for('api_v1.payment.payment_details', payment_id=payment.id) }}"
+                                    class="btn-view"
+                                >
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 3rem; color: #666; font-style: italic;">
+                                No payments found in the system.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-        
     </div>
-
-    <!-- Navigation -->
-    <a href="{{ url_for('api_v1.payment.list_payment') }}" class="btn-back">
-        &larr; Return to History
-    </a>
 
 </div>
 
