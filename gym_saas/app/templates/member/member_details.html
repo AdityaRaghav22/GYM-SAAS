@@ -3,165 +3,346 @@
 {% block title %}Member Details | Gym SaaS{% endblock %}
 
 {% block content %}
+<!-- Importing Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-<div class="row">
+<style>
+    /* --- Theme Configuration --- */
+    :root {
+        --bg-color: #f0f0f0;
+        --card-bg: #ffffff;
+        --primary: #3b82f6;
+        --text-main: #18181b;
+        --border-color: #000000;
+        --border-width: 3px;
+        --shadow-depth: 6px;
+        --success-bg: #4ade80;
+        --danger-bg: #fee2e2;
+        --danger-text: #ef4444;
+        --secondary-bg: #e5e7eb;
+    }
 
-  <!-- Member Info -->
-  <div class="col-md-4">
-    <div class="card shadow-sm mb-3">
-      <div class="card-header bg-primary text-white">
-        Member Info
-      </div>
+    body {
+        font-family: 'Space Grotesk', sans-serif;
+        background-color: var(--bg-color);
+        background-image: radial-gradient(#000000 1px, transparent 1px);
+        background-size: 20px 20px;
+        color: var(--text-main);
+    }
 
-      <div class="card-body">
-        <form
-          method="POST"
-          action="{{ url_for('api_v1.member.update_member', member_id=member.id) }}"
-        >
-          <div class="mb-2">
-            <label>Name</label>
-            <input
-              type="text"
-              name="name"
-              class="form-control"
-              value="{{ member.name }}"
-              required
-            >
-          </div>
+    /* --- Layout --- */
+    .boxy-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
 
-          <div class="mb-2">
-            <label>Phone</label>
-            <input
-              type="text"
-              name="phone_number"
-              class="form-control"
-              value="{{ member.phone_number }}"
-              required
-            >
-          </div>
+    .grid-layout {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        align-items: start;
+    }
 
-          <button class="btn btn-success w-100 mt-2">
-            Update
-          </button>
-        </form>
-      </div>
+    /* --- Card Styles --- */
+    .boxy-card {
+        background: var(--card-bg);
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: var(--shadow-depth) var(--shadow-depth) 0px var(--border-color);
+        margin-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+    }
 
-      {% if member.is_active %}
-      <div class="card-footer">
-        <form
-          method="POST"
-          action="{{ url_for('api_v1.member.deactivate_member', member_id=member.id) }}"
-          onsubmit="return confirm('Deactivate this member?');"
-        >
-          <button class="btn btn-sm btn-outline-danger w-100">
-            Deactivate Member
-          </button>
-        </form>
-      </div>
-      {% endif %}
+    .card-header-boxy {
+        border-bottom: var(--border-width) solid var(--border-color);
+        padding: 1rem;
+        font-family: 'Space Mono', monospace;
+        font-weight: 700;
+        text-transform: uppercase;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Header Colors */
+    .header-blue { background: var(--primary); color: white; }
+    .header-dark { background: var(--text-main); color: white; }
+    .header-green { background: var(--success-bg); color: black; }
+    .header-grey { background: var(--secondary-bg); color: black; }
+
+    .card-body-boxy {
+        padding: 1.5rem;
+        flex-grow: 1;
+    }
+
+    /* --- Form Elements --- */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .boxy-label {
+        display: block;
+        font-family: 'Space Mono', monospace;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-bottom: 0.4rem;
+        text-transform: uppercase;
+    }
+
+    .boxy-input, .boxy-select {
+        width: 100%;
+        padding: 0.75rem;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1rem;
+        border: 2px solid var(--border-color);
+        background: #fff;
+        outline: none;
+        border-radius: 0;
+        transition: all 0.2s;
+    }
+
+    .boxy-input:focus, .boxy-select:focus {
+        background: #eef2ff;
+        box-shadow: 4px 4px 0px var(--border-color);
+        transform: translate(-2px, -2px);
+    }
+
+    /* --- Buttons --- */
+    .btn-blocky {
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid var(--border-color);
+        font-family: 'Space Mono', monospace;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.1s;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+        box-shadow: 4px 4px 0px var(--border-color);
+    }
+
+    .btn-success {
+        background: var(--success-bg);
+        color: black;
+        box-shadow: 4px 4px 0px var(--border-color);
+    }
+
+    .btn-outline-success {
+        background: white;
+        color: black;
+        border-color: black;
+    }
+    .btn-outline-success:hover {
+        background: var(--success-bg);
+    }
+
+    .btn-blocky:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 6px 6px 0px var(--border-color);
+    }
+
+    .btn-blocky:active {
+        transform: translate(2px, 2px);
+        box-shadow: 0px 0px 0px var(--border-color);
+    }
+
+    /* --- Sub-items (Memberships/Payments) --- */
+    .sub-item {
+        border: 2px solid var(--border-color);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: #fff;
+    }
+
+    .sub-item-header {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 0.5rem;
+    }
+
+    /* --- Danger Zone --- */
+    .danger-zone {
+        margin-top: auto; /* Push to bottom */
+        border-top: var(--border-width) solid var(--border-color);
+        background-image: repeating-linear-gradient(45deg, var(--danger-bg), var(--danger-bg) 10px, #fff 10px, #fff 20px);
+        padding: 1.5rem;
+    }
+
+    .btn-danger {
+        background: white;
+        color: var(--danger-text);
+        border: 2px solid var(--danger-text);
+        box-shadow: 3px 3px 0px var(--danger-text);
+    }
+    .btn-danger:hover {
+        background: var(--danger-text);
+        color: white;
+    }
+
+</style>
+
+<div class="boxy-container">
+    
+    <!-- Breadcrumb / Back Link -->
+    <div style="margin-bottom: 2rem;">
+        <a href="{{ url_for('api_v1.member.members_page') }}" style="text-decoration: none; color: black; font-family: 'Space Mono', monospace; font-weight: bold; border: 2px solid black; padding: 0.5rem 1rem; background: white; box-shadow: 3px 3px 0px black; display: inline-block;">
+            &larr; BACK TO DIRECTORY
+        </a>
     </div>
-  </div>
 
-  <!-- Memberships -->
-  <div class="col-md-4">
-    <div class="card shadow-sm mb-3">
-      <div class="card-header bg-dark text-white">
-        Memberships
-      </div>
+    <div class="grid-layout">
 
-      <div class="card-body">
-        {% for m in memberships %}
-          <div class="border rounded p-2 mb-2">
-            <div><strong>Plan:</strong> {{ m.plan_name }}</div>
-            <div><strong>Valid till:</strong> {{ m.end_date }}</div>
+        <!-- Column 1: Member Info -->
+        <div class="column">
+            <div class="boxy-card">
+                <div class="card-header-boxy header-blue">
+                    <span>Member Info</span>
+                    <div style="width:12px; height:12px; background:white; border:2px solid black;"></div>
+                </div>
+                <div class="card-body-boxy">
+                    <form method="POST" action="{{ url_for('api_v1.member.update_member', member_id=member.id) }}">
+                        <div class="form-group">
+                            <label class="boxy-label">Full Name</label>
+                            <input type="text" name="name" class="boxy-input" value="{{ member.name }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="boxy-label">Phone Number</label>
+                            <input type="text" name="phone_number" class="boxy-input" value="{{ member.phone_number }}" required>
+                        </div>
+                        <button class="btn-blocky btn-primary" style="margin-top: 1rem;">
+                            Update Details
+                        </button>
+                    </form>
+                </div>
+                
+                {% if member.is_active %}
+                <div class="danger-zone">
+                    <form method="POST" action="{{ url_for('api_v1.member.deactivate_member', member_id=member.id) }}" onsubmit="return confirm('Deactivate this member?');">
+                        <button class="btn-blocky btn-danger">
+                            Deactivate Member
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
 
-            <form
-              method="POST"
-              action="{{ url_for('api_v1.membership.renew_membership', membership_id=m.id) }}"
-              class="mt-2"
-            >
-              <select
-                name="payment_method"
-                class="form-select form-select-sm mb-1"
-                required
-              >
-                <option value="cash">Cash</option>
-                <option value="upi">UPI</option>
-                <option value="card">Card</option>
-              </select>
+        <!-- Column 2: Memberships & New Plan -->
+        <div class="column">
+            
+            <!-- Existing Memberships -->
+            <div class="boxy-card">
+                <div class="card-header-boxy header-dark">
+                    <span>Active Plans</span>
+                    <div style="border: 1px solid white; padding: 0 4px;">{{ memberships|length }}</div>
+                </div>
+                <div class="card-body-boxy">
+                    {% for m in memberships %}
+                        <div class="sub-item">
+                            <div class="sub-item-header">
+                                {{ m.plan_name }}
+                            </div>
+                            <div style="font-size: 0.9rem; margin-bottom: 1rem;">
+                                Expires: <strong>{{ m.end_date }}</strong>
+                            </div>
 
-              <button class="btn btn-sm btn-outline-success w-100">
-                Renew
-              </button>
-            </form>
-          </div>
-        {% else %}
-          <p class="text-muted">No active memberships</p>
-        {% endfor %}
-      </div>
+                            <form method="POST" action="{{ url_for('api_v1.membership.renew_membership', membership_id=m.id) }}">
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <select name="payment_method" class="boxy-select" style="flex: 1;" required>
+                                        <option value="cash">Cash</option>
+                                        <option value="upi">UPI</option>
+                                        <option value="card">Card</option>
+                                    </select>
+                                    <button class="btn-blocky btn-outline-success" style="width: auto;">
+                                        Renew
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div style="text-align: center; color: #666; font-style: italic; padding: 1rem;">
+                            No active memberships found.
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- New Membership Form -->
+            <div class="boxy-card">
+                <div class="card-header-boxy header-green">
+                    <span>New Membership</span>
+                    <span>+</span>
+                </div>
+                <div class="card-body-boxy">
+                    <form method="POST" action="{{ url_for('api_v1.membership.create_membership') }}">
+                        <input type="hidden" name="member_id" value="{{ member.id }}">
+
+                        <div class="form-group">
+                            <label class="boxy-label">Select Plan</label>
+                            <select name="plan_id" class="boxy-select" required>
+                                {% for plan in plans %}
+                                    <option value="{{ plan.id }}">
+                                        {{ plan.name }} – ₹{{ plan.price }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="boxy-label">Payment Method</label>
+                            <select name="payment_method" class="boxy-select" required>
+                                <option value="cash">Cash</option>
+                                <option value="upi">UPI</option>
+                                <option value="card">Card</option>
+                            </select>
+                        </div>
+
+                        <button class="btn-blocky btn-success" style="margin-top: 1rem;">
+                            Assign Plan
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Column 3: Payment History -->
+        <div class="column">
+            <div class="boxy-card">
+                <div class="card-header-boxy header-grey">
+                    <span>Payment History</span>
+                    <span>$</span>
+                </div>
+                <div class="card-body-boxy">
+                    {% for p in payments %}
+                        <div class="sub-item" style="display: flex; justify-content: space-between; align-items: center; border-left: 5px solid black;">
+                            <div style="font-weight: bold; font-size: 1.1rem;">₹{{ p.amount }}</div>
+                            <div style="text-align: right;">
+                                <div class="boxy-label" style="font-size: 0.7rem; color: #666;">METHOD</div>
+                                <div style="font-family: 'Space Grotesk', sans-serif; text-transform: uppercase;">{{ p.payment_method }}</div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div style="text-align: center; color: #666; font-style: italic; padding: 1rem;">
+                            No payment history available.
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
     </div>
-
-    <!-- Create Membership -->
-    <div class="card shadow-sm">
-      <div class="card-header bg-success text-white">
-        New Membership
-      </div>
-
-      <div class="card-body">
-        <form
-          method="POST"
-          action="{{ url_for('api_v1.membership.create_membership') }}"
-        >
-          <input type="hidden" name="member_id" value="{{ member.id }}">
-
-          <div class="mb-2">
-            <label>Plan</label>
-            <select name="plan_id" class="form-select" required>
-              {% for plan in plans %}
-                <option value="{{ plan.id }}">
-                  {{ plan.name }} – ₹{{ plan.price }}
-                </option>
-              {% endfor %}
-            </select>
-          </div>
-
-          <div class="mb-2">
-            <label>Payment Method</label>
-            <select name="payment_method" class="form-select" required>
-              <option value="cash">Cash</option>
-              <option value="upi">UPI</option>
-              <option value="card">Card</option>
-            </select>
-          </div>
-
-          <button class="btn btn-success w-100">
-            Create Membership
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Payments -->
-  <div class="col-md-4">
-    <div class="card shadow-sm">
-      <div class="card-header bg-secondary text-white">
-        Payments
-      </div>
-
-      <div class="card-body">
-        {% for p in payments %}
-          <div class="border rounded p-2 mb-2">
-            <div>₹{{ p.amount }}</div>
-            <div class="text-muted small">{{ p.payment_method }}</div>
-          </div>
-        {% else %}
-          <p class="text-muted">No payments</p>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-
 </div>
 
 {% endblock %}

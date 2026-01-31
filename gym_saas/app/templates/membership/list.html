@@ -3,45 +3,214 @@
 {% block title %}Memberships | Gym SaaS{% endblock %}
 
 {% block content %}
+<!-- Importing Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h4>Active Memberships</h4>
+<style>
+    /* --- Theme Configuration --- */
+    :root {
+        --bg-color: #f0f0f0;
+        --card-bg: #ffffff;
+        --primary: #3b82f6;
+        --text-main: #18181b;
+        --border-color: #000000;
+        --border-width: 3px;
+        --shadow-depth: 6px;
+        --success-bg: #4ade80;
+        --inactive-bg: #d1d5db;
+        --header-bg: #000000;
+        --header-text: #ffffff;
+    }
+
+    body {
+        font-family: 'Space Grotesk', sans-serif;
+        background-color: var(--bg-color);
+        background-image: radial-gradient(#000000 1px, transparent 1px);
+        background-size: 20px 20px;
+        color: var(--text-main);
+    }
+
+    /* --- Layout --- */
+    .boxy-container {
+        width: 100%;
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    /* --- Card & Header --- */
+    .boxy-card {
+        background: var(--card-bg);
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: var(--shadow-depth) var(--shadow-depth) 0px var(--border-color);
+        margin-bottom: 3rem;
+        position: relative;
+    }
+
+    .card-header-boxy {
+        background: var(--header-bg);
+        color: var(--header-text);
+        border-bottom: var(--border-width) solid var(--border-color);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .card-header-boxy h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Space Mono', monospace;
+    }
+
+    .card-body-boxy {
+        padding: 0; /* No padding for table to reach edges */
+    }
+
+    /* --- Table Styling --- */
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .boxy-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Space Mono', monospace;
+        font-size: 0.9rem;
+    }
+
+    .boxy-table th {
+        background: var(--primary);
+        color: white;
+        text-align: left;
+        padding: 1rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+        border-right: 2px solid var(--border-color);
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+    
+    .boxy-table th:last-child {
+        border-right: none;
+    }
+
+    .boxy-table td {
+        border-bottom: 2px solid var(--border-color);
+        border-right: 2px solid var(--border-color);
+        padding: 1rem;
+        background: white;
+        font-family: 'Space Grotesk', sans-serif;
+        color: var(--text-main);
+    }
+
+    .boxy-table td:last-child {
+        border-right: none;
+    }
+
+    .boxy-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .boxy-table tr:hover td {
+        background: #fff9db; /* Light yellow hover effect */
+    }
+
+    /* --- Badges --- */
+    .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border: 2px solid black;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        box-shadow: 2px 2px 0px black;
+    }
+
+    .status-active {
+        background-color: var(--success-bg);
+        color: black;
+    }
+
+    .status-inactive {
+        background-color: var(--inactive-bg);
+        color: black;
+        text-decoration: line-through;
+    }
+
+</style>
+
+<div class="boxy-container">
+
+    <div class="boxy-card">
+        <!-- Header Section -->
+        <div class="card-header-boxy">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <!-- Simple CSS Icon -->
+                <div style="width: 24px; height: 24px; background: white; border: 2px solid white; display: grid; place-items: center;">
+                    <div style="width: 12px; height: 12px; background: black;"></div>
+                </div>
+                <h2>Active Memberships</h2>
+            </div>
+            
+            <div style="font-family: 'Space Mono', monospace; font-size: 0.9rem;">
+                TOTAL: {{ memberships|length }}
+            </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="card-body-boxy">
+            <div class="table-responsive">
+                <table class="boxy-table">
+                    <thead>
+                        <tr>
+                            <th>Member Name</th>
+                            <th>Plan</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for membership in memberships %}
+                        <tr>
+                            <td style="font-weight: 700;">
+                                {{ membership.member.name }}
+                            </td>
+                            <td>
+                                {{ membership.plan.name }}
+                            </td>
+                            <td>
+                                {{ membership.start_date }}
+                            </td>
+                            <td>
+                                {{ membership.end_date }}
+                            </td>
+                            <td>
+                                {% if membership.is_active %}
+                                    <span class="status-badge status-active">Active</span>
+                                {% else %}
+                                    <span class="status-badge status-inactive">Inactive</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 3rem; color: #666; font-style: italic;">
+                                No memberships found in the system.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
-
-<table class="table table-bordered table-hover">
-  <thead class="table-dark">
-    <tr>
-      <th>Member</th>
-      <th>Plan</th>
-      <th>Start Date</th>
-      <th>End Date</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    {% for membership in memberships %}
-    <tr>
-      <td>{{ membership.member.name}}</td>
-      <td>{{ membership.plan.name }}</td>
-      <td>{{ membership.start_date }}</td>
-      <td>{{ membership.end_date }}</td>
-      <td>
-        {% if membership.is_active %}
-          <span class="badge bg-success">Active</span>
-        {% else %}
-          <span class="badge bg-secondary">Inactive</span>
-        {% endif %}
-      </td>
-    </tr>
-    {% else %}
-    <tr>
-      <td colspan="5" class="text-center text-muted">
-        No memberships found
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
 
 {% endblock %}

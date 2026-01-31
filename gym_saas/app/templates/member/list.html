@@ -3,74 +3,285 @@
 {% block title %}Members | Gym SaaS{% endblock %}
 
 {% block content %}
+<!-- Importing Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h4>Members</h4>
+<style>
+    /* --- Theme Configuration --- */
+    :root {
+        --bg-color: #f0f0f0;
+        --card-bg: #ffffff;
+        --primary: #3b82f6;
+        --text-main: #18181b;
+        --border-color: #000000;
+        --border-width: 3px;
+        --shadow-depth: 6px;
+        --success-bg: #4ade80; /* Bright Green */
+        --inactive-bg: #d1d5db; /* Grey */
+    }
 
-  <!-- Create Member -->
-  <form
-    method="POST"
-    action="{{ url_for('api_v1.member.create_member') }}"
-    class="d-flex gap-2"
-  >
-    <input
-      type="text"
-      name="name"
-      class="form-control"
-      placeholder="Member name"
-      required
-    >
-    <input
-      type="text"
-      name="phone_number"
-      class="form-control"
-      placeholder="Phone"
-      required
-    >
-    <button class="btn btn-primary">
-      Add
-    </button>
-  </form>
+    body {
+        font-family: 'Space Grotesk', sans-serif;
+        background-color: var(--bg-color);
+        background-image: radial-gradient(#000000 1px, transparent 1px);
+        background-size: 20px 20px;
+        color: var(--text-main);
+    }
+
+    /* --- Layout Components --- */
+    .boxy-container {
+        width: 100%;
+        max-width: 900px; /* Wider for table */
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .boxy-card {
+        background: var(--card-bg);
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: var(--shadow-depth) var(--shadow-depth) 0px var(--border-color);
+        margin-bottom: 3rem;
+        position: relative;
+    }
+
+    .card-header-boxy {
+        background: var(--primary);
+        border-bottom: var(--border-width) solid var(--border-color);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .card-header-boxy h2 {
+        color: white;
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Space Mono', monospace;
+    }
+
+    .card-body-boxy {
+        padding: 1.5rem;
+    }
+
+    /* --- Form Elements --- */
+    .add-member-form {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .boxy-input {
+        flex: 1;
+        min-width: 200px;
+        padding: 0.75rem 1rem;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1rem;
+        border: 2px solid var(--border-color);
+        background: #fff;
+        outline: none;
+        border-radius: 0;
+        transition: all 0.2s;
+    }
+
+    .boxy-input:focus {
+        background: #eef2ff;
+        box-shadow: 4px 4px 0px var(--border-color);
+        transform: translate(-2px, -2px);
+    }
+
+    .btn-add {
+        background: black;
+        color: white;
+        border: 2px solid black;
+        padding: 0 2rem;
+        font-family: 'Space Mono', monospace;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 4px 4px 0px var(--primary);
+        transition: all 0.1s;
+    }
+
+    .btn-add:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 6px 6px 0px var(--primary);
+        background: var(--primary);
+    }
+
+    .btn-add:active {
+        transform: translate(2px, 2px);
+        box-shadow: 0px 0px 0px black;
+    }
+
+    /* --- Table Styling --- */
+    .table-container {
+        overflow-x: auto; /* Responsive table */
+    }
+
+    .boxy-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Space Mono', monospace;
+    }
+
+    .boxy-table th {
+        background: black;
+        color: white;
+        text-align: left;
+        padding: 1rem;
+        border: 2px solid black;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+
+    .boxy-table td {
+        border: 2px solid black;
+        padding: 1rem;
+        background: white;
+        font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Hover effect on rows */
+    .boxy-table tr:hover td {
+        background: #fff9db; /* Light yellow hover */
+    }
+
+    /* --- Badges & Buttons --- */
+    .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border: 2px solid black;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        box-shadow: 2px 2px 0px black;
+    }
+
+    .status-active {
+        background-color: var(--success-bg);
+        color: black;
+    }
+
+    .status-inactive {
+        background-color: var(--inactive-bg);
+        color: black;
+    }
+
+    .btn-view {
+        display: inline-block;
+        text-decoration: none;
+        background: white;
+        color: black;
+        border: 2px solid black;
+        padding: 0.25rem 1rem;
+        font-size: 0.9rem;
+        font-weight: bold;
+        box-shadow: 2px 2px 0px var(--primary);
+        transition: transform 0.1s;
+    }
+
+    .btn-view:hover {
+        transform: translate(-1px, -1px);
+        box-shadow: 3px 3px 0px var(--primary);
+        background: #eff6ff;
+    }
+</style>
+
+<div class="boxy-container">
+
+    <!-- Section 1: Add Member Block -->
+    <div class="boxy-card">
+        <div class="card-header-boxy">
+            <h2>Add New Member</h2>
+            <div style="font-size: 1.5rem;">+</div>
+        </div>
+        <div class="card-body-boxy">
+            <form method="POST" action="{{ url_for('api_v1.member.create_member') }}" class="add-member-form">
+                <input
+                    type="text"
+                    name="name"
+                    class="boxy-input"
+                    placeholder="FULL NAME"
+                    required
+                >
+                <input
+                    type="text"
+                    name="phone_number"
+                    class="boxy-input"
+                    placeholder="PHONE NUMBER"
+                    required
+                >
+                <button class="btn-add">
+                    Add Member
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Section 2: Members List Block -->
+    <div class="boxy-card">
+        <div class="card-header-boxy" style="background: black;">
+            <!-- Header for the list is black for contrast -->
+            <h2 style="color: white;">Directory</h2>
+            <!-- Pure CSS Icon: Grid -->
+            <div style="display:flex; gap:2px;">
+                <div style="width:8px; height:8px; background:white;"></div>
+                <div style="width:8px; height:8px; background:white;"></div>
+                <div style="width:8px; height:8px; background:white;"></div>
+            </div>
+        </div>
+        
+        <!-- No padding on body so table borders hit the edge -->
+        <div class="card-body-boxy" style="padding: 0;">
+            <div class="table-container">
+                <table class="boxy-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th width="120">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in members %}
+                        <tr>
+                            <td style="font-weight: bold;">{{ member.name }}</td>
+                            <td>{{ member.phone_number }}</td>
+                            <td>
+                                {% if member.is_active %}
+                                    <span class="status-badge status-active">Active</span>
+                                {% else %}
+                                    <span class="status-badge status-inactive">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a
+                                    href="{{ url_for('api_v1.member.member_details', member_id=member.id) }}"
+                                    class="btn-view"
+                                >
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" style="text-align:center; padding: 3rem; color: #666;">
+                                -- No members found in directory --
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
-
-<table class="table table-bordered table-hover">
-  <thead class="table-dark">
-    <tr>
-      <th>Name</th>
-      <th>Phone</th>
-      <th>Status</th>
-      <th width="120">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for member in members %}
-    <tr>
-      <td>{{ member.name }}</td>
-      <td>{{ member.phone_number }}</td>
-      <td>
-        {% if member.is_active %}
-          <span class="badge bg-success">Active</span>
-        {% else %}
-          <span class="badge bg-secondary">Inactive</span>
-        {% endif %}
-      </td>
-      <td>
-        <a
-          href="{{ url_for('api_v1.member.member_details', member_id=member.id) }}"
-          class="btn btn-sm btn-outline-primary"
-        >
-          View
-        </a>
-      </td>
-    </tr>
-    {% else %}
-    <tr>
-      <td colspan="4" class="text-center text-muted">
-        No members found
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
 {% endblock %}

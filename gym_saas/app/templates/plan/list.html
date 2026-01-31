@@ -3,92 +3,300 @@
 {% block title %}Plans | Gym SaaS{% endblock %}
 
 {% block content %}
+<!-- Importing Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h4>Plans</h4>
+<style>
+    /* --- Theme Configuration --- */
+    :root {
+        --bg-color: #f0f0f0;
+        --card-bg: #ffffff;
+        --primary: #3b82f6;
+        --text-main: #18181b;
+        --border-color: #000000;
+        --border-width: 3px;
+        --shadow-depth: 6px;
+        --success-bg: #4ade80;
+        --inactive-bg: #d1d5db;
+        --header-bg: #000000;
+        --header-text: #ffffff;
+    }
 
-  <!-- Create Plan -->
-  <form
-    method="POST"
-    action="{{ url_for('api_v1.plan.create_plan') }}"
-    class="d-flex gap-2"
-  >
-    <input
-      type="text"
-      name="name"
-      class="form-control"
-      placeholder="Plan name"
-      required
-    >
-    <input
-      type="number"
-      name="duration_months"
-      class="form-control"
-      placeholder="Months"
-      min="1"
-      required
-    >
-    <input
-      type="number"
-      step="0.01"
-      name="price"
-      class="form-control"
-      placeholder="Price"
-      required
-    >
-    <input
-      type="text"
-      name="description"
-      class="form-control"
-      placeholder="Description"
-    >
-    <button class="btn btn-primary">
-      Add
-    </button>
-  </form>
+    body {
+        font-family: 'Space Grotesk', sans-serif;
+        background-color: var(--bg-color);
+        background-image: radial-gradient(#000000 1px, transparent 1px);
+        background-size: 20px 20px;
+        color: var(--text-main);
+    }
+
+    /* --- Layout --- */
+    .boxy-container {
+        width: 100%;
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .boxy-card {
+        background: var(--card-bg);
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: var(--shadow-depth) var(--shadow-depth) 0px var(--border-color);
+        margin-bottom: 3rem;
+        position: relative;
+    }
+
+    .card-header-boxy {
+        border-bottom: var(--border-width) solid var(--border-color);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .header-dark { background: var(--header-bg); color: var(--header-text); }
+    .header-light { background: white; color: black; }
+
+    .card-header-boxy h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Space Mono', monospace;
+    }
+
+    .card-body-boxy {
+        padding: 1.5rem;
+    }
+
+    /* --- Form Elements --- */
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        align-items: end; /* Aligns button with inputs */
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .boxy-input {
+        width: 100%;
+        padding: 0.75rem;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1rem;
+        border: 2px solid var(--border-color);
+        background: #fff;
+        outline: none;
+        border-radius: 0;
+        transition: all 0.2s;
+    }
+
+    .boxy-input:focus {
+        background: #eef2ff;
+        box-shadow: 4px 4px 0px var(--border-color);
+        transform: translate(-2px, -2px);
+    }
+
+    .btn-add {
+        background: black;
+        color: white;
+        border: 2px solid black;
+        padding: 0.75rem 1.5rem;
+        font-family: 'Space Mono', monospace;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 4px 4px 0px var(--primary);
+        transition: all 0.1s;
+        height: 100%; /* Match input height roughly */
+        min-height: 46px; 
+    }
+
+    .btn-add:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 6px 6px 0px var(--primary);
+        background: var(--primary);
+    }
+
+    .btn-add:active {
+        transform: translate(2px, 2px);
+        box-shadow: 0px 0px 0px black;
+    }
+
+    /* --- Table Styling --- */
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .boxy-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Space Mono', monospace;
+    }
+
+    .boxy-table th {
+        background: var(--primary);
+        color: white;
+        text-align: left;
+        padding: 1rem;
+        border: 2px solid var(--border-color);
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        border-top: none; /* Merges with header */
+        border-left: none;
+    }
+    
+    .boxy-table th:last-child { border-right: none; }
+
+    .boxy-table td {
+        border: 2px solid var(--border-color);
+        padding: 1rem;
+        background: white;
+        font-family: 'Space Grotesk', sans-serif;
+        border-left: none;
+    }
+    
+    .boxy-table td:last-child { border-right: none; }
+    .boxy-table tr:last-child td { border-bottom: none; }
+
+    .boxy-table tr:hover td {
+        background: #fff9db;
+    }
+
+    /* --- Badges & Actions --- */
+    .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border: 2px solid black;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        box-shadow: 2px 2px 0px black;
+    }
+
+    .status-active { background-color: var(--success-bg); color: black; }
+    .status-inactive { background-color: var(--inactive-bg); color: black; }
+
+    .btn-view {
+        display: inline-block;
+        text-decoration: none;
+        background: white;
+        color: black;
+        border: 2px solid black;
+        padding: 0.25rem 1rem;
+        font-size: 0.8rem;
+        font-weight: bold;
+        box-shadow: 2px 2px 0px var(--primary);
+        transition: transform 0.1s;
+    }
+
+    .btn-view:hover {
+        transform: translate(-1px, -1px);
+        box-shadow: 3px 3px 0px var(--primary);
+        background: #eff6ff;
+    }
+</style>
+
+<div class="boxy-container">
+
+    <!-- Card 1: Create Plan -->
+    <div class="boxy-card">
+        <div class="card-header-boxy header-light">
+            <h2>Create New Plan</h2>
+            <div style="font-size: 1.5rem;">+</div>
+        </div>
+        <div class="card-body-boxy">
+            <form method="POST" action="{{ url_for('api_v1.plan.create_plan') }}">
+                <div class="form-grid">
+                    
+                    <div class="form-group" style="flex: 2; min-width: 200px;">
+                        <input type="text" name="name" class="boxy-input" placeholder="Plan Name (e.g. Gold)" required>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="number" name="duration_months" class="boxy-input" placeholder="Months" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="number" step="0.01" name="price" class="boxy-input" placeholder="Price (₹)" required>
+                    </div>
+
+                    <div class="form-group" style="flex: 2; min-width: 200px;">
+                        <input type="text" name="description" class="boxy-input" placeholder="Short Description">
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn-add">Add Plan</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Card 2: Plans List -->
+    <div class="boxy-card">
+        <div class="card-header-boxy header-dark">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:20px; height:20px; background:white;"></div>
+                <h2>Available Plans</h2>
+            </div>
+            <div>{{ plans|length }} PLANS</div>
+        </div>
+
+        <div class="card-body-boxy" style="padding: 0;">
+            <div class="table-container">
+                <table class="boxy-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Duration</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th width="120">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for plan in plans %}
+                        <tr>
+                            <td style="font-weight: bold;">{{ plan.name }}</td>
+                            <td>{{ plan.duration_months }} months</td>
+                            <td style="font-family: 'Space Mono', monospace;">₹{{ plan.price }}</td>
+                            <td>
+                                {% if plan.is_active %}
+                                    <span class="status-badge status-active">Active</span>
+                                {% else %}
+                                    <span class="status-badge status-inactive">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a
+                                    href="{{ url_for('api_v1.plan.plan_details', plan_id=plan.id) }}"
+                                    class="btn-view"
+                                >
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 3rem; color: #666; font-style: italic;">
+                                No plans found. Create one above to get started.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
-
-<table class="table table-bordered table-hover">
-  <thead class="table-dark">
-    <tr>
-      <th>Name</th>
-      <th>Duration</th>
-      <th>Price</th>
-      <th>Status</th>
-      <th width="120">Action</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    {% for plan in plans %}
-    <tr>
-      <td>{{ plan.name }}</td>
-      <td>{{ plan.duration_months }} months</td>
-      <td>₹{{ plan.price }}</td>
-      <td>
-        {% if plan.is_active %}
-          <span class="badge bg-success">Active</span>
-        {% else %}
-          <span class="badge bg-secondary">Inactive</span>
-        {% endif %}
-      </td>
-      <td>
-        <a
-          href="{{ url_for('api_v1.plan.plan_details', plan_id=plan.id) }}"
-          class="btn btn-sm btn-outline-primary"
-        >
-          View
-        </a>
-      </td>
-    </tr>
-    {% else %}
-    <tr>
-      <td colspan="5" class="text-center text-muted">
-        No plans found
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
 
 {% endblock %}
