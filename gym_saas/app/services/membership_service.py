@@ -112,7 +112,7 @@ class MembershipService:
       return None, err
 
     memberships = Membership.query.filter(
-        Membership.gym_id == gym_id, Membership.is_active.is_(True)).all()
+        Membership.gym_id == gym_id).all()
 
     return memberships, None
 
@@ -137,8 +137,7 @@ class MembershipService:
         return None, err
 
     membership = Membership.query.filter(
-        Membership.id == membership_id, Membership.gym_id == gym_id,
-        Membership.is_active.is_(True)).first()
+        Membership.id == membership_id, Membership.gym_id == gym_id).first()
 
     if not membership:
       return None, "Membership not found"

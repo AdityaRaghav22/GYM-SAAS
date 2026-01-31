@@ -85,7 +85,7 @@ class PlanService:
     if not gym_id_valid:
       return None, gym_id_error
 
-    gym = Gym.query.filter_by(id=gym_id, is_active=True).first()
+    gym = Gym.query.filter_by(id=gym_id).first()
     if not gym:
       return None, "Gym does not exist"
 

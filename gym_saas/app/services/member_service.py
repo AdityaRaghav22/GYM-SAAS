@@ -58,11 +58,11 @@ class MemberService:
     if not gym_id_valid:
       return None, gym_id_error
 
-    gym = Gym.query.filter_by(id=gym_id, is_active=True).first()
+    gym = Gym.query.filter_by(id=gym_id).first()
     if not gym:
       return None, "Gym does not exist"
 
-    members = Member.query.filter_by(gym_id=gym_id, is_active=True).all()
+    members = Member.query.filter_by(gym_id=gym_id).all()
 
     return members, None
 
@@ -78,7 +78,7 @@ class MemberService:
 
     member = Member.query.filter(Member.id == member_id,
                                  Member.gym_id == gym_id,
-                                 Member.is_active.is_(True)).first()
+                                 ).first()
 
     if not member:
       return None, "Member does not exist"
