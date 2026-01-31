@@ -200,14 +200,14 @@
                 <span class="receipt-value">{{ membership.end_date }}</span>
             </div>
 
-            <a
+            <div class="card-footer text-end">
+                <a
                   href="{{ url_for('api_v1.payment.list_payment') }}"
-                  class="btn btn-sm btn-secondary">
+                  class="btn btn-sm btn-secondary"
+                >
                   Back to Payments
-            </a>
-            
-        </div>
-
+                </a>
+            </div>
         <!-- Total -->
         <div class="total-section">
             <span class="total-label">Total Paid</span>
