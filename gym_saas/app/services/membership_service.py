@@ -35,7 +35,7 @@ class MembershipService:
     if existing:
       existing.is_active = True
       db.session.commit()
-      return None, "Membership reactivated successfully"
+      return None, "Membership activated successfully"
 
     start_date = datetime.utcnow()
     end_date = start_date + relativedelta(months=plan.duration_months)
@@ -127,7 +127,6 @@ class MembershipService:
 
     memberships = Membership.query.filter(
         Membership.gym_id == gym_id, Membership.member_id == member_id,
-        Membership.member_id.status == "active",
         Membership.is_active.is_(True)).all()
 
     return memberships, None
