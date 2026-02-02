@@ -3,16 +3,7 @@ from .extensions import db, migrate, jwt
 from gym_saas.config import DevelopmentConfig
 from flask import redirect, url_for
 from datetime import timedelta
-from flask_jwt_extended import (
-    verify_jwt_in_request,
-    get_jwt_identity,
-    create_access_token,
-    set_access_cookies,
-)
 
-from flask import request
-from flask_jwt_extended.exceptions import JWTExtendedException
-from flask import make_response
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -51,38 +42,14 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
-    @app.before_request
-    def auto_refresh_jwt():
-        # ⛔ skip public & auth routes
-        if request.endpoint in (
-            "api_v1.gym_auth.login_page",
-            "api_v1.gym_auth.register_page",
-            "api_v1.gym_auth.refresh",
-            "static",
-        ):
-            return
-
-        try:
-            # 🔴 FORCE verification
-            verify_jwt_in_request()
-        except JWTExtendedException:
-            try:
-                # try refresh token
-                verify_jwt_in_request(refresh=True)
-                identity = get_jwt_identity()
-                access_token = create_access_token(identity=identity)
-    
-                response = make_response(redirect(request.url))
-                set_access_cookies(response, access_token)
-                return response
-            except Exception:
-                # refresh also failed → login
-                return redirect(url_for("api_v1.gym_auth.login_page"))
-            
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
         return redirect(url_for("api_v1.gym_auth.login_page"))
-        
+
+    @jwt.expired_token_loader
+    def expired_callback(jwt_header, jwt_payload):
+        return redirect(url_for("api_v1.gym_auth.refresh"))
+
     @jwt.invalid_token_loader
     def invalid_token_callback(reason):
         return redirect(url_for("api_v1.gym_auth.login_page"))
