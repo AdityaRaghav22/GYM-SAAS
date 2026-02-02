@@ -1,6 +1,5 @@
 from gym_saas.app.extensions import db
 from gym_saas.app.models import Membership, Member, Plan
-from gym_saas.app.routes.membership import deactivate_membership
 from gym_saas.app.utils.validation import validate_id
 from gym_saas.app.utils.generate_id import generate_id
 from dateutil.relativedelta import relativedelta
@@ -66,51 +65,64 @@ class MembershipService:
         return None, err
 
     membership = Membership.query.filter(
-        Membership.id == membership_id, Membership.gym_id == gym_id,
-        Membership.is_active.is_(True)).first()
+      Membership.id == membership_id,
+      Membership.gym_id == gym_id,
+      Membership.is_active.is_(True)
+    ).first()
+
     if not membership:
       return None, "Active membership not found"
 
-    plan = Plan.query.filter(Plan.id == membership.plan_id,
-                             Plan.gym_id == gym_id,
-                             Plan.is_active.is_(True)).first()
+    plan = Plan.query.filter(
+      Plan.id == membership.plan_id,
+      Plan.gym_id == gym_id,
+      Plan.is_active.is_(True)
+    ).first()
+
     if not plan:
       return None, "Plan not found"
 
     now = datetime.utcnow()
-    grace_deadline = membership.end_date
-    deactivation_deadline = membership.end_date + timedelta(days=3)
-
-    if membership.status == "active" and now < membership.end_date:
-      return None, "Membership is still active"
-
-    if now == grace_deadline:
-      membership.is_active = False
+    grace_deadline = membership.end_date + timedelta(days=3)
+    
+    # auto-expire when end_date is crossed
+    if membership.status == "active" and now >= membership.end_date:
       membership.status = "expired"
       db.session.commit()
-      return None, "Renewal period expired"
+      return None, "Membership expired"
 
-    if now > deactivation_deadline:
-      deactivate_membership(gym_id, membership_id)
+    # Still active → cannot renew
+    if now < membership.end_date:
+      return None, "Membership is still active"
 
-    new_start = max(now, membership.end_date)
+    # Grace period expired → cancel membership
+    if now > grace_deadline:
+      return MembershipService.deactivate_membership(gym_id, membership_id)
+
+    # Grace period → allow renewal
+    new_start = now
     new_end = new_start + relativedelta(months=plan.duration_months)
 
-    renewed = Membership(id=generate_id(),
-                         gym_id=gym_id,
-                         member_id=membership.member_id,
-                         plan_id=plan.id,
-                         start_date=new_start,
-                         end_date=new_end,
-                         status="active",
-                         is_active=True)
+    renewed = Membership(
+      id=generate_id(),
+      gym_id=gym_id,
+      member_id=membership.member_id,
+      plan_id=plan.id,
+      start_date=new_start,
+      end_date=new_end,
+      status="active",
+      is_active=True
+    )
 
     try:
+      # expire old membership
       membership.is_active = False
       membership.status = "expired"
+
       db.session.add(renewed)
       db.session.commit()
       return renewed, None
+
     except Exception:
       db.session.rollback()
       return None, "Renewal failed"
