@@ -63,19 +63,22 @@ def create_app():
             return
 
         try:
-            verify_jwt_in_request(optional=True)
+            # 🔴 FORCE verification
+            verify_jwt_in_request()
         except JWTExtendedException:
             try:
+                # try refresh token
                 verify_jwt_in_request(refresh=True)
                 identity = get_jwt_identity()
                 access_token = create_access_token(identity=identity)
-
+    
                 response = make_response(redirect(request.url))
                 set_access_cookies(response, access_token)
                 return response
             except Exception:
-                pass
-
+                # refresh also failed → login
+                return redirect(url_for("api_v1.gym_auth.login_page"))
+            
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
         return redirect(url_for("api_v1.gym_auth.login_page"))
