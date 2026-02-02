@@ -1,5 +1,6 @@
 from gym_saas.app.extensions import db
 from gym_saas.app.models import Membership, Member, Plan
+from gym_saas.app.routes.membership import deactivate_membership
 from gym_saas.app.utils.validation import validate_id
 from gym_saas.app.utils.generate_id import generate_id
 from dateutil.relativedelta import relativedelta
@@ -77,13 +78,20 @@ class MembershipService:
       return None, "Plan not found"
 
     now = datetime.utcnow()
-    grace_deadline = membership.end_date + timedelta(days=3)
+    grace_deadline = membership.end_date
+    deactivation_deadline = membership.end_date + timedelta(days=3)
 
-    if now > grace_deadline:
+    if membership.status == "active" and now < membership.end_date:
+      return None, "Membership is still active"
+
+    if now == grace_deadline:
       membership.is_active = False
       membership.status = "expired"
       db.session.commit()
       return None, "Renewal period expired"
+
+    if now > deactivation_deadline:
+      deactivate_membership(gym_id, membership_id)
 
     new_start = max(now, membership.end_date)
     new_end = new_start + relativedelta(months=plan.duration_months)
@@ -163,8 +171,10 @@ class MembershipService:
     if membership.status == "cancelled":
       return None, "Membership already cancelled"
 
-    if datetime.utcnow() >= membership.end_date - timedelta(days=3):
-      return None, "Membership cannot be cancelled within 3 days of expiry"
+    grace_deadline = membership.end_date + timedelta(days=3)
+
+    if datetime.utcnow() <= grace_deadline:
+        return None, "Membership is in grace period. Cannot cancel yet."
 
     membership.is_active = False
     membership.status = "cancelled"
