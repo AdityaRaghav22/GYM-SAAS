@@ -53,6 +53,15 @@ def create_app():
 
     @app.before_request
     def auto_refresh_jwt():
+        # ⛔ skip public & auth routes
+        if request.endpoint in (
+            "api_v1.gym_auth.login_page",
+            "api_v1.gym_auth.register_page",
+            "api_v1.gym_auth.refresh",
+            "static",
+        ):
+            return
+
         try:
             verify_jwt_in_request(optional=True)
         except JWTExtendedException:
@@ -64,11 +73,8 @@ def create_app():
                 response = make_response(redirect(request.url))
                 set_access_cookies(response, access_token)
                 return response
-
             except Exception:
                 pass
-
-
 
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
