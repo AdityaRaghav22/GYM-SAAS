@@ -5,7 +5,6 @@ from flask_jwt_extended import (
     set_access_cookies,
     set_refresh_cookies,
     unset_jwt_cookies,
-    verify_jwt_in_request
 )
 from gym_saas.app.services.gym_auth_service import GymAuthService
 from gym_saas.app.utils.route_validation import validate_register, validate_login
@@ -20,7 +19,6 @@ gym_auth_bp = Blueprint("gym_auth", __name__)
 @gym_auth_bp.route("/register", methods=["GET"])
 def register_page():
     try:
-        verify_jwt_in_request()
         return redirect(url_for("api_v1.dashboard.home"))
     except:
         return render_template("gym/register.html")
@@ -28,7 +26,6 @@ def register_page():
 @gym_auth_bp.route("/login", methods=["GET"])
 def login_page():
     try:
-        verify_jwt_in_request()
         return redirect(url_for("api_v1.dashboard.home"))
     except:
         return render_template("gym/login.html")
