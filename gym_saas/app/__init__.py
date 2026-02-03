@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from .extensions import db, migrate, jwt
 from gym_saas.config import DevelopmentConfig
 from flask import redirect, url_for
@@ -48,8 +48,9 @@ def create_app():
 
     @jwt.expired_token_loader
     def expired_callback(jwt_header, jwt_payload):
-        return redirect(url_for("api_v1.gym_auth.refresh"))
-
+        return redirect(
+        url_for("api_v1.gym_auth.refresh", next=request.path))
+        
     @jwt.invalid_token_loader
     def invalid_token_callback(reason):
         return redirect(url_for("api_v1.gym_auth.login_page"))

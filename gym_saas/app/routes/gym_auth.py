@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity,
+    create_access_token,
     set_access_cookies,
     set_refresh_cookies,
     unset_jwt_cookies,
@@ -154,21 +155,18 @@ def delete():
     flash(result["message"], "success")
     return response
 
-@gym_auth_bp.route("/refresh", methods=["GET", "POST"])
+@gym_auth_bp.route("/refresh", methods=["GET"])
 @jwt_required(refresh=True)
 def refresh():
     identity = get_jwt_identity()
 
-    tokens, error = GymAuthService.refresh_access_token(identity)
+    # Create new access token directly
+    access_token = create_access_token(identity=identity)
 
-    if error or not tokens:
-        response = redirect(url_for("api_v1.gym_auth.login_page"))
-        unset_jwt_cookies(response)
-        flash("Session expired. Please log in again.", "error")
-        return response
+    # 🔑 Redirect BACK to where user came from
+    next_url = request.args.get("next") or url_for("api_v1.dashboard.home")
 
-    response = redirect(url_for("api_v1.dashboard.home"))
-    response = cast(Response, response)
-    set_access_cookies(response, tokens["access_token"])
-
+    response = redirect(next_url)
+    set_access_cookies(response, access_token)
     return response
+
