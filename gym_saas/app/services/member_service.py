@@ -5,7 +5,7 @@ from gym_saas.app.utils.validation import validate_id, validate_name, validate_p
 from gym_saas.app.utils.generate_id import generate_id
 from sqlalchemy.exc import IntegrityError
 from typing import Optional
-
+from gym_saas.app.models import Membership
 
 class MemberService:
 
@@ -157,9 +157,20 @@ class MemberService:
     if not member:
       return None, "Member does not exist"
 
-    member.is_active = False
 
     try:
+      member.is_active = False
+      Membership.query.filter(
+        Membership.member_id == member_id,
+        Membership.gym_id == gym_id,
+        Membership.is_active.is_(True)
+      ).update(
+        {
+            Membership.is_active: False,
+            Membership.status: "cancelled"
+        },
+        synchronize_session=False
+      )
       db.session.commit()
       return member, None
 
