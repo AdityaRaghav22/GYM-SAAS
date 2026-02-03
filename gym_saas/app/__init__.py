@@ -47,21 +47,20 @@ def create_app():
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
         if is_browser_request():
+            print("Unauthorized callback triggered")
             return redirect(url_for("api_v1.gym_auth.login_page"))
         return {"msg": "Unauthorized"}, 401
 
 
     @jwt.expired_token_loader
     def expired_callback(jwt_header, jwt_payload):
-        # 🚫 Never refresh while already refreshing
-        if request.path == "/auth/refresh":
-            return redirect(url_for("api_v1.gym_auth.login_page"))
-
+        # 🚫 Never refresh while already refreshin 
         return redirect(url_for("api_v1.gym_auth.refresh"))
         
     @jwt.invalid_token_loader
     def invalid_token_callback(reason):
         if is_browser_request():
+            print("Invalid token callback triggered")
             return redirect(url_for("api_v1.gym_auth.login_page"))
         return {"msg": "Invalid token"}, 401
 
