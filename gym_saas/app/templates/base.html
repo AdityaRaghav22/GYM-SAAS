@@ -207,7 +207,24 @@
 
     <!-- 🔐 JWT Auto-Refresh -->
     <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+
+    <script>
+        (async () => {
+            try {
+                const res = await fetch("/gym/refresh", {
+                    method: "POST",
+                    credentials: "include"
+                });
+
+                if (!res.ok) {
+                    // Refresh token expired → login
+                    window.location.href = "/gym/login";
+                }
+            } catch (e) {
+                window.location.href = "/gym/login";
+            }
+        })();
+    </script>
 </body>
 
 </html>
-
