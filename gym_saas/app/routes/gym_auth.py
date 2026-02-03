@@ -19,6 +19,7 @@ gym_auth_bp = Blueprint("gym_auth", __name__)
 # =========================
 
 @gym_auth_bp.route("/register", methods=["GET"])
+@jwt_required(optional=True)
 def register_page():
     try:
         verify_jwt_in_request()
@@ -27,6 +28,7 @@ def register_page():
         return render_template("gym/register.html")
 
 @gym_auth_bp.route("/login", methods=["GET"])
+@jwt_required(optional=True)
 def login_page():
         if get_jwt_identity():
             return redirect(url_for("api_v1.dashboard.home"))
