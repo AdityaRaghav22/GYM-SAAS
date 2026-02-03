@@ -3,7 +3,8 @@ from gym_saas.app.models import Gym
 from flask_jwt_extended import create_access_token, create_refresh_token
 from datetime import timedelta
 from gym_saas.app.utils.validation import (validate_email, validate_password,
-                                  validate_phone_number, validate_name)
+                                           validate_phone_number,
+                                           validate_name)
 from gym_saas.app.utils.generate_id import generate_id
 from sqlalchemy.exc import IntegrityError
 
@@ -82,7 +83,8 @@ class GymAuthService:
                                                "is_active": gym.is_active
                                            },
                                            expires_delta=timedelta(minutes=15))
-        refresh_token = create_refresh_token(identity=gym.id, expires_delta= timedelta(days=30))
+        refresh_token = create_refresh_token(identity=gym.id,
+                                             expires_delta=timedelta(days=30))
 
         return {
             "access_token": access_token,
@@ -107,7 +109,13 @@ class GymAuthService:
             },
             expires_delta=timedelta(minutes=15))
 
-        return {"access_token": new_access_token}, None
+        new_refresh_token = create_refresh_token(
+            identity=gym.id, expires_delta=timedelta(days=30))
+
+        return {
+            "access_token": new_access_token,
+            "refresh_token": new_refresh_token
+        }, None
 
     @staticmethod
     def delete_gym(gym_id):

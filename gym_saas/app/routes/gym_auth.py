@@ -159,14 +159,17 @@ def delete():
 @jwt_required(refresh=True)
 def refresh():
     identity = get_jwt_identity()
-
+    
     tokens, error = GymAuthService.refresh_access_token(identity)
-
+    
     if error or not tokens:
         response = jsonify({"msg": "Session expired"})
         unset_jwt_cookies(response)
         return response, 401
-
-    response = jsonify({"msg": "access token refreshed"})
+    
+    response = jsonify({"msg": "tokens refreshed"})
+    
     set_access_cookies(response, tokens["access_token"])
+    set_refresh_cookies(response, tokens["refresh_token"])
+    
     return response, 200

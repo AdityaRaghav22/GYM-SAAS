@@ -1,7 +1,6 @@
 from flask import Flask
 from .extensions import db, migrate, jwt
 from gym_saas.config import DevelopmentConfig
-from flask import redirect, url_for
 from datetime import timedelta
 
 def create_app():
