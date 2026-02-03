@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, Response
+from flask import Blueprint, render_template, request, redirect, url_for, flash, Response, jsonify, make_response
 from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity,
@@ -80,8 +80,9 @@ def login():
         flash(error or "Authentication failed.", "error")
         return render_template("gym/login.html")
 
-    response = redirect(url_for("api_v1.dashboard.home"))
-    response = cast(Response, response)
+    response = make_response(
+        redirect(url_for("api_v1.dashboard.home"))
+    )
 
     set_access_cookies(response, tokens["access_token"])
     set_refresh_cookies(response, tokens["refresh_token"])
