@@ -29,13 +29,8 @@ def create_app():
     app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)
 
     # 🔥 Render-safe cookie flags
-    if not app.debug:
-        app.config["JWT_COOKIE_SECURE"] = True
-        app.config["JWT_COOKIE_SAMESITE"] = "None"
-    else:
-        app.config["JWT_COOKIE_SECURE"] = False
-        app.config["JWT_COOKIE_SAMESITE"] = "Lax"
-
+    app.config["JWT_COOKIE_SECURE"] = False
+    app.config["JWT_COOKIE_SAMESITE"] = "Lax"
 
     # init extensions (ONLY once)
     db.init_app(app)
