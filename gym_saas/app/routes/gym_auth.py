@@ -156,7 +156,8 @@ def delete():
     flash(result["message"], "success")
     return response
 
-@gym_auth_bp.route("/refresh", methods=["GET", "POST"]) @jwt_required(refresh=True) 
+@gym_auth_bp.route("/refresh", methods=["GET", "POST"])
+@jwt_required(refresh=True) 
 def refresh(): 
     identity = get_jwt_identity() 
     tokens, error = GymAuthService.refresh_access_token(identity) 
