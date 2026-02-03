@@ -158,6 +158,7 @@ def delete():
 @gym_auth_bp.route("/refresh", methods=["GET"])
 @jwt_required(refresh=True)
 def refresh():
+    print("Hello refresh here")
     identity = get_jwt_identity()
 
     # Create new access token directly
@@ -168,5 +169,6 @@ def refresh():
 
     response = redirect(next_url)
     set_access_cookies(response, access_token)
+    
     return response
 
