@@ -2,6 +2,11 @@ from flask import Flask
 from .extensions import db, migrate, jwt
 from gym_saas.config import DevelopmentConfig
 from datetime import timedelta
+from flask_jwt_extended import (verify_jwt_in_request, get_jwt_identity,
+                                create_access_token, set_access_cookies)
+from flask_jwt_extended.exceptions import JWTExtendedException
+from flask import make_response
+
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -28,13 +33,37 @@ def create_app():
     app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)
 
     # 🔥 Render-safe cookie flags
-    app.config["JWT_COOKIE_SECURE"] = False
-    app.config["JWT_COOKIE_SAMESITE"] = "Lax"
+    app.config["JWT_COOKIE_SECURE"] = True
+    app.config["JWT_COOKIE_SAMESITE"] = "None"
 
     # init extensions (ONLY once)
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+
+    # ===============================
+    # 🔁 AUTO REFRESH ACCESS TOKEN
+    # ===============================
+    @app.before_request
+    def refresh_expiring_jwt():
+        try:
+            print("🔁 auto refresh check")
+            # Try access token first
+            verify_jwt_in_request(optional=True)
+        except JWTExtendedException:
+            try:
+                # Fallback to refresh token
+                verify_jwt_in_request(refresh=True)
+                identity = get_jwt_identity()
+
+                new_access = create_access_token(identity=identity)
+
+                resp = make_response()
+                set_access_cookies(resp, new_access)
+                return resp
+            except JWTExtendedException:
+                # No valid refresh token → continue normally
+                pass
 
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
