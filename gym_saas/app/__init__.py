@@ -1,11 +1,8 @@
-from flask import Flask, request
+from flask import Flask
 from .extensions import db, migrate, jwt
 from gym_saas.config import DevelopmentConfig
 from flask import redirect, url_for
 from datetime import timedelta
-
-def is_browser_request():
-    return request.accept_mimetypes.accept_html
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -21,7 +18,7 @@ def create_app():
 
     app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
     app.config["JWT_REFRESH_COOKIE_PATH"] = "/"
-    app.config["JWT_COOKIE_DOMAIN"] = ".onrender.com"
+
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
     # 🔥 persistence
@@ -39,6 +36,7 @@ def create_app():
         app.config["JWT_COOKIE_SECURE"] = False
         app.config["JWT_COOKIE_SAMESITE"] = "Lax"
 
+
     # init extensions (ONLY once)
     db.init_app(app)
     migrate.init_app(app, db)
@@ -46,23 +44,15 @@ def create_app():
 
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
-        if is_browser_request():
-            print("Unauthorized callback triggered")
-            return redirect(url_for("api_v1.gym_auth.login_page"))
-        return {"msg": "Unauthorized"}, 401
-
+        return redirect(url_for("api_v1.gym_auth.login_page"))
 
     @jwt.expired_token_loader
     def expired_callback(jwt_header, jwt_payload):
-        # 🚫 Never refresh while already refreshing
-        return redirect(url_for("api_v1.gym_auth.refresh"))
-        
+        return redirect(url_for("api_v1.gym_auth.login_page"))
+
     @jwt.invalid_token_loader
     def invalid_token_callback(reason):
-        if is_browser_request():
-            print("Invalid token callback triggered")
-            return redirect(url_for("api_v1.gym_auth.login_page"))
-        return {"msg": "Invalid token"}, 401
+        return redirect(url_for("api_v1.gym_auth.login_page"))
 
     # import AFTER init
     from . import models
