@@ -12,14 +12,14 @@ def create_app():
     app.config.from_pyfile("config.py", silent=True)
 
     # 🔐 JWT COOKIE CONFIG
-    app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+    app.config["JWT_TOKEN_LOCATION"] = ["headers", "cookies"]
 
     app.config["JWT_ACCESS_COOKIE_NAME"] = "access_token"
     app.config["JWT_REFRESH_COOKIE_NAME"] = "refresh_token"
 
     app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
     app.config["JWT_REFRESH_COOKIE_PATH"] = "/"
-
+    app.config["JWT_COOKIE_DOMAIN"] = ".onrender.com"
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
     # 🔥 persistence
@@ -44,15 +44,20 @@ def create_app():
 
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
+        if request.accept_mimetypes.accept_json:
+            return {"msg": "Invalid token"}, 401
         return redirect(url_for("api_v1.gym_auth.login_page"))
 
     @jwt.expired_token_loader
     def expired_callback(jwt_header, jwt_payload):
-        return redirect(
-        url_for("api_v1.gym_auth.refresh", next=request.path))
+        if request.accept_mimetypes.accept_json:
+            return {"msg": "Unauthorized"}, 401
+        return redirect(url_for("api_v1.gym_auth.login_page"))
         
     @jwt.invalid_token_loader
     def invalid_token_callback(reason):
+        if request.accept_mimetypes.accept_json:
+            return {"msg": "Invalid token"}, 401
         return redirect(url_for("api_v1.gym_auth.login_page"))
 
     # import AFTER init
