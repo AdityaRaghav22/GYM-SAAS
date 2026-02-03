@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Dashboard{% endblock %} | Anchor</title>
-    
+
     <!-- Scripts & Styles -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #f8fafc; /* slate-50 */
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            /* slate-50 */
         }
+
         .glass-header {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
+
         /* Active link styling */
         .nav-link-active {
             background-color: #eef2ff;
@@ -27,159 +32,183 @@
         }
     </style>
 </head>
+
 <body class="text-slate-900 overflow-x-hidden">
 
-<!-- ================= SIDEBAR (Desktop) ================= -->
-<aside class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-slate-200 z-50 hidden lg:flex flex-col">
-    <div class="p-6">
-        <a href="{{ url_for('api_v1.dashboard.home') }}" class="flex items-center gap-2.5 group">
-            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white transition-transform group-hover:rotate-6">
-                <i class="fas fa-dumbbell text-sm"></i>
-            </div>
-            <span class="font-extrabold text-xl tracking-tight text-slate-900">Anchor</span>
-        </a>
-    </div>
+    <!-- ================= SIDEBAR (Desktop) ================= -->
+    <aside class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-slate-200 z-50 hidden lg:flex flex-col">
+        <div class="p-6">
+            <a href="{{ url_for('api_v1.dashboard.home') }}" class="flex items-center gap-2.5 group">
+                <div
+                    class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white transition-transform group-hover:rotate-6">
+                    <i class="fas fa-dumbbell text-sm"></i>
+                </div>
+                <span class="font-extrabold text-xl tracking-tight text-slate-900">Anchor</span>
+            </a>
+        </div>
 
-    <nav class="flex-grow px-4 space-y-2 mt-4">
-        <a href="{{ url_for('api_v1.dashboard.home') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
-            <i class="fas fa-th-large w-5"></i> Dashboard
-        </a>
-        <a href="{{ url_for('api_v1.member.list_member') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
-            <i class="fas fa-users w-5"></i> Members
-        </a>
-        <a href="{{ url_for('api_v1.membership.list_membership') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
-            <i class="fas fa-users w-5"></i> Memberships
-        </a>
-        <a href="{{ url_for('api_v1.plan.list_plan') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
-            <i class="fas fa-layer-group w-5"></i> Plans
-        </a>
-        <a href="{{ url_for('api_v1.payment.list_payment') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
-            <i class="fas fa-credit-card w-5"></i> Payments
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
-            <i class="fas fa-chart-pie w-5"></i> Analytics
-        </a>
-    </nav>
+        <nav class="flex-grow px-4 space-y-2 mt-4">
+            <a href="{{ url_for('api_v1.dashboard.home') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-th-large w-5"></i> Dashboard
+            </a>
+            <a href="{{ url_for('api_v1.member.list_member') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-users w-5"></i> Members
+            </a>
+            <a href="{{ url_for('api_v1.membership.list_membership') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-users w-5"></i> Memberships
+            </a>
+            <a href="{{ url_for('api_v1.plan.list_plan') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-layer-group w-5"></i> Plans
+            </a>
+            <a href="{{ url_for('api_v1.payment.list_payment') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-credit-card w-5"></i> Payments
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-chart-pie w-5"></i> Analytics
+            </a>
+        </nav>
 
-    <div class="p-4 border-t border-slate-100">
-        <a href="{{ url_for('api_v1.gym_auth.profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all">
-            <i class="fas fa-cog"></i> Settings
-        </a>
-    </div>
-</aside>
+        <div class="p-4 border-t border-slate-100">
+            <a href="{{ url_for('api_v1.gym_auth.profile') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </div>
+    </aside>
 
-<!-- ================= TOP NAVIGATION (Mobile & Desktop Header) ================= -->
-<nav class="fixed top-0 w-full lg:pl-64 glass-header border-b border-slate-200 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16 items-center">
-            
-            <!-- Mobile Menu Button -->
-            <button class="lg:hidden text-slate-500 hover:text-indigo-600 p-2" onclick="toggleMobileMenu()">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
+    <!-- ================= TOP NAVIGATION (Mobile & Desktop Header) ================= -->
+    <nav class="fixed top-0 w-full lg:pl-64 glass-header border-b border-slate-200 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
 
-            <!-- Page Title (Contextual) -->
-            <h1 class="hidden md:block font-bold text-slate-500 text-sm uppercase tracking-widest">
-                {% block header_title %}Overview{% endblock %}
-            </h1>
-
-            <!-- Right Actions -->
-            <div class="flex items-center gap-3">
-                <!-- Notifications (Visual only) -->
-                <button class="w-10 h-10 rounded-xl hover:bg-slate-100 flex items-center justify-center text-slate-500 relative">
-                    <i class="far fa-bell"></i>
-                    <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-indigo-600 rounded-full border-2 border-white"></span>
+                <!-- Mobile Menu Button -->
+                <button class="lg:hidden text-slate-500 hover:text-indigo-600 p-2" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-xl"></i>
                 </button>
 
-                <div class="h-6 w-[1px] bg-slate-200 mx-1"></div>
+                <!-- Page Title (Contextual) -->
+                <h1 class="hidden md:block font-bold text-slate-500 text-sm uppercase tracking-widest">
+                    {% block header_title %}Overview{% endblock %}
+                </h1>
 
+                <!-- Right Actions -->
                 <div class="flex items-center gap-3">
-                    <div class="hidden md:block text-right">
-                        <p class="text-xs font-black text-slate-900 uppercase">Admin</p>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Pro Plan</p>
-                    </div>
-                    <form action="{{ url_for('api_v1.gym_auth.logout') }}" method="POST" class="inline">
-                        <button type="submit" 
+                    <!-- Notifications (Visual only) -->
+                    <button
+                        class="w-10 h-10 rounded-xl hover:bg-slate-100 flex items-center justify-center text-slate-500 relative">
+                        <i class="far fa-bell"></i>
+                        <span
+                            class="absolute top-2.5 right-2.5 w-2 h-2 bg-indigo-600 rounded-full border-2 border-white"></span>
+                    </button>
+
+                    <div class="h-6 w-[1px] bg-slate-200 mx-1"></div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="hidden md:block text-right">
+                            <p class="text-xs font-black text-slate-900 uppercase">Admin</p>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Pro Plan</p>
+                        </div>
+                        <form action="{{ url_for('api_v1.gym_auth.logout') }}" method="POST" class="inline">
+                            <button type="submit"
                                 class="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-900 text-white hover:bg-red-600 transition-all active:scale-95 shadow-sm">
-                            <i class="fas fa-sign-out-alt"></i>
-                        </button>
-                    </form>
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<!-- ================= MOBILE MENU DRAWER ================= -->
-<div id="mobile-menu" class="fixed inset-0 bg-slate-900/50 z-[60] hidden backdrop-blur-sm lg:hidden">
-    <div class="w-64 h-full bg-white p-6 shadow-2xl animate-slide-in">
-        <div class="flex justify-between items-center mb-8">
-            <span class="font-extrabold text-xl tracking-tight text-slate-900">Anchor</span>
-            <button onclick="toggleMobileMenu()"><i class="fas fa-times text-slate-400"></i></button>
+    <!-- ================= MOBILE MENU DRAWER ================= -->
+    <div id="mobile-menu" class="fixed inset-0 bg-slate-900/50 z-[60] hidden backdrop-blur-sm lg:hidden">
+        <div class="w-64 h-full bg-white p-6 shadow-2xl animate-slide-in">
+            <div class="flex justify-between items-center mb-8">
+                <span class="font-extrabold text-xl tracking-tight text-slate-900">Anchor</span>
+                <button onclick="toggleMobileMenu()"><i class="fas fa-times text-slate-400"></i></button>
+            </div>
+            <nav class="space-y-4">
+                <a href="{{ url_for('api_v1.dashboard.home') }}"
+                    class="flex items-center gap-3 font-bold text-indigo-600"><i class="fas fa-th-large"></i>
+                    Dashboard</a>
+                <a href="#" class="flex items-center gap-3 font-bold text-slate-500"><i class="fas fa-users"></i>
+                    Members</a>
+                <a href="#" class="flex items-center gap-3 font-bold text-slate-500"><i class="fas fa-layer-group"></i>
+                    Plans</a>
+                <a href="#" class="flex items-center gap-3 font-bold text-slate-500"><i class="fas fa-credit-card"></i>
+                    Payments</a>
+                <hr class="border-slate-100">
+                <a href="{{ url_for('api_v1.gym_auth.profile') }}"
+                    class="flex items-center gap-3 font-bold text-slate-500"><i class="fas fa-user"></i> Profile</a>
+            </nav>
         </div>
-        <nav class="space-y-4">
-            <a href="{{ url_for('api_v1.dashboard.home') }}" class="flex items-center gap-3 font-bold text-indigo-600"><i class="fas fa-th-large"></i> Dashboard</a>
-            <a href="#" class="flex items-center gap-3 font-bold text-slate-500"><i class="fas fa-users"></i> Members</a>
-            <a href="#" class="flex items-center gap-3 font-bold text-slate-500"><i class="fas fa-layer-group"></i> Plans</a>
-            <a href="#" class="flex items-center gap-3 font-bold text-slate-500"><i class="fas fa-credit-card"></i> Payments</a>
-            <hr class="border-slate-100">
-            <a href="{{ url_for('api_v1.gym_auth.profile') }}" class="flex items-center gap-3 font-bold text-slate-500"><i class="fas fa-user"></i> Profile</a>
-        </nav>
     </div>
-</div>
 
-<!-- ================= MAIN CONTENT AREA ================= -->
-<main class="pt-20 lg:pl-64 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        <!-- Flash Messages -->
-        <div class="space-y-4 mb-8">
-            {% with messages = get_flashed_messages(with_categories=true) %}
+    <!-- ================= MAIN CONTENT AREA ================= -->
+    <main class="pt-20 lg:pl-64 min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+            <!-- Flash Messages -->
+            <div class="space-y-4 mb-8">
+                {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
-                    {% for category, message in messages %}
-                        {% set is_error = category == 'error' or category == 'danger' %}
-                        <div class="flex items-center gap-3 p-4 rounded-2xl border animate-fade-in 
+                {% for category, message in messages %}
+                {% set is_error = category == 'error' or category == 'danger' %}
+                <div
+                    class="flex items-center gap-3 p-4 rounded-2xl border animate-fade-in 
                             {{ 'bg-red-50 border-red-100 text-red-700' if is_error else 'bg-emerald-50 border-emerald-100 text-emerald-700' }}">
-                            <i class="fas {{ 'fa-circle-exclamation' if is_error else 'fa-circle-check' }} text-lg"></i>
-                            <p class="text-sm font-bold flex-grow">{{ message }}</p>
-                            <button onclick="this.parentElement.remove()" class="opacity-30 hover:opacity-100 transition-opacity">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    {% endfor %}
+                    <i class="fas {{ 'fa-circle-exclamation' if is_error else 'fa-circle-check' }} text-lg"></i>
+                    <p class="text-sm font-bold flex-grow">{{ message }}</p>
+                    <button onclick="this.parentElement.remove()"
+                        class="opacity-30 hover:opacity-100 transition-opacity">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                {% endfor %}
                 {% endif %}
-            {% endwith %}
+                {% endwith %}
+            </div>
+
+            <!-- Block Content -->
+            <div class="animate-fade-in">
+                {% block content %}{% endblock %}
+            </div>
+
         </div>
+    </main>
 
-        <!-- Block Content -->
-        <div class="animate-fade-in">
-            {% block content %}{% endblock %}
-        </div>
-        
-    </div>
-</main>
+    <script>
+        // Mobile menu toggle logic
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
 
-<script>
-    // Mobile menu toggle logic
-    function toggleMobileMenu() {
-        const menu = document.getElementById('mobile-menu');
-        menu.classList.toggle('hidden');
-    }
-
-    // Animation utility
-    document.addEventListener('DOMContentLoaded', () => {
-        const elements = document.querySelectorAll('.animate-fade-in');
-        elements.forEach((el, i) => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(10px)';
-            el.style.transition = 'opacity 0.4s ease-out, transform 0.4s ease-out';
-            setTimeout(() => {
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
-            }, i * 80);
+        // Animation utility
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.animate-fade-in');
+            elements.forEach((el, i) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(10px)';
+                el.style.transition = 'opacity 0.4s ease-out, transform 0.4s ease-out';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, i * 80);
+            });
         });
-    });
-</script>
+    </script>
 
+    <!-- 🔐 JWT Auto-Refresh -->
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
 </body>
+
 </html>
+
+<!-- eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3MDEwNTU0NiwianRpIjoiZWEzM2E2MDctY2Y4MC00MTVhLWIwYmMtNzY0MmNiOTM3OTMxIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjJmMGI0ZDIyLTViZjEtNGI1MC1iZjUxLTc3MjcwMGJiMTU2MSIsIm5iZiI6MTc3MDEwNTU0NiwiZXhwIjoxNzcwMTA2NDQ2LCJneW1faWQiOiIyZjBiNGQyMi01YmYxLTRiNTAtYmY1MS03NzI3MDBiYjE1NjEiLCJpc19hY3RpdmUiOnRydWV9.ZOID8pmNAam3QKIoXhbG1ite5Vw3Pqc9KedRGL8tc2E -->

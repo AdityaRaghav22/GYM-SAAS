@@ -17,7 +17,7 @@ def create_app():
     app.config["JWT_REFRESH_COOKIE_NAME"] = "refresh_token"
 
     app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
-    app.config["JWT_REFRESH_COOKIE_PATH"] = "/"
+    app.config["JWT_REFRESH_COOKIE_PATH"] = "/gym/refresh"
 
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
@@ -44,15 +44,15 @@ def create_app():
 
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
-        return redirect(url_for("api_v1.gym_auth.login_page"))
+        return {"msg": "missing or invalid token"}, 401
 
     @jwt.expired_token_loader
     def expired_callback(jwt_header, jwt_payload):
-        return redirect(url_for("api_v1.gym_auth.login_page"))
+        return {"msg": "access token expired"}, 401
 
     @jwt.invalid_token_loader
     def invalid_token_callback(reason):
-        return redirect(url_for("api_v1.gym_auth.login_page"))
+        return {"msg": "invalid token"}, 401
 
     # import AFTER init
     from . import models

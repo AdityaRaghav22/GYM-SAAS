@@ -154,7 +154,7 @@ def delete():
     flash(result["message"], "success")
     return response
 
-@gym_auth_bp.route("/refresh", methods=["GET", "POST"])
+@gym_auth_bp.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 def refresh():
     identity = get_jwt_identity()
@@ -162,13 +162,10 @@ def refresh():
     tokens, error = GymAuthService.refresh_access_token(identity)
 
     if error or not tokens:
-        response = redirect(url_for("api_v1.gym_auth.login_page"))
+        response = jsonify({"msg": "Session expired"})
         unset_jwt_cookies(response)
-        flash("Session expired. Please log in again.", "error")
-        return response
+        return response, 401
 
-    response = redirect(url_for("api_v1.dashboard.home"))
-    response = cast(Response, response)
+    response = jsonify({"msg": "access token refreshed"})
     set_access_cookies(response, tokens["access_token"])
-
-    return response
+    return response, 200
