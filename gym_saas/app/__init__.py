@@ -4,6 +4,8 @@ from gym_saas.config import DevelopmentConfig
 from flask import redirect, url_for
 from datetime import timedelta
 
+def is_browser_request():
+    return request.accept_mimetypes.accept_html
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -44,9 +46,10 @@ def create_app():
 
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
-        if request.accept_mimetypes.accept_json:
-            return {"msg": "Invalid token"}, 401
-        return redirect(url_for("api_v1.gym_auth.login_page"))
+        if is_browser_request():
+            return redirect(url_for("api_v1.gym_auth.login_page"))
+        return {"msg": "Unauthorized"}, 401
+
 
     @jwt.expired_token_loader
     def expired_callback(jwt_header, jwt_payload):
@@ -54,15 +57,13 @@ def create_app():
         if request.path == "/auth/refresh":
             return redirect(url_for("api_v1.gym_auth.login_page"))
 
-        return redirect(
-            url_for("api_v1.gym_auth.refresh", next=request.path)
-        )
+        return redirect(url_for("api_v1.gym_auth.refresh"))
         
     @jwt.invalid_token_loader
     def invalid_token_callback(reason):
-        if request.accept_mimetypes.accept_json:
-            return {"msg": "Invalid token"}, 401
-        return redirect(url_for("api_v1.gym_auth.login_page"))
+        if is_browser_request():
+            return redirect(url_for("api_v1.gym_auth.login_page"))
+        return {"msg": "Invalid token"}, 401
 
     # import AFTER init
     from . import models

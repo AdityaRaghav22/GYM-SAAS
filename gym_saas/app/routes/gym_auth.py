@@ -28,10 +28,9 @@ def register_page():
 
 @gym_auth_bp.route("/login", methods=["GET"])
 def login_page():
-    try:
-        verify_jwt_in_request()
-        return redirect(url_for("api_v1.dashboard.home"))
-    except:
+        if get_jwt_identity():
+            return redirect(url_for("api_v1.dashboard.home"))
+
         return render_template("gym/login.html")
     
     
