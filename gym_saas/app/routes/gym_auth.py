@@ -156,20 +156,18 @@ def delete():
     flash(result["message"], "success")
     return response
 
-@gym_auth_bp.route("/refresh", methods=["GET"])
-@jwt_required(refresh=True)
-def refresh():
-    print("Hello refresh here")
-    identity = get_jwt_identity()
-
-    # Create new access token directly
-    access_token = create_access_token(identity=identity)
-
-    # 🔑 Redirect BACK to where user came from
-    next_url = request.args.get("next") or url_for("api_v1.dashboard.home")
-
-    response = redirect(next_url)
-    set_access_cookies(response, access_token)
+@gym_auth_bp.route("/refresh", methods=["GET", "POST"]) @jwt_required(refresh=True) 
+def refresh(): 
+    identity = get_jwt_identity() 
+    tokens, error = GymAuthService.refresh_access_token(identity) 
     
+    if error or not tokens: 
+        response = redirect(url_for("api_v1.gym_auth.login_page")) 
+        unset_jwt_cookies(response)
+        flash("Session expired. Please log in again.", "error")
+        return response
+        
+    response = redirect(url_for("api_v1.dashboard.home"))
+    response = cast(Response, response) 
+    set_access_cookies(response, tokens["access_token"]) 
     return response
-

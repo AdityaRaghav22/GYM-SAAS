@@ -54,7 +54,7 @@ def create_app():
 
     @jwt.expired_token_loader
     def expired_callback(jwt_header, jwt_payload):
-        # 🚫 Never refresh while already refreshin 
+        # 🚫 Never refresh while already refreshing
         return redirect(url_for("api_v1.gym_auth.refresh"))
         
     @jwt.invalid_token_loader
