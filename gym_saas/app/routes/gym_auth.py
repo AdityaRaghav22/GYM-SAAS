@@ -158,6 +158,7 @@ def delete():
 @gym_auth_bp.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 def refresh():
+    print("refreshing tokens")
     identity = get_jwt_identity()
     
     tokens, error = GymAuthService.refresh_access_token(identity)
