@@ -198,5 +198,4 @@ class MembershipService:
       db.session.rollback()
       return None, "Something went wrong. Please try again."
 
-
 # -- ../routes/membership.py
