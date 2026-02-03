@@ -8,6 +8,6 @@ dashboard_bp = Blueprint("dashboard", __name__)
 def home():
     try:
         verify_jwt_in_request()  # STRICT validation
-        return redirect(url_for("dashboard.dashboard_home"))
+        return redirect(url_for("api_v1.dashboard.home"))
     except JWTExtendedException:
         return render_template("home.html")
