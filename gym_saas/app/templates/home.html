@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,291 +11,333 @@
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-    body { 
-        font-family: 'Plus Jakarta Sans', sans-serif; 
-        scroll-behavior: smooth;
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      scroll-behavior: smooth;
     }
+
     .glass-nav {
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
+
     .hero-gradient {
-        background: radial-gradient(circle at top right, #e0e7ff 0%, #ffffff 50%);
+      background: radial-gradient(circle at top right, #e0e7ff 0%, #ffffff 50%);
     }
+
     .feature-card:hover .icon-box {
-        transform: scale(1.1) rotate(-5deg);
-        background-color: #4f46e5;
-        color: white;
+      transform: scale(1.1) rotate(-5deg);
+      background-color: #4f46e5;
+      color: white;
     }
   </style>
 </head>
 
 <body class="bg-white text-slate-900 selection:bg-indigo-100 selection:text-indigo-700">
 
-<!-- ================= NAVBAR ================= -->
-<nav class="fixed top-0 w-full glass-nav border-b border-slate-100 z-50">
-  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-    <div class="flex items-center gap-2.5 group cursor-pointer">
-      <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white transition-transform group-hover:rotate-12">
-        <i class="fas fa-dumbbell text-lg"></i>
-      </div>
-      <span class="font-extrabold text-2xl tracking-tight text-slate-900">Anchor</span>
-    </div>
-
-    <div class="hidden md:flex gap-10 text-sm font-bold text-slate-500">
-      <a href="#features" class="hover:text-indigo-600 transition-colors">Features</a>
-      <a href="#pricing" class="hover:text-indigo-600 transition-colors">Pricing</a>
-      <a href="#contact" class="hover:text-indigo-600 transition-colors">Contact</a>
-    </div>
-
-    <div class="flex items-center gap-6">
-      <a href="/gym/login" class="hidden sm:block text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors">
-        Login
-      </a>
-      <a href="/gym/register"
-         class="bg-slate-900 text-white px-6 py-3 rounded-full text-sm font-bold hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-200 transition-all active:scale-95">
-        Start Free Trial
-      </a>
-    </div>
-  </div>
-</nav>
-
-<!-- ================= HERO ================= -->
-<section class="relative pt-40 pb-24 hero-gradient px-6 overflow-hidden">
-  <div class="max-w-7xl mx-auto text-center relative z-10">
-    
-    <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-[1.1]">
-      Run your gym.<br>
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-500">
-        We’ll handle the system.
-      </span>
-    </h1>
-
-    <p class="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-12 leading-relaxed font-medium">
-      Manage members, automated billing, and detailed analytics from one beautiful dashboard. Built for modern gym owners.
-    </p>
-
-    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-20">
-      <a href="/gym/register"
-         class="w-full sm:w-auto bg-indigo-600 text-white px-10 py-5 rounded-2xl text-lg font-bold hover:bg-indigo-700 hover:shadow-xl hover:shadow-indigo-200 transition-all flex items-center justify-center gap-2">
-        Get Started Free <i class="fas fa-arrow-right text-sm"></i>
-      </a>
-      <a href="/gym/login"
-         class="w-full sm:w-auto bg-white border border-slate-200 px-10 py-5 rounded-2xl text-lg font-bold hover:bg-slate-50 hover:border-slate-300 transition-all text-slate-600">
-        Watch Demo
-      </a>
-    </div>
-
-    <!-- MOCKUP COMPONENT -->
-    <div class="max-w-5xl mx-auto relative">
-        <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-[2.5rem] blur opacity-20"></div>
-        <div class="relative bg-slate-900 rounded-[2rem] border border-slate-800 shadow-2xl p-4 md:p-8 aspect-video overflow-hidden">
-            <!-- Sidebar/Topnav placeholder -->
-            <div class="flex gap-4 mb-6">
-                <div class="w-32 h-4 bg-slate-800 rounded-full"></div>
-                <div class="w-20 h-4 bg-slate-800 rounded-full"></div>
-                <div class="ml-auto flex gap-2">
-                    <div class="w-4 h-4 bg-slate-800 rounded-full"></div>
-                    <div class="w-4 h-4 bg-slate-800 rounded-full"></div>
-                </div>
-            </div>
-            <!-- Grid Layout -->
-            <div class="grid grid-cols-4 gap-6">
-                <div class="col-span-3 space-y-6">
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="h-24 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl"></div>
-                        <div class="h-24 bg-slate-800 rounded-2xl"></div>
-                        <div class="h-24 bg-slate-800 rounded-2xl"></div>
-                    </div>
-                    <div class="h-48 bg-slate-800 rounded-2xl"></div>
-                </div>
-                <div class="col-span-1 h-full bg-slate-800/50 rounded-2xl border border-slate-800"></div>
-            </div>
-            <!-- Floating Decorative Element -->
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-indigo-600 text-white p-6 rounded-3xl shadow-2xl">
-                <i class="fas fa-chart-line text-4xl"></i>
-            </div>
+  <!-- ================= NAVBAR ================= -->
+  <nav class="fixed top-0 w-full glass-nav border-b border-slate-100 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 group cursor-pointer">
+        <div
+          class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white transition-transform group-hover:rotate-12">
+          <i class="fas fa-dumbbell text-lg"></i>
         </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= FEATURES ================= -->
-<section id="features" class="py-32 bg-white px-6">
-  <div class="max-w-7xl mx-auto">
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
-      <div class="max-w-xl">
-        <h2 class="text-indigo-600 font-bold uppercase tracking-widest text-sm mb-4">
-          Unmatched Experience
-        </h2>
-        <h3 class="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
-          Everything you need to <span class="text-indigo-600">scale your gym.</span>
-        </h3>
+        <span class="font-extrabold text-2xl tracking-tight text-slate-900">Anchor</span>
       </div>
-      <p class="text-slate-500 text-lg max-w-sm font-medium">
-        Stop wrestling with multiple apps. Anchor centralizes your entire operation in one place.
+
+      <div class="hidden md:flex gap-10 text-sm font-bold text-slate-500">
+        <a href="#features" class="hover:text-indigo-600 transition-colors">Features</a>
+        <a href="#pricing" class="hover:text-indigo-600 transition-colors">Pricing</a>
+        <a href="#contact" class="hover:text-indigo-600 transition-colors">Contact</a>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <a href="/gym/login"
+          class="hidden sm:block text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors">
+          Login
+        </a>
+        <a href="/gym/register"
+          class="bg-slate-900 text-white px-6 py-3 rounded-full text-sm font-bold hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-200 transition-all active:scale-95">
+          Start Free Trial
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= HERO ================= -->
+  <section class="relative pt-40 pb-24 hero-gradient px-6 overflow-hidden">
+    <div class="max-w-7xl mx-auto text-center relative z-10">
+
+      <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-[1.1]">
+        Run your gym.<br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-500">
+          We’ll handle the system.
+        </span>
+      </h1>
+
+      <p class="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-12 leading-relaxed font-medium">
+        Manage members, automated billing, and detailed analytics from one beautiful dashboard. Built for modern gym
+        owners.
       </p>
+
+      <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-20">
+        <a href="/gym/register"
+          class="w-full sm:w-auto bg-indigo-600 text-white px-10 py-5 rounded-2xl text-lg font-bold hover:bg-indigo-700 hover:shadow-xl hover:shadow-indigo-200 transition-all flex items-center justify-center gap-2">
+          Get Started Free <i class="fas fa-arrow-right text-sm"></i>
+        </a>
+        <a href="/gym/login"
+          class="w-full sm:w-auto bg-white border border-slate-200 px-10 py-5 rounded-2xl text-lg font-bold hover:bg-slate-50 hover:border-slate-300 transition-all text-slate-600">
+          Watch Demo
+        </a>
+      </div>
+
+      <!-- MOCKUP COMPONENT -->
+      <div class="max-w-5xl mx-auto relative">
+        <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-[2.5rem] blur opacity-20">
+        </div>
+        <div
+          class="relative bg-slate-900 rounded-[2rem] border border-slate-800 shadow-2xl p-4 md:p-8 aspect-video overflow-hidden">
+          <!-- Sidebar/Topnav placeholder -->
+          <div class="flex gap-4 mb-6">
+            <div class="w-32 h-4 bg-slate-800 rounded-full"></div>
+            <div class="w-20 h-4 bg-slate-800 rounded-full"></div>
+            <div class="ml-auto flex gap-2">
+              <div class="w-4 h-4 bg-slate-800 rounded-full"></div>
+              <div class="w-4 h-4 bg-slate-800 rounded-full"></div>
+            </div>
+          </div>
+          <!-- Grid Layout -->
+          <div class="grid grid-cols-4 gap-6">
+            <div class="col-span-3 space-y-6">
+              <div class="grid grid-cols-3 gap-4">
+                <div class="h-24 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl"></div>
+                <div class="h-24 bg-slate-800 rounded-2xl"></div>
+                <div class="h-24 bg-slate-800 rounded-2xl"></div>
+              </div>
+              <div class="h-48 bg-slate-800 rounded-2xl"></div>
+            </div>
+            <div class="col-span-1 h-full bg-slate-800/50 rounded-2xl border border-slate-800"></div>
+          </div>
+          <!-- Floating Decorative Element -->
+          <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-indigo-600 text-white p-6 rounded-3xl shadow-2xl">
+            <i class="fas fa-chart-line text-4xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES ================= -->
+  <section id="features" class="py-32 bg-white px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+        <div class="max-w-xl">
+          <h2 class="text-indigo-600 font-bold uppercase tracking-widest text-sm mb-4">
+            Unmatched Experience
+          </h2>
+          <h3 class="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
+            Everything you need to <span class="text-indigo-600">scale your gym.</span>
+          </h3>
+        </div>
+        <p class="text-slate-500 text-lg max-w-sm font-medium">
+          Stop wrestling with multiple apps. Anchor centralizes your entire operation in one place.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+        <!-- Feature Card -->
+        <div
+          class="feature-card group bg-slate-50 p-10 rounded-[2.5rem] border border-transparent hover:border-indigo-100 hover:bg-white transition-all duration-500 cursor-default">
+          <div
+            class="icon-box w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-8 transition-all duration-500">
+            <i class="fas fa-users text-2xl"></i>
+          </div>
+          <h4 class="text-2xl font-bold mb-4">Member Insights</h4>
+          <p class="text-slate-500 leading-relaxed font-medium">
+            Detailed profiles, attendance tracking, and health goals for every individual.
+          </p>
+        </div>
+
+        <!-- Feature Card -->
+        <div
+          class="feature-card group bg-slate-50 p-10 rounded-[2.5rem] border border-transparent hover:border-emerald-100 hover:bg-white transition-all duration-500 cursor-default">
+          <div
+            class="icon-box w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-8 transition-all duration-500">
+            <i class="fas fa-id-card text-2xl"></i>
+          </div>
+          <h4 class="text-2xl font-bold mb-4">Plan Builder</h4>
+          <p class="text-slate-500 leading-relaxed font-medium">
+            Create dynamic memberships with recurring billing or one-time passes in seconds.
+          </p>
+        </div>
+
+        <!-- Feature Card -->
+        <div
+          class="feature-card group bg-slate-50 p-10 rounded-[2.5rem] border border-transparent hover:border-blue-100 hover:bg-white transition-all duration-500 cursor-default">
+          <div
+            class="icon-box w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-8 transition-all duration-500">
+            <i class="fas fa-credit-card text-2xl"></i>
+          </div>
+          <h4 class="text-2xl font-bold mb-4">Smart Invoicing</h4>
+          <p class="text-slate-500 leading-relaxed font-medium">
+            Automatic payment reminders and clean ledger management for stress-free tax seasons.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PRICING ================= -->
+  <section id="pricing" class="py-32 bg-slate-50 px-6">
+    <div class="max-w-7xl mx-auto text-center mb-20">
+      <h2 class="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">Flexible pricing.</h2>
+      <p class="text-slate-500 text-lg font-medium">Join hundreds of owners using Anchor today.</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
 
-      <!-- Feature Card -->
-      <div class="feature-card group bg-slate-50 p-10 rounded-[2.5rem] border border-transparent hover:border-indigo-100 hover:bg-white transition-all duration-500 cursor-default">
-        <div class="icon-box w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-8 transition-all duration-500">
-          <i class="fas fa-users text-2xl"></i>
-        </div>
-        <h4 class="text-2xl font-bold mb-4">Member Insights</h4>
-        <p class="text-slate-500 leading-relaxed font-medium">
-          Detailed profiles, attendance tracking, and health goals for every individual.
-        </p>
-      </div>
-
-      <!-- Feature Card -->
-      <div class="feature-card group bg-slate-50 p-10 rounded-[2.5rem] border border-transparent hover:border-emerald-100 hover:bg-white transition-all duration-500 cursor-default">
-        <div class="icon-box w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-8 transition-all duration-500">
-          <i class="fas fa-id-card text-2xl"></i>
-        </div>
-        <h4 class="text-2xl font-bold mb-4">Plan Builder</h4>
-        <p class="text-slate-500 leading-relaxed font-medium">
-          Create dynamic memberships with recurring billing or one-time passes in seconds.
-        </p>
-      </div>
-
-      <!-- Feature Card -->
-      <div class="feature-card group bg-slate-50 p-10 rounded-[2.5rem] border border-transparent hover:border-blue-100 hover:bg-white transition-all duration-500 cursor-default">
-        <div class="icon-box w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-8 transition-all duration-500">
-          <i class="fas fa-credit-card text-2xl"></i>
-        </div>
-        <h4 class="text-2xl font-bold mb-4">Smart Invoicing</h4>
-        <p class="text-slate-500 leading-relaxed font-medium">
-          Automatic payment reminders and clean ledger management for stress-free tax seasons.
-        </p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ================= PRICING ================= -->
-<section id="pricing" class="py-32 bg-slate-50 px-6">
-  <div class="max-w-7xl mx-auto text-center mb-20">
-    <h2 class="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">Flexible pricing.</h2>
-    <p class="text-slate-500 text-lg font-medium">Join hundreds of owners using Anchor today.</p>
-  </div>
-
-  <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-
-    <!-- Starter -->
-    <div class="bg-white p-10 rounded-[2.5rem] border border-slate-200 flex flex-col hover:shadow-xl transition-all">
-      <div class="mb-8">
-        <h3 class="uppercase text-xs font-bold text-indigo-600 tracking-widest mb-3">Starter Gym</h3>
-        <div class="flex items-baseline gap-1">
+      <!-- Starter -->
+      <div class="bg-white p-10 rounded-[2.5rem] border border-slate-200 flex flex-col hover:shadow-xl transition-all">
+        <div class="mb-8">
+          <h3 class="uppercase text-xs font-bold text-indigo-600 tracking-widest mb-3">Starter Gym</h3>
+          <div class="flex items-baseline gap-1">
             <span class="text-5xl font-extrabold tracking-tight">₹999</span>
             <span class="text-slate-400 font-bold">/mo</span>
+          </div>
         </div>
+
+        <ul class="space-y-4 mb-10 flex-grow text-slate-600 font-medium">
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-500"></i> Up to 50 members</li>
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-500"></i> Membership tracking
+          </li>
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-500"></i> Manual billing</li>
+          <li class="flex items-center gap-3 opacity-40"><i class="fas fa-times-circle"></i> Custom Reporting</li>
+        </ul>
+
+        <a href="/gym/register"
+          class="block text-center border-2 border-slate-900 text-slate-900 rounded-2xl py-4 font-bold hover:bg-slate-900 hover:text-white transition-all active:scale-95">
+          Get Started
+        </a>
       </div>
-      
-      <ul class="space-y-4 mb-10 flex-grow text-slate-600 font-medium">
-        <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-500"></i> Up to 50 members</li>
-        <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-500"></i> Membership tracking</li>
-        <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-500"></i> Manual billing</li>
-        <li class="flex items-center gap-3 opacity-40"><i class="fas fa-times-circle"></i> Custom Reporting</li>
-      </ul>
 
-      <a href="/gym/register" class="block text-center border-2 border-slate-900 text-slate-900 rounded-2xl py-4 font-bold hover:bg-slate-900 hover:text-white transition-all active:scale-95">
-        Get Started
-      </a>
-    </div>
-
-    <!-- Pro -->
-    <div class="bg-indigo-600 p-10 rounded-[2.5rem] border-4 border-indigo-400 text-white flex flex-col shadow-2xl shadow-indigo-200 relative transform md:-translate-y-4 transition-all">
-      <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-yellow-400 text-slate-900 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">Most Popular</div>
-      <div class="mb-8">
-        <h3 class="uppercase text-xs font-bold text-indigo-200 tracking-widest mb-3">Growth Pro</h3>
-        <div class="flex items-baseline gap-1">
+      <!-- Pro -->
+      <div
+        class="bg-indigo-600 p-10 rounded-[2.5rem] border-4 border-indigo-400 text-white flex flex-col shadow-2xl shadow-indigo-200 relative transform md:-translate-y-4 transition-all">
+        <div
+          class="absolute -top-4 left-1/2 -translate-x-1/2 bg-yellow-400 text-slate-900 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">
+          Most Popular</div>
+        <div class="mb-8">
+          <h3 class="uppercase text-xs font-bold text-indigo-200 tracking-widest mb-3">Growth Pro</h3>
+          <div class="flex items-baseline gap-1">
             <span class="text-5xl font-extrabold tracking-tight">₹1999</span>
             <span class="text-indigo-200 font-bold">/mo</span>
+          </div>
         </div>
+
+        <ul class="space-y-4 mb-10 flex-grow font-medium">
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-300"></i> Unlimited members</li>
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-300"></i> Automatic payments
+          </li>
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-300"></i> Advanced Analytics
+          </li>
+          <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-300"></i> Priority support</li>
+        </ul>
+
+        <a href="/gym/register"
+          class="block text-center bg-white text-indigo-600 rounded-2xl py-4 font-black hover:bg-indigo-50 transition-all shadow-xl active:scale-95">
+          Start Free Trial
+        </a>
       </div>
-      
-      <ul class="space-y-4 mb-10 flex-grow font-medium">
-        <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-300"></i> Unlimited members</li>
-        <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-300"></i> Automatic payments</li>
-        <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-300"></i> Advanced Analytics</li>
-        <li class="flex items-center gap-3"><i class="fas fa-check-circle text-indigo-300"></i> Priority support</li>
-      </ul>
 
-      <a href="/gym/register"
-         class="block text-center bg-white text-indigo-600 rounded-2xl py-4 font-black hover:bg-indigo-50 transition-all shadow-xl active:scale-95">
-        Start Free Trial
-      </a>
-    </div>
-
-    <!-- Enterprise -->
-    <div class="bg-white p-10 rounded-[2.5rem] border border-slate-200 flex flex-col hover:shadow-xl transition-all">
-      <div class="mb-8">
-        <h3 class="uppercase text-xs font-bold text-slate-400 tracking-widest mb-3">Enterprise</h3>
-        <div class="flex items-baseline gap-1">
+      <!-- Enterprise -->
+      <div class="bg-white p-10 rounded-[2.5rem] border border-slate-200 flex flex-col hover:shadow-xl transition-all">
+        <div class="mb-8">
+          <h3 class="uppercase text-xs font-bold text-slate-400 tracking-widest mb-3">Enterprise</h3>
+          <div class="flex items-baseline gap-1">
             <span class="text-5xl font-extrabold tracking-tight">Custom</span>
+          </div>
         </div>
+
+        <p class="text-slate-500 font-medium mb-10 leading-relaxed">
+          Custom built for multi-branch franchises and specialized fitness centers requiring custom APIs.
+        </p>
+
+        <div class="flex-grow"></div>
+
+        <a href="#contact"
+          class="block text-center border-2 border-slate-900 text-slate-900 rounded-2xl py-4 font-bold hover:bg-slate-900 hover:text-white transition-all active:scale-95">
+          Talk to Sales
+        </a>
       </div>
-      
-      <p class="text-slate-500 font-medium mb-10 leading-relaxed">
-        Custom built for multi-branch franchises and specialized fitness centers requiring custom APIs.
-      </p>
 
-      <div class="flex-grow"></div>
-
-      <a href="#contact" class="block text-center border-2 border-slate-900 text-slate-900 rounded-2xl py-4 font-bold hover:bg-slate-900 hover:text-white transition-all active:scale-95">
-        Talk to Sales
-      </a>
     </div>
+  </section>
 
-  </div>
-</section>
-
-<!-- ================= FOOTER ================= -->
-<footer id="contact" class="bg-slate-950 text-slate-400 py-24 px-6 border-t border-slate-900">
-  <div class="max-w-7xl mx-auto">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+  <!-- ================= FOOTER ================= -->
+  <footer id="contact" class="bg-slate-950 text-slate-400 py-24 px-6 border-t border-slate-900">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
         <div class="col-span-1 md:col-span-2">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white">
-                  <i class="fas fa-dumbbell"></i>
-                </div>
-                <span class="font-extrabold text-2xl tracking-tight text-white">Anchor</span>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white">
+              <i class="fas fa-dumbbell"></i>
             </div>
-            <p class="max-w-sm font-medium leading-relaxed">
-                The world's most intuitive gym management platform. Helping 2,000+ fitness entrepreneurs build their dreams.
-            </p>
+            <span class="font-extrabold text-2xl tracking-tight text-white">Anchor</span>
+          </div>
+          <p class="max-w-sm font-medium leading-relaxed">
+            The world's most intuitive gym management platform. Helping 2,000+ fitness entrepreneurs build their dreams.
+          </p>
         </div>
         <div>
-            <h4 class="text-white font-bold mb-6">Company</h4>
-            <ul class="space-y-4 font-medium">
-                <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
-                <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
-                <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
-            </ul>
+          <h4 class="text-white font-bold mb-6">Company</h4>
+          <ul class="space-y-4 font-medium">
+            <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+          </ul>
         </div>
         <div>
-            <h4 class="text-white font-bold mb-6">Social</h4>
-            <div class="flex gap-4">
-                <a href="#" class="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:text-white hover:bg-indigo-600 transition-all"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:text-white hover:bg-indigo-600 transition-all"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:text-white hover:bg-indigo-600 transition-all"><i class="fab fa-linkedin-in"></i></a>
-            </div>
+          <h4 class="text-white font-bold mb-6">Social</h4>
+          <div class="flex gap-4">
+            <a href="#"
+              class="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:text-white hover:bg-indigo-600 transition-all"><i
+                class="fab fa-twitter"></i></a>
+            <a href="#"
+              class="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:text-white hover:bg-indigo-600 transition-all"><i
+                class="fab fa-instagram"></i></a>
+            <a href="#"
+              class="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:text-white hover:bg-indigo-600 transition-all"><i
+                class="fab fa-linkedin-in"></i></a>
+          </div>
         </div>
-    </div>
-    <div class="pt-10 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6 text-sm font-bold">
-      <p>© 2026 Anchor Platform. A product of IronCloud Technologies.</p>
-      <div class="flex gap-8">
-        <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-        <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+      </div>
+      <div
+        class="pt-10 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6 text-sm font-bold">
+        <p>© 2026 Anchor Platform. A product of IronCloud Technologies.</p>
+        <div class="flex gap-8">
+          <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+          <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+        </div>
       </div>
     </div>
-  </div>
-</footer>
+  </footer>
+  <script>
+    fetch("/gym/refresh", {
+      method: "POST",
+      credentials: "include"
+    }).then(() => {
+      window.location.href = "/dashboard";
+    }).catch(() => {
+      window.location.href = "/gym/login";
+    });
+  </script>
 
 </body>
+
 </html>
