@@ -7,5 +7,5 @@ dashboard_bp = Blueprint("dashboard", __name__)
 def home():
     verify_jwt_in_request(optional=True)
     if get_jwt_identity():
-        return redirect(url_for("dashboard.dashboard_home"))
+        return redirect(url_for("dashboard.home"))
     return render_template("home.html")
