@@ -4,8 +4,7 @@ from gym_saas.config import DevelopmentConfig
 from datetime import timedelta
 from flask_jwt_extended import (verify_jwt_in_request, get_jwt_identity,
                                 create_access_token, set_access_cookies)
-from flask_jwt_extended.exceptions import JWTExtendedException
-from flask import make_response
+from flask import make_response, request
 
 
 def create_app():
@@ -46,23 +45,35 @@ def create_app():
     # ===============================
     @app.before_request
     def refresh_expiring_jwt():
+        path = request.path
+
+        # Skip static & auth routes
+        if (
+            path.startswith("/static") or
+            path.startswith("/gym/login") or
+            path.startswith("/gym/register") or
+            path.startswith("/gym/refresh")
+        ):
+            return
+
         try:
-            print("🔁 auto refresh check")
-            # Try access token first
-            verify_jwt_in_request(optional=True)
-        except JWTExtendedException:
+            # If access token is valid → do nothing
+            verify_jwt_in_request()
+            return
+        except Exception as e:
+            # Only refresh if token is expired
+            if "expired" not in str(e).lower():
+                return
+
             try:
-                # Fallback to refresh token
                 verify_jwt_in_request(refresh=True)
                 identity = get_jwt_identity()
-
                 new_access = create_access_token(identity=identity)
 
                 resp = make_response()
                 set_access_cookies(resp, new_access)
                 return resp
-            except JWTExtendedException:
-                # No valid refresh token → continue normally
+            except Exception:
                 pass
 
     @jwt.unauthorized_loader
