@@ -25,9 +25,13 @@ def create_membership():
             flash(err or "Invalid ID", "error")
             return redirect(url_for("api_v1.dashboard.home"))
 
+    if data.get("start_date"):
+        start_date = data.get("start_date")
+    else:
+        start_date = None
+
     membership, error = MembershipService.create_membership(
-        gym_id, member_id, plan_id, start_date= data.get("start_date")
-    )
+        gym_id, member_id, plan_id, start_date)
 
     if error:
         flash(error, "error")
