@@ -17,6 +17,7 @@ def create_membership():
     member_id = data.get("member_id")
     plan_id = data.get("plan_id")
     payment_method = data.get("payment_method")
+    
 
     for value in [gym_id, member_id, plan_id]:
         valid, err = validate_id(value)
@@ -25,7 +26,7 @@ def create_membership():
             return redirect(url_for("api_v1.dashboard.home"))
 
     membership, error = MembershipService.create_membership(
-        gym_id, member_id, plan_id
+        gym_id, member_id, plan_id, start_date= data.get("start_date")
     )
 
     if error:

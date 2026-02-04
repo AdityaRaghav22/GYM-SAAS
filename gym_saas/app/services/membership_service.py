@@ -9,45 +9,62 @@ from datetime import datetime, timedelta
 class MembershipService:
 
   @staticmethod
-  def create_membership(gym_id, member_id, plan_id):
+  def create_membership(gym_id, member_id, plan_id, start_date=None):
     if not all([gym_id, member_id, plan_id]):
       return None, "All fields are required"
 
     for value in [gym_id, member_id, plan_id]:
-      valid, err = validate_id(value)
-      if not valid:
-        return None, err
+        valid, err = validate_id(value)
+        if not valid:
+          return None, err
 
-    member = Member.query.filter(Member.id == member_id,
-                                 Member.gym_id == gym_id,
-                                 Member.is_active.is_(True)).first()
+    member = Member.query.filter(
+      Member.id == member_id,
+      Member.gym_id == gym_id,
+      Member.is_active.is_(True)
+    ).first()
     if not member:
       return None, "Member does not exist"
 
-    plan = Plan.query.filter(Plan.id == plan_id, Plan.gym_id == gym_id,
-                             Plan.is_active.is_(True)).first()
+    plan = Plan.query.filter(
+      Plan.id == plan_id,
+      Plan.gym_id == gym_id,
+      Plan.is_active.is_(True)
+    ).first()
     if not plan:
       return None, "Plan does not exist"
 
-    existing = Membership.query.filter(Membership.member_id == member_id,
-                                       Membership.gym_id == gym_id,
-                                       Membership.is_active.is_(False)).first()
-    if existing:
-      existing.is_active = True
-      db.session.commit()
-      return None, "Membership activated successfully"
+    # 🔒 Prevent multiple active memberships
+    active = Membership.query.filter(
+      Membership.member_id == member_id,
+      Membership.gym_id == gym_id,
+      Membership.is_active.is_(True)
+    ).first()
+    if active:
+      return None, "Member already has an active membership"
 
-    start_date = datetime.utcnow()
+    # 📅 Parse start date
+    if not start_date:
+      start_date = datetime.utcnow()  
+
+    # 🚫 Optional future-date restriction
+    if start_date > datetime.utcnow() + timedelta(days=1):
+      return None, "Start date cannot be in the future"
+
     end_date = start_date + relativedelta(months=plan.duration_months)
 
-    membership = Membership(id=generate_id(),
-                            gym_id=gym_id,
-                            member_id=member_id,
-                            plan_id=plan_id,
-                            start_date=start_date,
-                            end_date=end_date,
-                            status="active",
-                            is_active=True)
+    status = "scheduled" if start_date > datetime.utcnow() else "active"
+
+    membership = Membership(
+      id=generate_id(),
+      gym_id=gym_id,
+      member_id=member_id,
+      plan_id=plan_id,
+      start_date=start_date,
+      end_date=end_date,
+      status=status,
+      is_active=True
+    )
 
     try:
       db.session.add(membership)

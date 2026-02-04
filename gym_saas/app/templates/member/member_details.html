@@ -6,7 +6,9 @@
 <!-- Importing Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
 
 <style>
     /* --- Theme Configuration --- */
@@ -69,10 +71,25 @@
     }
 
     /* Header Colors */
-    .header-blue { background: var(--primary); color: white; }
-    .header-dark { background: var(--text-main); color: white; }
-    .header-green { background: var(--success-bg); color: black; }
-    .header-grey { background: var(--secondary-bg); color: black; }
+    .header-blue {
+        background: var(--primary);
+        color: white;
+    }
+
+    .header-dark {
+        background: var(--text-main);
+        color: white;
+    }
+
+    .header-green {
+        background: var(--success-bg);
+        color: black;
+    }
+
+    .header-grey {
+        background: var(--secondary-bg);
+        color: black;
+    }
 
     .card-body-boxy {
         padding: 1.5rem;
@@ -93,7 +110,8 @@
         text-transform: uppercase;
     }
 
-    .boxy-input, .boxy-select {
+    .boxy-input,
+    .boxy-select {
         width: 100%;
         padding: 0.75rem;
         font-family: 'Space Grotesk', sans-serif;
@@ -105,7 +123,8 @@
         transition: all 0.2s;
     }
 
-    .boxy-input:focus, .boxy-select:focus {
+    .boxy-input:focus,
+    .boxy-select:focus {
         background: #eef2ff;
         box-shadow: 4px 4px 0px var(--border-color);
         transform: translate(-2px, -2px);
@@ -142,6 +161,7 @@
         color: black;
         border-color: black;
     }
+
     .btn-outline-success:hover {
         background: var(--success-bg);
     }
@@ -173,7 +193,8 @@
 
     /* --- Danger Zone --- */
     .danger-zone {
-        margin-top: auto; /* Push to bottom */
+        margin-top: auto;
+        /* Push to bottom */
         border-top: var(--border-width) solid var(--border-color);
         background-image: repeating-linear-gradient(45deg, var(--danger-bg), var(--danger-bg) 10px, #fff 10px, #fff 20px);
         padding: 1.5rem;
@@ -185,18 +206,19 @@
         border: 2px solid var(--danger-text);
         box-shadow: 3px 3px 0px var(--danger-text);
     }
+
     .btn-danger:hover {
         background: var(--danger-text);
         color: white;
     }
-
 </style>
 
 <div class="boxy-container">
-    
+
     <!-- Breadcrumb / Back Link -->
     <div style="margin-bottom: 2rem;">
-        <a href="{{ url_for('api_v1.member.list_member') }}" style="text-decoration: none; color: black; font-family: 'Space Mono', monospace; font-weight: bold; border: 2px solid black; padding: 0.5rem 1rem; background: white; box-shadow: 3px 3px 0px black; display: inline-block;">
+        <a href="{{ url_for('api_v1.member.list_member') }}"
+            style="text-decoration: none; color: black; font-family: 'Space Mono', monospace; font-weight: bold; border: 2px solid black; padding: 0.5rem 1rem; background: white; box-shadow: 3px 3px 0px black; display: inline-block;">
             &larr; BACK TO DIRECTORY
         </a>
     </div>
@@ -218,17 +240,19 @@
                         </div>
                         <div class="form-group">
                             <label class="boxy-label">Phone Number</label>
-                            <input type="text" name="phone_number" class="boxy-input" value="{{ member.phone_number }}" required>
+                            <input type="text" name="phone_number" class="boxy-input" value="{{ member.phone_number }}"
+                                required>
                         </div>
                         <button class="btn-blocky btn-primary" style="margin-top: 1rem;">
                             Update Details
                         </button>
                     </form>
                 </div>
-                
+
                 {% if member.is_active %}
                 <div class="danger-zone">
-                    <form method="POST" action="{{ url_for('api_v1.member.deactivate_member', member_id=member.id) }}" onsubmit="return confirm('Deactivate this member?');">
+                    <form method="POST" action="{{ url_for('api_v1.member.deactivate_member', member_id=member.id) }}"
+                        onsubmit="return confirm('Deactivate this member?');">
                         <button class="btn-blocky btn-danger">
                             Deactivate Member
                         </button>
@@ -240,7 +264,7 @@
 
         <!-- Column 2: Memberships & New Plan -->
         <div class="column">
-            
+
             <!-- Existing Memberships -->
             <div class="boxy-card">
                 <div class="card-header-boxy header-dark">
@@ -249,31 +273,32 @@
                 </div>
                 <div class="card-body-boxy">
                     {% for m in memberships %}
-                        <div class="sub-item">
-                            <div class="sub-item-header">
-                                {{m.plan.name}}
-                            </div>
-                            <div style="font-size: 0.9rem; margin-bottom: 1rem;">
-                                Expires: <strong>{{m.end_date.strftime('%d %b %Y') }}</strong>
-                            </div>
+                    <div class="sub-item">
+                        <div class="sub-item-header">
+                            {{m.plan.name}}
+                        </div>
+                        <div style="font-size: 0.9rem; margin-bottom: 1rem;">
+                            Expires: <strong>{{m.end_date.strftime('%d %b %Y') }}</strong>
+                        </div>
 
-                            <form method="POST" action="{{ url_for('api_v1.membership.renew_membership', membership_id=m.id) }}">
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <select name="payment_method" class="boxy-select" style="flex: 1;" required>
-                                        <option value="cash">Cash</option>
-                                        <option value="upi">UPI</option>
-                                        <option value="card">Card</option>
-                                    </select>
-                                    <button class="btn-blocky btn-outline-success" style="width: auto;">
-                                        Renew
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                        <form method="POST"
+                            action="{{ url_for('api_v1.membership.renew_membership', membership_id=m.id) }}">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <select name="payment_method" class="boxy-select" style="flex: 1;" required>
+                                    <option value="cash">Cash</option>
+                                    <option value="upi">UPI</option>
+                                    <option value="card">Card</option>
+                                </select>
+                                <button class="btn-blocky btn-outline-success" style="width: auto;">
+                                    Renew
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                     {% else %}
-                        <div style="text-align: center; color: #666; font-style: italic; padding: 1rem;">
-                            No active memberships found.
-                        </div>
+                    <div style="text-align: center; color: #666; font-style: italic; padding: 1rem;">
+                        No active memberships found.
+                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -284,21 +309,30 @@
                     <span>New Membership</span>
                     <span>+</span>
                 </div>
+
                 <div class="card-body-boxy">
                     <form method="POST" action="{{ url_for('api_v1.membership.create_membership') }}">
                         <input type="hidden" name="member_id" value="{{ member.id }}">
 
+                        <!-- Plan -->
                         <div class="form-group">
                             <label class="boxy-label">Select Plan</label>
                             <select name="plan_id" class="boxy-select" required>
                                 {% for plan in plans %}
-                                    <option value="{{ plan.id }}">
-                                        {{ plan.name }} – ₹{{ plan.price }}
-                                    </option>
+                                <option value="{{ plan.id }}">
+                                    {{ plan.name }} – ₹{{ plan.price }}
+                                </option>
                                 {% endfor %}
                             </select>
                         </div>
 
+                        <!-- Start Date -->
+                        <div class="form-group">
+                            <label class="boxy-label">Start Date</label>
+                            <input type="date" name="start_date" class="boxy-input" required>
+                        </div>
+
+                        <!-- Payment Method -->
                         <div class="form-group">
                             <label class="boxy-label">Payment Method</label>
                             <select name="payment_method" class="boxy-select" required>
@@ -314,7 +348,6 @@
                     </form>
                 </div>
             </div>
-
         </div>
 
         <!-- Column 3: Payment History -->
@@ -326,17 +359,19 @@
                 </div>
                 <div class="card-body-boxy">
                     {% for p in payments %}
-                        <div class="sub-item" style="display: flex; justify-content: space-between; align-items: center; border-left: 5px solid black;">
-                            <div style="font-weight: bold; font-size: 1.1rem;">₹{{ p.amount }}</div>
-                            <div style="text-align: right;">
-                                <div class="boxy-label" style="font-size: 0.7rem; color: #666;">METHOD</div>
-                                <div style="font-family: 'Space Grotesk', sans-serif; text-transform: uppercase;">{{ p.payment_method }}</div>
-                            </div>
+                    <div class="sub-item"
+                        style="display: flex; justify-content: space-between; align-items: center; border-left: 5px solid black;">
+                        <div style="font-weight: bold; font-size: 1.1rem;">₹{{ p.amount }}</div>
+                        <div style="text-align: right;">
+                            <div class="boxy-label" style="font-size: 0.7rem; color: #666;">METHOD</div>
+                            <div style="font-family: 'Space Grotesk', sans-serif; text-transform: uppercase;">{{
+                                p.payment_method }}</div>
                         </div>
+                    </div>
                     {% else %}
-                        <div style="text-align: center; color: #666; font-style: italic; padding: 1rem;">
-                            No payment history available.
-                        </div>
+                    <div style="text-align: center; color: #666; font-style: italic; padding: 1rem;">
+                        No payment history available.
+                    </div>
                     {% endfor %}
                 </div>
             </div>
