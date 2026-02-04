@@ -267,7 +267,7 @@
                                 </div>
                                 <div style="text-align: right;">
                                     <div class="boxy-label" style="font-size: 0.65rem; color: #666;">EXPIRES</div>
-                                    <div style="font-family: 'Space Mono', monospace; font-size: 0.85rem;">{{ m.end_date }}</div>
+                                    <div style="font-family: 'Space Mono', monospace; font-size: 0.85rem;">{{ m.end_date.strftime('%d %b %Y')  }}</div>
                                 </div>
                             </div>
                         {% endif %}
@@ -283,35 +283,26 @@
         </div>
 
         <!-- Column 3: Payments -->
-        <div class="column">
-            <div class="boxy-card">
-                <div class="card-header-boxy header-grey">
-                    <span>Revenue</span>
-                    <span>$</span>
-                </div>
-                <div class="card-body-boxy">
-                    {% set ns_pay = namespace(found=false) %}
-                    {% for p in payments %}
-                        {% if p.plan_id == plan.id %}
-                            {% set ns_pay.found = true %}
-                            <div class="sub-item" style="border-left: 5px solid black;">
-                                <div style="font-weight: bold; font-size: 1.1rem; font-family: 'Space Mono', monospace;">
-                                    ₹{{ p.amount }}
-                                </div>
-                                <div style="text-transform: uppercase; font-size: 0.8rem; background: #eee; padding: 2px 6px; border: 1px solid #999;">
-                                    {{ p.payment_method }}
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if not ns_pay.found %}
-                        <div class="empty-state">
-                            No payments recorded for this plan.
+        <div class="card-body-boxy">
+            {% if payments %}
+                {% for p in payments %}
+                    <div class="sub-item" style="border-left: 5px solid black;">
+                        <div style="font-weight: bold; font-size: 1.1rem; font-family: 'Space Mono', monospace;">
+                            ₹{{ p.amount }}
                         </div>
-                    {% endif %}
+                        <div style="font-size: 0.85rem;">
+                            {{ p.membership.plan.name }}
+                        </div>
+                        <div style="text-transform: uppercase; font-size: 0.8rem; background: #eee; padding: 2px 6px; border: 1px solid #999;">
+                            {{ p.payment_method }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    No payments recorded.
                 </div>
-            </div>
+            {% endif %}
         </div>
 
     </div>

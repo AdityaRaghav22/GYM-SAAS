@@ -180,7 +180,7 @@
                 {{ payment.payment_method }}
               </td>
               <td>
-                {{ payment.created_at }}
+                {{ payment.created_at.strftime('%d %b %Y')  }}
               </td>
               <td>
                 <a href="{{ url_for('api_v1.payment.payment_details', payment_id=payment.id) }}" class="btn-view">

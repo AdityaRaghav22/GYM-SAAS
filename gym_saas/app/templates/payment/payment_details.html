@@ -173,7 +173,7 @@
             <!-- Date & Method -->
             <div class="receipt-row">
                 <span class="receipt-label">Date</span>
-                <span class="receipt-value">{{ payment.created_at }}</span>
+                <span class="receipt-value">{{ payment.created_at.strftime('%d %b %Y')  }}</span>
             </div>
             <div class="receipt-row">
                 <span class="receipt-label">Method</span>
@@ -197,7 +197,7 @@
 
             <div class="receipt-row">
                 <span class="receipt-label">Valid Until</span>
-                <span class="receipt-value">{{ membership.end_date }}</span>
+                <span class="receipt-value">{{ membership.end_date.strftime('%d %b %Y')  }}</span>
             </div>
 
         </div>

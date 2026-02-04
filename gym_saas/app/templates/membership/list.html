@@ -6,7 +6,9 @@
 <!-- Importing Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
 
 <style>
     /* --- Theme Configuration --- */
@@ -69,7 +71,8 @@
     }
 
     .card-body-boxy {
-        padding: 0; /* No padding for table to reach edges */
+        padding: 0;
+        /* No padding for table to reach edges */
     }
 
     /* --- Table Styling --- */
@@ -94,7 +97,7 @@
         text-transform: uppercase;
         font-weight: bold;
     }
-    
+
     .boxy-table th:last-child {
         border-right: none;
     }
@@ -117,7 +120,8 @@
     }
 
     .boxy-table tr:hover td {
-        background: #fff9db; /* Light yellow hover effect */
+        background: #fff9db;
+        /* Light yellow hover effect */
     }
 
     /* --- Badges --- */
@@ -141,7 +145,6 @@
         color: black;
         text-decoration: line-through;
     }
-
 </style>
 
 <div class="boxy-container">
@@ -151,12 +154,13 @@
         <div class="card-header-boxy">
             <div style="display:flex; align-items:center; gap:10px;">
                 <!-- Simple CSS Icon -->
-                <div style="width: 24px; height: 24px; background: white; border: 2px solid white; display: grid; place-items: center;">
+                <div
+                    style="width: 24px; height: 24px; background: white; border: 2px solid white; display: grid; place-items: center;">
                     <div style="width: 12px; height: 12px; background: black;"></div>
                 </div>
                 <h2>Active Memberships</h2>
             </div>
-            
+
             <div style="font-family: 'Space Mono', monospace; font-size: 0.9rem;">
                 TOTAL: {{ memberships|length }}
             </div>
@@ -185,16 +189,16 @@
                                 {{ membership.plan.name }}
                             </td>
                             <td>
-                                {{ membership.start_date }}
+                                {{ membership.start_date.strftime('%d %b %Y') }}
                             </td>
                             <td>
-                                {{ membership.end_date }}
+                                {{ membership.end_date.strftime('%d %b %Y') }}
                             </td>
                             <td>
                                 {% if membership.is_active %}
-                                    <span class="status-badge status-active">Active</span>
+                                <span class="status-badge status-active">Active</span>
                                 {% else %}
-                                    <span class="status-badge status-inactive">Inactive</span>
+                                <span class="status-badge status-inactive">Inactive</span>
                                 {% endif %}
                             </td>
                         </tr>
