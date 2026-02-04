@@ -89,8 +89,7 @@ class PlanService:
     if not gym:
       return None, "Gym does not exist"
 
-    plans = Plan.query.filter(Plan.gym_id == gym_id,
-                              Plan.is_active.is_(True)).all()
+    plans = Plan.query.filter(Plan.gym_id == gym_id).all()
 
     return plans, None
 

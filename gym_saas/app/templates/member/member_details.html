@@ -251,10 +251,10 @@
                     {% for m in memberships %}
                         <div class="sub-item">
                             <div class="sub-item-header">
-                                {{ m.plan_name }}
+                                {{m.plan.name}}
                             </div>
                             <div style="font-size: 0.9rem; margin-bottom: 1rem;">
-                                Expires: <strong>{{ m.end_date }}</strong>
+                                Expires: <strong>{m.end_date.strftime('%d %b %Y')}</strong>
                             </div>
 
                             <form method="POST" action="{{ url_for('api_v1.membership.renew_membership', membership_id=m.id) }}">
