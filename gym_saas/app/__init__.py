@@ -4,7 +4,7 @@ from gym_saas.config import DevelopmentConfig
 from datetime import timedelta
 from flask_jwt_extended import (verify_jwt_in_request, get_jwt_identity,
                                 create_access_token, set_access_cookies)
-from flask import make_response, request
+from flask import make_response, request, redirect
 
 
 def create_app():
@@ -82,7 +82,7 @@ def create_app():
 
     @jwt.expired_token_loader
     def expired_callback(jwt_header, jwt_payload):
-        return {"msg": "access token expired"}, 401
+        return redirect("/")
 
     @jwt.invalid_token_loader
     def invalid_token_callback(reason):
