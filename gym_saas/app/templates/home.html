@@ -331,12 +331,21 @@
     fetch("/gym/refresh", {
       method: "POST",
       credentials: "include"
-    }).then(() => {
-      window.location.href = "/dashboard";
-    }).catch(() => {
-      window.location.href = "/gym/login";
-    });
+    })
+      .then(res => {
+        if (res.ok) {
+          // Refresh succeeded → go to dashboard
+          window.location.replace("/dashboard/");
+        } else {
+          // Refresh failed → login
+          window.location.replace("/gym/login");
+        }
+      })
+      .catch(() => {
+        window.location.replace("/gym/login");
+      });
   </script>
+
 
 </body>
 
