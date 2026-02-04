@@ -5,7 +5,6 @@ from gym_saas.app.utils.generate_id import generate_id
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
 
-
 class MembershipService:
 
   @staticmethod
@@ -14,41 +13,34 @@ class MembershipService:
       return None, "All fields are required"
 
     for value in [gym_id, member_id, plan_id]:
-        valid, err = validate_id(value)
-        if not valid:
-          return None, err
+      valid, err = validate_id(value)
+      if not valid:
+        return None, err
 
-    member = Member.query.filter(
-      Member.id == member_id,
-      Member.gym_id == gym_id,
-      Member.is_active.is_(True)
-    ).first()
+    member = Member.query.filter(Member.id == member_id,
+                                 Member.gym_id == gym_id,
+                                 Member.is_active.is_(True)).first()
     if not member:
       return None, "Member does not exist"
 
-    plan = Plan.query.filter(
-      Plan.id == plan_id,
-      Plan.gym_id == gym_id,
-      Plan.is_active.is_(True)
-    ).first()
+    plan = Plan.query.filter(Plan.id == plan_id, Plan.gym_id == gym_id,
+                             Plan.is_active.is_(True)).first()
     if not plan:
       return None, "Plan does not exist"
 
     # 🔒 Prevent multiple active memberships
-    active = Membership.query.filter(
-      Membership.member_id == member_id,
-      Membership.gym_id == gym_id,
-      Membership.is_active.is_(True)
-    ).first()
+    active = Membership.query.filter(Membership.member_id == member_id,
+                                     Membership.gym_id == gym_id,
+                                     Membership.is_active.is_(True)).first()
     if active:
       return None, "Member already has an active membership"
 
     # 📅 Parse start date
     if start_date:
       try:
-          start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
       except ValueError:
-          return None, "Invalid start date format"
+        return None, "Invalid start date format"
     else:
       start_date = datetime.utcnow()
 
@@ -60,16 +52,14 @@ class MembershipService:
 
     status = "scheduled" if start_date > datetime.utcnow() else "active"
 
-    membership = Membership(
-      id=generate_id(),
-      gym_id=gym_id,
-      member_id=member_id,
-      plan_id=plan_id,
-      start_date=start_date,
-      end_date=end_date,
-      status=status,
-      is_active=True
-    )
+    membership = Membership(id=generate_id(),
+                            gym_id=gym_id,
+                            member_id=member_id,
+                            plan_id=plan_id,
+                            start_date=start_date,
+                            end_date=end_date,
+                            status=status,
+                            is_active=True)
 
     try:
       db.session.add(membership)
@@ -87,26 +77,22 @@ class MembershipService:
         return None, err
 
     membership = Membership.query.filter(
-      Membership.id == membership_id,
-      Membership.gym_id == gym_id,
-      Membership.is_active.is_(True)
-    ).first()
+        Membership.id == membership_id, Membership.gym_id == gym_id,
+        Membership.is_active.is_(True)).first()
 
     if not membership:
       return None, "Active membership not found"
 
-    plan = Plan.query.filter(
-      Plan.id == membership.plan_id,
-      Plan.gym_id == gym_id,
-      Plan.is_active.is_(True)
-    ).first()
+    plan = Plan.query.filter(Plan.id == membership.plan_id,
+                             Plan.gym_id == gym_id,
+                             Plan.is_active.is_(True)).first()
 
     if not plan:
       return None, "Plan not found"
 
     now = datetime.utcnow()
     grace_deadline = membership.end_date + timedelta(days=3)
-    
+
     # auto-expire when end_date is crossed
     if membership.status == "active" and now >= membership.end_date:
       membership.status = "expired"
@@ -125,16 +111,14 @@ class MembershipService:
     new_start = now
     new_end = new_start + relativedelta(months=plan.duration_months)
 
-    renewed = Membership(
-      id=generate_id(),
-      gym_id=gym_id,
-      member_id=membership.member_id,
-      plan_id=plan.id,
-      start_date=new_start,
-      end_date=new_end,
-      status="active",
-      is_active=True
-    )
+    renewed = Membership(id=generate_id(),
+                         gym_id=gym_id,
+                         member_id=membership.member_id,
+                         plan_id=plan.id,
+                         start_date=new_start,
+                         end_date=new_end,
+                         status="active",
+                         is_active=True)
 
     try:
       # expire old membership
@@ -155,8 +139,15 @@ class MembershipService:
     if not valid:
       return None, err
 
-    memberships = Membership.query.filter(
-        Membership.gym_id == gym_id).all()
+    memberships = Membership.query.filter(Membership.gym_id == gym_id).all()
+
+    updated = False
+    for m in memberships:
+      if MembershipService.sync_membership_status(m):
+        updated = True
+
+    if updated:
+      db.session.commit()
 
     return memberships, None
 
@@ -168,8 +159,15 @@ class MembershipService:
         return None, err
 
     memberships = Membership.query.filter(
-        Membership.gym_id == gym_id, Membership.member_id == member_id,
-        Membership.is_active.is_(True)).all()
+        Membership.gym_id == gym_id, Membership.member_id == member_id).all()
+
+    updated = False
+    for m in memberships:
+      if MembershipService.sync_membership_status(m):
+        updated = True
+
+    if updated:
+      db.session.commit()
 
     return memberships, None
 
@@ -180,8 +178,8 @@ class MembershipService:
       if not valid:
         return None, err
 
-    membership = Membership.query.filter(
-        Membership.id == membership_id, Membership.gym_id == gym_id).first()
+    membership = Membership.query.filter(Membership.id == membership_id,
+                                         Membership.gym_id == gym_id).first()
 
     if not membership:
       return None, "Membership not found"
@@ -207,7 +205,7 @@ class MembershipService:
     grace_deadline = membership.end_date + timedelta(days=3)
 
     if datetime.utcnow() <= grace_deadline:
-        return None, "Membership is in grace period. Cannot cancel yet."
+      return None, "Membership is in grace period. Cannot cancel yet."
 
     membership.is_active = False
     membership.status = "cancelled"
@@ -218,5 +216,23 @@ class MembershipService:
     except Exception:
       db.session.rollback()
       return None, "Something went wrong. Please try again."
+
+
+  @staticmethod
+  def sync_membership_status(membership):
+    now = datetime.utcnow()
+  
+    if membership.is_active and membership.status == "active":
+      if now >= membership.end_date:
+        membership.status = "expired"
+        membership.is_active = False
+        return True  # updated
+  
+    if membership.status == "scheduled" and now >= membership.start_date:
+      membership.status = "active"
+      return True
+  
+    return False
+
 
 # -- ../routes/membership.py
