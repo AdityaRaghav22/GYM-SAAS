@@ -44,8 +44,13 @@ class MembershipService:
       return None, "Member already has an active membership"
 
     # 📅 Parse start date
-    if not start_date:
-      start_date = datetime.utcnow()  
+    if start_date:
+      try:
+          start_date = datetime.strptime(start_date, "%Y-%m-%d")
+      except ValueError:
+          return None, "Invalid start date format"
+    else:
+      start_date = datetime.utcnow()
 
     # 🚫 Optional future-date restriction
     if start_date > datetime.utcnow() + timedelta(days=1):
