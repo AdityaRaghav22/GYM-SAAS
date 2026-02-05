@@ -5,6 +5,7 @@ from gym_saas.app.utils.generate_id import generate_id
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
 
+
 class MembershipService:
 
   @staticmethod
@@ -217,22 +218,25 @@ class MembershipService:
       db.session.rollback()
       return None, "Something went wrong. Please try again."
 
-
   @staticmethod
   def sync_membership_status(membership):
     now = datetime.utcnow()
-  
-    if membership.is_active and membership.status == "active":
-      if now >= membership.end_date:
-        membership.status = "expired"
-        membership.is_active = False
-        return True  # updated
-  
-    if membership.status == "scheduled" and now >= membership.start_date:
-      membership.status = "active"
-      return True
-  
-    return False
+    grace_deadline = membership.end_date + timedelta(days=3)
+
+    updated = False
+
+    # 🔹 Active → Expired (grace starts)
+    if membership.status == "active" and now >= membership.end_date:
+      membership.status = "expired"
+      updated = True
+
+    # 🔹 Expired → Cancelled (grace over)
+    if membership.status == "expired" and now > grace_deadline:
+      membership.status = "cancelled"
+      membership.is_active = False
+      updated = True
+
+    return updated
 
 
 # -- ../routes/membership.py
