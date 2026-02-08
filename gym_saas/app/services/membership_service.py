@@ -159,7 +159,7 @@ class MembershipService:
         return None, err
 
     memberships = Membership.query.filter(
-        Membership.gym_id == gym_id, Membership.member_id == member_id).all()
+        Membership.gym_id == gym_id, Membership.member_id == member_id, Membership.is_active.is_(True), ).all()
 
     updated = False
     for m in memberships:
