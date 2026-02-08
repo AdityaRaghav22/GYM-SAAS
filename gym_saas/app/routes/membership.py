@@ -79,22 +79,6 @@ def list_membership():
 
     return render_template("membership/list.html", memberships=memberships)
 
-@membership_bp.route("/<member_id>", methods=["GET"])
-@jwt_required()
-def get_active_membership(member_id):
-    gym_id = get_jwt_identity()
-    valid, err = validate_id(gym_id)
-    if not valid:
-        flash(err or "Invalid gym ID", "error")
-        return redirect(url_for("api_v1.dashboard.home"))
-
-    active_memberips, error = MembershipService.list_active_memberships_for_member(gym_id, member_id)
-    if error:
-        flash(error, "error")
-        return redirect(url_for("api_v1.dashboard.home"))
-
-    return render_template("membership/details.html", membership=active_memberips)
-
 @membership_bp.route("/<membership_id>/renew", methods=["POST"])
 @jwt_required()
 def renew_membership(membership_id):
