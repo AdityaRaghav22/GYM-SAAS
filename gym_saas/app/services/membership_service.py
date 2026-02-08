@@ -78,8 +78,7 @@ class MembershipService:
         return None, err
 
     membership = Membership.query.filter(
-        Membership.id == membership_id, Membership.gym_id == gym_id,
-        Membership.is_active.is_(True)).first()
+        Membership.id == membership_id, Membership.gym_id == gym_id).first()
 
     if not membership:
       return None, "Active membership not found"
