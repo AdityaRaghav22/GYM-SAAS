@@ -175,3 +175,8 @@ def refresh():
     # set_refresh_cookies(response, tokens["refresh_token"])
 
     return response, 200
+
+@gym_auth_bp.route("/me", methods=["GET"])
+@jwt_required()
+def me():
+    return {"ok": True}, 200
