@@ -95,11 +95,8 @@ class GymAuthService:
     def refresh_access_token(identity):
         gym = db.session.get(Gym, identity)
 
-        if not gym:
-            return None, "Gym not found"
-
-        if not gym.is_active:
-            return None, "Gym account is inactive"
+        if not gym or not gym.is_active:
+            return None, "Invalid session"
 
         new_access_token = create_access_token(
             identity=gym.id,
@@ -109,13 +106,7 @@ class GymAuthService:
             },
             expires_delta=timedelta(minutes=15))
 
-        new_refresh_token = create_refresh_token(
-            identity=gym.id, expires_delta=timedelta(days=30))
-
-        return {
-            "access_token": new_access_token,
-            "refresh_token": new_refresh_token
-        }, None
+        return {"access_token": new_access_token}, None
 
     @staticmethod
     def delete_gym(gym_id):
