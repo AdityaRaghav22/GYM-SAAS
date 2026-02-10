@@ -335,12 +335,10 @@
       .then(res => {
         if (res.ok) {
           window.location.replace("/dashboard/");
-        } else {
-          window.location.replace("/");
         }
       })
       .catch(() => {
-        window.location.replace("/");
+        
       });
   </script>
 
