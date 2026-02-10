@@ -29,7 +29,7 @@ def create_app():
 
     # 🔥 expiry
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
-    app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=1)
+    app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)
 
     # 🔥 Render-safe cookie flags
     app.config["JWT_COOKIE_SECURE"] = True
@@ -82,7 +82,7 @@ def create_app():
 
     @jwt.expired_token_loader
     def expired_callback(jwt_header, jwt_payload):
-        return redirect("/")
+        return {"msg": "token expired"}, 401
 
     @jwt.invalid_token_loader
     def invalid_token_callback(reason):

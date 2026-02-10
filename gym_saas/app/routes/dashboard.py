@@ -6,4 +6,6 @@ dashboard_bp = Blueprint("dashboard", __name__)
 @dashboard_bp.route("/", methods=["GET"])
 @jwt_required()
 def home():
+
+    
     return render_template("dashboard/home.html")

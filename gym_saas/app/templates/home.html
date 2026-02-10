@@ -337,15 +337,14 @@
           // Refresh succeeded → go to dashboard
           window.location.replace("/dashboard/");
         } else {
-          // Refresh failed → login
-          window.location.replace("/gym/login");
+          // Refresh failed → Landing Page
+          window.location.replace("/");
         }
       })
       .catch(() => {
-        window.location.replace("/gym/login");
+        window.location.replace("/");
       });
   </script>
-
 
 </body>
 
