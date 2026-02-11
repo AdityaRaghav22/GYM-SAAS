@@ -1,5 +1,6 @@
 from gym_saas.app.extensions import db
 from gym_saas.app.models import Membership, Member, Plan
+from gym_saas.app.services.payment_service import PaymentService
 from gym_saas.app.utils.validation import validate_id
 from gym_saas.app.utils.generate_id import generate_id
 from dateutil.relativedelta import relativedelta
@@ -71,7 +72,7 @@ class MembershipService:
       return None, "Failed to create membership"
 
   @staticmethod
-  def renew_membership(gym_id, membership_id):
+  def renew_membership(gym_id, membership_id, amount = None, payment_method = "cash"):
     for value in [gym_id, membership_id]:
       valid, err = validate_id(value)
       if not valid:
@@ -107,31 +108,45 @@ class MembershipService:
     if now > grace_deadline:
       return MembershipService.deactivate_membership(gym_id, membership_id)
 
-    # Grace period → allow renewal
     new_start = now
     new_end = new_start + relativedelta(months=plan.duration_months)
 
-    renewed = Membership(id=generate_id(),
-                         gym_id=gym_id,
-                         member_id=membership.member_id,
-                         plan_id=plan.id,
-                         start_date=new_start,
-                         end_date=new_end,
-                         status="active",
-                         is_active=True)
+    renewed = Membership(
+        id=generate_id(),
+        gym_id=gym_id,
+        member_id=membership.member_id,
+        plan_id=plan.id,
+        start_date=new_start,
+        end_date=new_end,
+        status="active",
+        is_active=True
+    )
 
     try:
-      # expire old membership
-      membership.is_active = False
-      membership.status = "cancelled"
+        membership.is_active = False
+        membership.status = "cancelled"
 
-      db.session.add(renewed)
-      db.session.commit()
-      return renewed, None
+        db.session.add(renewed)
+        db.session.flush()  # 🔑 IMPORTANT
+
+        # 🔐 PAYMENT LOGIC (balance-aware)
+        if amount is None:
+            amount = plan.price  # default full price
+
+        if amount > 0:
+            PaymentService.create_payment(
+                gym_id=gym_id,
+                membership_id=renewed.id,
+                amount=amount,
+                payment_method=payment_method
+            )
+
+        db.session.commit()
+        return renewed, None
 
     except Exception:
-      db.session.rollback()
-      return None, "Renewal failed"
+        db.session.rollback()
+        return None, "Renewal failed"
 
   @staticmethod
   def list_active_memberships(gym_id):
@@ -237,5 +252,14 @@ class MembershipService:
 
     return updated
 
+@staticmethod
+def get_membership_balance(gym_id, membership):
+  gym_id_valid, error = validate_id(gym_id)
+  if not gym_id_valid:
+    return None, error
+  total_paid = PaymentService.get_total_paid_for_membership(
+      gym_id, membership.id
+  )
+  return max(membership.plan.price - total_paid, 0)
 
 # -- ../routes/membership.py

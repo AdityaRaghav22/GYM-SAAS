@@ -107,8 +107,11 @@ def renew_membership(membership_id):
             flash(err or "Invalid ID", "error")
             return redirect(url_for("api_v1.membership.list_membership"))
 
+    amount = request.form.get("amount_paid", type=float)
+    payment_method = request.form.get("payment_method", "cash")
+
     membership, error = MembershipService.renew_membership(
-        gym_id, membership_id)
+        gym_id, membership_id, amount, payment_method)
 
     if error:
         flash(error, "error")
@@ -116,23 +119,6 @@ def renew_membership(membership_id):
 
     if membership is None:
         flash("Failed to renew membership", "error")
-        return redirect(url_for("api_v1.membership.list_membership"))
-
-    plan, error = PlanService.get_plan(gym_id, membership.plan_id)
-    if error:
-        flash(error, "error")
-        return redirect(url_for("api_v1.membership.list_membership"))
-
-    if plan is None:
-        flash("Plan not found", "error")
-        return redirect(url_for("api_v1.membership.list_membership"))
-
-    payment_method = request.form.get("payment_method")
-    payment, error = PaymentService.create_payment(gym_id, membership.id,
-                                                   plan.price, payment_method)
-
-    if error:
-        flash(error, "error")
         return redirect(url_for("api_v1.membership.list_membership"))
 
     flash("Membership renewed successfully", "success")
