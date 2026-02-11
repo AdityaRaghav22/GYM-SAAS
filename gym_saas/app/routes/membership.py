@@ -123,10 +123,6 @@ def renew_membership(membership_id):
 
     flash("Membership renewed successfully", "success")
 
-    if membership is None:
-        flash("Failed to renew membership", "error")
-        return redirect("api_v1.membership.list_membership")
-
     # ✅ Redirect to SAME MEMBER DETAILS PAGE
     return redirect(
         url_for("api_v1.member.member_details", member_id=membership.member_id))
