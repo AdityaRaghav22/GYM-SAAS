@@ -156,7 +156,7 @@ class MembershipService:
     for value in [gym_id, member_id]:
       valid, err = validate_id(value)
       if not valid:
-        return None, err
+        return [], err
 
     memberships = Membership.query.filter(
         Membership.gym_id == gym_id, Membership.member_id == member_id, Membership.is_active.is_(True), ).all()
