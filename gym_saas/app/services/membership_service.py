@@ -123,7 +123,7 @@ class MembershipService:
     try:
       # expire old membership
       membership.is_active = False
-      membership.status = "expired"
+      membership.status = "cancelled"
 
       db.session.add(renewed)
       db.session.commit()
