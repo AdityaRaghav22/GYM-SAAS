@@ -34,6 +34,9 @@ def create_plan():
         return redirect(url_for("api_v1.dashboard.home"))
 
     flash("Plan created successfully", "success")
+    print("plan created")
+    print(plan)
+    
     return redirect(url_for("api_v1.dashboard.home"))
 
 @plan_bp.route("/list", methods=["GET"])
