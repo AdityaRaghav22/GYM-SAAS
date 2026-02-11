@@ -344,14 +344,8 @@
                         <!-- Paid Amount -->
                         <div class="form-group">
                             <label class="boxy-label">Amount Paid</label>
-                            <input
-                                type="number"
-                                name="amount_paid"
-                                class="boxy-input"
-                                placeholder="₹ Amount paid (optional)"
-                                min="0"
-                                step="0.01"
-                            >
+                            <input type="number" name="amount_paid" class="boxy-input"
+                                placeholder="₹ Amount paid (optional)" min="0" step="0.01">
                         </div>
 
                         <button class="btn-blocky btn-success" style="margin-top: 1rem;">
@@ -362,8 +356,10 @@
             </div>
         </div>
 
-        <!-- Column 3: Payment History -->
+        <!-- Column 3: Payment History + Balance -->
         <div class="column">
+
+            <!-- Payment History -->
             <div class="boxy-card">
                 <div class="card-header-boxy header-grey">
                     <span>Payment History</span>
@@ -376,8 +372,9 @@
                         <div style="font-weight: bold; font-size: 1.1rem;">₹{{ p.amount }}</div>
                         <div style="text-align: right;">
                             <div class="boxy-label" style="font-size: 0.7rem; color: #666;">METHOD</div>
-                            <div style="font-family: 'Space Grotesk', sans-serif; text-transform: uppercase;">{{
-                                p.payment_method }}</div>
+                            <div style="font-family: 'Space Grotesk', sans-serif; text-transform: uppercase;">
+                                {{ p.payment_method }}
+                            </div>
                         </div>
                     </div>
                     {% else %}
@@ -387,38 +384,38 @@
                     {% endfor %}
                 </div>
             </div>
-        </div>
-        
-        <!-- Balance Summary Card -->
-        <div class="boxy-card">
-            <div class="card-header-boxy header-dark">
-                <span>Balance Summary</span>
-                <span>₹</span>
+
+            <!-- Balance Summary -->
+            <div class="boxy-card">
+                <div class="card-header-boxy header-dark">
+                    <span>Balance Summary</span>
+                    <span>₹</span>
+                </div>
+
+                <div class="card-body-boxy">
+                    <div class="sub-item">
+                        <div class="boxy-label">Total Plan Amount</div>
+                        <div style="font-size:1.3rem; font-weight:bold;">
+                            ₹{{ overall_plan_total }}
+                        </div>
+                    </div>
+
+                    <div class="sub-item">
+                        <div class="boxy-label">Total Paid</div>
+                        <div style="font-size:1.3rem; font-weight:bold; color:green;">
+                            ₹{{ overall_paid }}
+                        </div>
+                    </div>
+
+                    <div class="sub-item" style="background:#fff7ed; border:3px solid black;">
+                        <div class="boxy-label">Remaining Balance</div>
+                        <div style="font-size:1.6rem; font-weight:bold; color:#dc2626;">
+                            ₹{{ overall_balance }}
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="card-body-boxy">
-                <div class="sub-item">
-                    <div class="boxy-label">Total Plan Amount</div>
-                    <div style="font-size:1.3rem; font-weight:bold;">
-                        ₹{{ overall_plan_total }}
-                    </div>
-                </div>
-
-                <div class="sub-item">
-                    <div class="boxy-label">Total Paid</div>
-                    <div style="font-size:1.3rem; font-weight:bold; color:green;">
-                        ₹{{ overall_paid }}
-                    </div>
-                </div>
-
-                <div class="sub-item"
-                     style="background:#fff7ed; border:3px solid black;">
-                    <div class="boxy-label">Remaining Balance</div>
-                    <div style="font-size:1.6rem; font-weight:bold; color:#dc2626;">
-                        ₹{{ overall_balance }}
-                    </div>
-                </div>
-            </div>
         </div>
 
     </div>
