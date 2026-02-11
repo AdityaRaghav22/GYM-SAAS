@@ -281,12 +281,6 @@
                             Expires: <strong>{{m.end_date.strftime('%d %b %Y') }}</strong>
                         </div>
 
-                        <div class="form-group">
-                            <label class="boxy-label">Amount Paid</label>
-                            <input type="number" name="amount_paid" class="boxy-input"
-                                placeholder="₹ Amount paid (optional)" min="0" step="0.01">
-                        </div>
-
                         <form method="POST"
                             action="{{ url_for('api_v1.membership.renew_membership', membership_id=m.id) }}">
                             <div style="display: flex; gap: 0.5rem;">
@@ -419,6 +413,34 @@
                             ₹{{ overall_balance }}
                         </div>
                     </div>
+
+                    {% if overall_balance > 0 %}
+                    <!-- 🔥 Clear Balance Form -->
+                    <form method="POST" action="{{ url_for('api_v1.member.member_details', member_id=member.id) }}"
+                        style="margin-top:1rem;" onsubmit="return confirm('Clear full remaining balance?');">
+
+                        <input type="hidden" name="clear_balance" value="true">
+
+                        <!-- Payment Method -->
+                        <div class="form-group">
+                            <label class="boxy-label">Payment Method</label>
+                            <select name="payment_method" class="boxy-select" required>
+                                <option value="cash">Cash</option>
+                                <option value="upi">UPI</option>
+                                <option value="card">Card</option>
+                            </select>
+                        </div>
+
+                        <button class="btn-blocky btn-success">
+                            Clear Balance (₹{{ overall_balance }})
+                        </button>
+                    </form>
+                    {% else %}
+                    <!-- ✅ Cleared State -->
+                    <div style="text-align:center; margin-top:1rem; font-weight:bold; color:green;">
+                        ✅ Balance Cleared
+                    </div>
+                    {% endif %}
                 </div>
             </div>
 

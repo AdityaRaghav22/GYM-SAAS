@@ -122,18 +122,15 @@ class PaymentService:
     return total, None
 
   @staticmethod
-  def get_total_paid_for_membership(gym_id, membership_id):
-    for value in [gym_id, membership_id]:
-      valid, err = validate_id(value)
-      if not valid:
-        return None, err
-        
-    total = (
-        db.session.query(db.func.coalesce(db.func.sum(Payment.amount), 0))
-        .filter(
+  def get_total_paid_for_membership(gym_id, membership_id) -> float:
+    valid, _ = validate_id(membership_id)
+    if not valid:
+      return 0.0
+
+    total = (db.session.query(
+        db.func.coalesce(db.func.sum(Payment.amount), 0)).filter(
             Payment.gym_id == gym_id,
             Payment.membership_id == membership_id,
-        )
-        .scalar()
-    )
-    return total
+        ).scalar())
+
+    return float(total or 0)
