@@ -11,7 +11,7 @@ class PaymentService:
 
   @staticmethod
   def create_payment(gym_id, membership_id, amount, payment_method):
-    if not all([gym_id, membership_id, amount, payment_method]):
+    if not all([gym_id, membership_id, payment_method]):
       return None, "All fields are required"
 
     for value in [gym_id, membership_id]:
@@ -37,7 +37,7 @@ class PaymentService:
     if amount <= 0:
       return None, "Amount must be greater than zero"
 
-    if payment_method not in {"cash", "upi"}:
+    if payment_method not in {"cash", "upi", "card"}:
       return None, "Invalid payment method"
 
     payment = Payment(id=generate_id(),
