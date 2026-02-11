@@ -215,10 +215,19 @@
         });
     </script>
     <script>
-            fetch("/gym/refresh", {
-                method: "POST",
-          credentials: "include"
-        });
+        fetch("/gym/refresh", {
+            method: "POST",
+            credentials: "include"
+        })
+            .then(res => {
+                if (!res.ok) {
+                    // ❌ session invalid or expired
+                    window.location.replace("/");
+                }
+            })
+            .catch(() => {
+                window.location.replace("/");
+            });
     </script>
 
 </body>

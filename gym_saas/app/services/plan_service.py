@@ -11,7 +11,7 @@ from typing import Optional
 class PlanService:
 
   @staticmethod
-  def create_plan(gym_id, name, duration_months, price, description=None):
+  def create_plan(gym_id, name, duration_months, price, description=None, free_months = None):
     if not all([gym_id, name, duration_months, price]):
       return None, "All fields are required"
 
@@ -29,15 +29,22 @@ class PlanService:
 
     try:
       duration_months = int(duration_months)
-
-    except (TypeError, ValueError):
-      return None, "Duration must be a positive integer"
+      if free_months in (None, "", " "):
+        free_months = 0 
+      free_months = int(free_months)
       
+    except (TypeError, ValueError):
+      return None, "Duration and free months must be integers"
+  
     duration_valid, duration_error = validate_duration_months(duration_months)
+    free_months_valid, free_months_error = validate_duration_months(free_months)
     
-    if not duration_valid:
-      return None, duration_error
+    if not duration_valid or free_months_valid:
+      return None, (duration_error or free_months_error)
 
+    if free_months is not None:
+        duration_months = duration_months + free_months
+      
     try:
       price = Decimal(price)
       

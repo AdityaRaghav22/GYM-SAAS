@@ -26,6 +26,7 @@ def create_plan():
         data.get("duration_months"),
         data.get("price"),
         data.get("description"),
+        free_months= data.get("free_months") or 0
     )
 
     if error:
