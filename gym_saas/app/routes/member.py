@@ -99,13 +99,25 @@ def member_details(member_id):
             "balance": balance,
         }
 
+    overall_plan_total = sum(
+        data["plan_amount"] for data in membership_balances.values()
+    )
+    overall_paid = sum(
+        data["paid"] for data in membership_balances.values()
+    )
+    overall_balance = sum(
+        data["balance"] for data in membership_balances.values()
+    )
+
     return render_template(
         "member/member_details.html",
         member=member,
         memberships=memberships,
         payments=payments,
         plans=plans,
-        membership_balances=membership_balances
+        overall_plan_total=overall_plan_total,
+        overall_paid=overall_paid,
+        overall_balance=overall_balance
     )
 
 
