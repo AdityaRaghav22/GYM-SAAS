@@ -388,6 +388,38 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Balance Summary Card -->
+        <div class="boxy-card">
+            <div class="card-header-boxy header-dark">
+                <span>Balance Summary</span>
+                <span>₹</span>
+            </div>
+
+            <div class="card-body-boxy">
+                <div class="sub-item">
+                    <div class="boxy-label">Total Plan Amount</div>
+                    <div style="font-size:1.3rem; font-weight:bold;">
+                        ₹{{ overall_plan_total }}
+                    </div>
+                </div>
+
+                <div class="sub-item">
+                    <div class="boxy-label">Total Paid</div>
+                    <div style="font-size:1.3rem; font-weight:bold; color:green;">
+                        ₹{{ overall_paid }}
+                    </div>
+                </div>
+
+                <div class="sub-item"
+                     style="background:#fff7ed; border:3px solid black;">
+                    <div class="boxy-label">Remaining Balance</div>
+                    <div style="font-size:1.6rem; font-weight:bold; color:#dc2626;">
+                        ₹{{ overall_balance }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 </div>

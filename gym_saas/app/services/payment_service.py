@@ -120,3 +120,20 @@ class PaymentService:
         0)).filter(Payment.gym_id == gym_id, Payment.status == "PAID",
                    Payment.created_at.between(start_date, end_date)).scalar()
     return total, None
+
+  @staticmethod
+  def get_total_paid_for_membership(gym_id, membership_id):
+    for value in [gym_id, membership_id]:
+      valid, err = validate_id(value)
+      if not valid:
+        return None, err
+        
+    total = (
+        db.session.query(db.func.coalesce(db.func.sum(Payment.amount), 0))
+        .filter(
+            Payment.gym_id == gym_id,
+            Payment.membership_id == membership_id,
+        )
+        .scalar()
+    )
+    return total

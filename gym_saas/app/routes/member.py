@@ -72,12 +72,33 @@ def member_details(member_id):
         flash(error, "error")
         return redirect(url_for("api_v1.member.list_member"))
 
+    if not memberships:
+        flash("No active memberships found", "info")
+        return redirect(url_for("api_v1.member.list_member"))
+
     payments, error = PaymentService.list_payments_by_member(gym_id, member_id)
     if error:
         flash(error, "error")
         return redirect(url_for("api_v1.member.list_member"))
 
     plans, _ = PlanService.list_plans(gym_id)
+
+    membership_balances = {}
+
+    for m in memberships:
+        total_paid = PaymentService.get_total_paid_for_membership(
+            gym_id, m.id
+        )
+
+        plan_amount = m.plan.price  # assuming relationship exists
+        balance = plan_amount - total_paid
+
+        membership_balances[m.id] = {
+            "plan_amount": plan_amount,
+            "paid": total_paid,
+            "balance": balance,
+        }
+
     return render_template(
         "member/member_details.html",
         member=member,
