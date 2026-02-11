@@ -48,7 +48,7 @@ def create_membership():
         return redirect(url_for("api_v1.dashboard.home"))
 
     raw_amount = data.get("amount_paid")
-    
+
     try:
         if raw_amount in (None, "", " "):
             # 👇 default to FULL payment
@@ -122,7 +122,14 @@ def renew_membership(membership_id):
         return redirect(url_for("api_v1.membership.list_membership"))
 
     flash("Membership renewed successfully", "success")
-    return redirect(url_for("api_v1.membership.list_membership"))
+
+    if membership is None:
+        flash("Failed to renew membership", "error")
+        return redirect("api_v1.membership.list_membership")
+
+    # ✅ Redirect to SAME MEMBER DETAILS PAGE
+    return redirect(
+        url_for("api_v1.member.member_details", member_id=membership.member_id))
 
 
 @membership_bp.route("/<membership_id>/deactivate", methods=["POST"])
