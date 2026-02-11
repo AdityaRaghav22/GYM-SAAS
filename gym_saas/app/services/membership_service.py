@@ -140,7 +140,7 @@ class MembershipService:
         amount = Decimal(amount)
         PaymentService.create_payment(
             gym_id=gym_id,
-            membership_id=membership_id,
+            membership_id=renewed.id,
             amount=amount,
             payment_method=payment_method
         )

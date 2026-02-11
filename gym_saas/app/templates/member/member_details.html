@@ -271,12 +271,7 @@
                     <span>Enrolled Plans</span>
                     <div style="border: 1px solid white; padding: 0 4px;">{{ memberships|length }}</div>
                 </div>
-                <!-- Paid Amount -->
-                <div class="form-group">
-                    <label class="boxy-label">Amount Paid</label>
-                    <input type="number" name="amount_paid" class="boxy-input"
-                        placeholder="₹ Amount paid (optional)" min="0" step="0.01">
-                </div>
+                
                 <div class="card-body-boxy">
                     {% for m in memberships %}
                     <div class="sub-item">
@@ -289,6 +284,12 @@
 
                         <form method="POST"
                             action="{{ url_for('api_v1.membership.renew_membership', membership_id=m.id) }}">
+                            <!-- Paid Amount -->
+                            <div class="form-group">
+                                <label class="boxy-label">Amount Paid</label>
+                                <input type="number" name="amount_paid" class="boxy-input"
+                                    placeholder="₹ Amount paid (optional)" min="0" step="0.01">
+                            </div>
                             <div style="display: flex; gap: 0.5rem;">
                                 <select name="payment_method" class="boxy-select" style="flex: 1;" required>
                                     <option value="cash">Cash</option>
