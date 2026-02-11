@@ -128,9 +128,9 @@ def renew_membership(membership_id):
         return redirect(url_for("api_v1.membership.list_membership"))
 
     payment_method = request.form.get("payment_method")
-
+    amount = request.form.get("amount_paid")
     payment, error = PaymentService.create_payment(gym_id, membership.id,
-                                                   plan.price, payment_method)
+                                                   amount, payment_method)
 
     if error:
         flash(error, "error")
