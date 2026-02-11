@@ -215,37 +215,10 @@
         });
     </script>
     <script>
-        async function fetchWithAuth(url, options = {}) {
-            // 1️⃣ First attempt
-            let res = await fetch(url, {
-                ...options,
-                credentials: "include"
-            });
-
-            // 2️⃣ If access token expired
-            if (res.status === 401) {
-                // try refresh
-                const refresh = await fetch("/gym/refresh", {
-                    method: "POST",
-                    credentials: "include"
-                });
-
-                // 3️⃣ Refresh failed → logout
-                if (!refresh.ok) {
-                    window.location.replace("/");
-                    return;
-                }
-
-                // 4️⃣ Retry original request
-                res = await fetch(url, {
-                    ...options,
-                    credentials: "include"
-                });
-            }
-
-            return res;
-        }
-
+            fetch("/gym/refresh", {
+                method: "POST",
+          credentials: "include"
+        });
     </script>
 
 </body>
