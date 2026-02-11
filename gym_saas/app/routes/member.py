@@ -105,6 +105,7 @@ def member_details(member_id):
         memberships=memberships,
         payments=payments,
         plans=plans,
+        membership_balances=membership_balances
     )
 
 

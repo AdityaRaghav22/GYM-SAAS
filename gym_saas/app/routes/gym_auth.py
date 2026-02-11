@@ -1,12 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, Response, jsonify, make_response
-from flask_jwt_extended import (
-    jwt_required,
-    get_jwt_identity,
-    set_access_cookies,
-    set_refresh_cookies,
-    unset_jwt_cookies,
-    verify_jwt_in_request
-)
+from flask_jwt_extended import (jwt_required, get_jwt_identity,
+                                set_access_cookies, set_refresh_cookies,
+                                unset_jwt_cookies, verify_jwt_in_request)
 from gym_saas.app.services.gym_auth_service import GymAuthService
 from gym_saas.app.utils.route_validation import validate_register, validate_login
 from typing import cast
@@ -17,6 +12,7 @@ gym_auth_bp = Blueprint("gym_auth", __name__)
 # GET PAGES
 # =========================
 
+
 @gym_auth_bp.route("/register", methods=["GET"])
 def register_page():
     try:
@@ -24,6 +20,7 @@ def register_page():
         return redirect(url_for("api_v1.dashboard.home"))
     except:
         return render_template("gym/register.html")
+
 
 @gym_auth_bp.route("/login", methods=["GET"])
 def login_page():
@@ -62,6 +59,7 @@ def register():
     flash("Registration successful. Please log in.", "success")
     return redirect(url_for("api_v1.gym_auth.login_page"))
 
+
 @gym_auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.form
@@ -80,14 +78,13 @@ def login():
         flash(error or "Authentication failed.", "error")
         return render_template("gym/login.html")
 
-    response = make_response(
-        redirect(url_for("api_v1.dashboard.home"))
-    )
+    response = make_response(redirect(url_for("api_v1.dashboard.home")))
 
     set_access_cookies(response, tokens["access_token"])
     set_refresh_cookies(response, tokens["refresh_token"])
 
     return response
+
 
 @gym_auth_bp.route("/logout", methods=["POST"])
 def logout():
@@ -97,9 +94,11 @@ def logout():
     flash("Logged out successfully.", "success")
     return response
 
+
 # =========================
 # PROFILE
 # =========================
+
 
 @gym_auth_bp.route("/profile", methods=["GET"])
 @jwt_required()
@@ -112,6 +111,7 @@ def profile():
         return redirect(url_for("api_v1.dashboard.home"))
 
     return render_template("gym/profile.html", gym=gym)
+
 
 @gym_auth_bp.route("/update", methods=["POST"])
 @jwt_required()
@@ -134,6 +134,7 @@ def update():
         flash("Update Failed.", "error")
 
     return redirect(url_for("api_v1.gym_auth.profile"))
+
 
 @gym_auth_bp.route("/delete", methods=["POST"])
 @jwt_required()
@@ -158,20 +159,15 @@ def delete():
 @gym_auth_bp.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 def refresh():
-    print("refreshing tokens")
     identity = get_jwt_identity()
 
-    tokens, error = GymAuthService.refresh_access_token(identity)
+    access_token, error = GymAuthService.refresh_access_token(identity)
 
-    if error or not tokens:
-        response = jsonify({"msg": "Session expired"})
+    if error or not access_token:
+        response = make_response("", 401)
         unset_jwt_cookies(response)
-        return response, 401
+        return response
 
-    response = jsonify({"msg": "access token refreshed"})
-    set_access_cookies(response, tokens["access_token"])
-
-    # ❌ DO NOT set refresh cookie again
-    # set_refresh_cookies(response, tokens["refresh_token"])
-
-    return response, 200
+    response = make_response("", 204)
+    set_access_cookies(response, access_token)
+    return response

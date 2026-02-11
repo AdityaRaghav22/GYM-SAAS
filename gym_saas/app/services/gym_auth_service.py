@@ -99,14 +99,9 @@ class GymAuthService:
             return None, "Invalid session"
 
         new_access_token = create_access_token(
-            identity=gym.id,
-            additional_claims={
-                "gym_id": gym.id,
-                "is_active": gym.is_active
-            },
-            expires_delta=timedelta(minutes=15))
+            identity=gym.id, expires_delta=timedelta(minutes=15))
 
-        return {"access_token": new_access_token}, None
+        return new_access_token, None
 
     @staticmethod
     def delete_gym(gym_id):
