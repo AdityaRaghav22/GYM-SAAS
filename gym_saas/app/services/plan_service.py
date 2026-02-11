@@ -37,10 +37,13 @@ class PlanService:
       return None, "Duration and free months must be integers"
   
     duration_valid, duration_error = validate_duration_months(duration_months)
-    free_months_valid, free_months_error = validate_duration_months(free_months)
-    
-    if not duration_valid or not free_months_valid:
-      return None, (duration_error or free_months_error)
+    if free_months is not None and free_months > 0:
+      free_months_valid, free_months_error = validate_duration_months(free_months)
+      if not free_months_valid:
+        return None, free_months_error
+      
+    if not duration_valid :
+      return None, duration_error
 
     if free_months is not None:
         duration_months = duration_months + free_months
