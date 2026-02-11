@@ -121,16 +121,12 @@ class PaymentService:
                    Payment.created_at.between(start_date, end_date)).scalar()
     return total, None
 
-  @staticmethod
-  def get_total_paid_for_membership(gym_id, membership_id) -> float:
-    valid, _ = validate_id(membership_id)
-    if not valid:
-      return 0.0
+@staticmethod
+def get_total_paid_for_membership(gym_id, membership_id) -> Decimal:
+  total = (db.session.query(db.func.coalesce(db.func.sum(
+      Payment.amount), 0)).filter(
+          Payment.gym_id == gym_id,
+          Payment.membership_id == membership_id,
+      ).scalar())
 
-    total = (db.session.query(
-        db.func.coalesce(db.func.sum(Payment.amount), 0)).filter(
-            Payment.gym_id == gym_id,
-            Payment.membership_id == membership_id,
-        ).scalar())
-
-    return float(total or 0)
+  return total if total is not None else Decimal("0")
