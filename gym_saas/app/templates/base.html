@@ -215,20 +215,32 @@
         });
     </script>
     <script>
-        fetch("/gym/refresh", {
-            method: "POST",
-            credentials: "include"
-        })
-            .then(res => {
-                if (!res.ok) {
-                    // ❌ session invalid or expired
-                    window.location.replace("/");
-                }
-            })
-            .catch(() => {
-                window.location.replace("/");
-            });
+        (function () {
+            const REFRESH_INTERVAL = 1000 * 60 * 10; // 10 minutes
+
+            function refreshToken() {
+                fetch("/gym/refresh", {
+                    method: "POST",
+                    credentials: "include"
+                })
+                    .then(res => {
+                        if (!res.ok) {
+                            window.location.replace("/");
+                        }
+                    })
+                    .catch(() => {
+                        window.location.replace("/");
+                    });
+            }
+
+            // 🔁 refresh periodically
+            setInterval(refreshToken, REFRESH_INTERVAL);
+
+            // 🔁 also refresh on page load
+            refreshToken();
+        })();
     </script>
+
 
 </body>
 

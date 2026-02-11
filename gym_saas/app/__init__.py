@@ -2,10 +2,10 @@ from flask import Flask
 from .extensions import db, migrate, jwt
 from gym_saas.config import DevelopmentConfig
 from datetime import timedelta
-from flask_jwt_extended import (verify_jwt_in_request, get_jwt_identity,
-                                create_access_token, set_access_cookies)
-from flask import make_response, request, redirect
+from flask import request, redirect, url_for, flash
 
+def is_browser():
+    return "text/html" in request.headers.get("Accept", "")
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -40,17 +40,25 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
-    # 🔐 JWT CALLBACKS
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
+        if is_browser():
+            flash("Please login to continue.", "warning")
+            return redirect(url_for("gym_auth.login_page"))
         return {"msg": "missing or invalid token"}, 401
 
     @jwt.expired_token_loader
     def expired_callback(jwt_header, jwt_payload):
+        if is_browser():
+            flash("Session expired. Please login again.", "error")
+            return redirect(url_for("gym_auth.login_page"))
         return {"msg": "token expired"}, 401
 
     @jwt.invalid_token_loader
     def invalid_token_callback(reason):
+        if is_browser():
+            flash("Invalid session. Please login again.", "error")
+            return redirect(url_for("gym_auth.login_page"))
         return {"msg": "invalid token"}, 401
 
     # import AFTER init

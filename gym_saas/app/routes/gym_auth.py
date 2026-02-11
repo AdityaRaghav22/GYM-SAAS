@@ -164,10 +164,10 @@ def refresh():
     access_token, error = GymAuthService.refresh_access_token(identity)
 
     if error or not access_token:
-        response = make_response("", 401)
+        response = make_response({"msg": "session expired"}, 401)
         unset_jwt_cookies(response)
         return response
 
-    response = make_response("", 204)
+    response = make_response({"msg": "refreshed"}, 200)
     set_access_cookies(response, access_token)
     return response

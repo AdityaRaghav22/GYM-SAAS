@@ -1,10 +1,12 @@
+import decimal
 from gym_saas.app.extensions import db
 from gym_saas.app.models import Membership, Member, Plan
 from gym_saas.app.services.payment_service import PaymentService
-from gym_saas.app.utils.validation import validate_id
+from gym_saas.app.utils.validation import validate_id, validate_price
 from gym_saas.app.utils.generate_id import generate_id
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
+from decimal import Decimal
 
 
 class MembershipService:
@@ -112,41 +114,43 @@ class MembershipService:
     new_end = new_start + relativedelta(months=plan.duration_months)
 
     renewed = Membership(
-        id=generate_id(),
-        gym_id=gym_id,
-        member_id=membership.member_id,
-        plan_id=plan.id,
-        start_date=new_start,
-        end_date=new_end,
-        status="active",
-        is_active=True
+      id=generate_id(),
+      gym_id=gym_id,
+      member_id=membership.member_id,
+      plan_id=plan.id,
+      start_date=new_start,
+      end_date=new_end,
+      status="active",
+      is_active=True
     )
 
     try:
-        membership.is_active = False
-        membership.status = "cancelled"
+      membership.is_active = False
+      membership.status = "cancelled"
 
-        db.session.add(renewed)
-        db.session.flush()  # 🔑 IMPORTANT
+      db.session.add(renewed)
+      db.session.flush()  # 🔑 IMPORTANT
 
-        # 🔐 PAYMENT LOGIC (balance-aware)
-        if amount is None:
-            amount = plan.price  # default full price
+      # 🔐 PAYMENT LOGIC (balance-aware)
+      if amount is None:
+        amount = plan.price  # default full price
 
-        if amount > 0:
-            PaymentService.create_payment(
-                gym_id=gym_id,
-                membership_id=renewed.id,
-                amount=amount,
-                payment_method=payment_method
-            )
+      if amount > 0:
+         # 🔐 Create payment for the renewed membership
+        amount = Decimal(amount)
+        PaymentService.create_payment(
+            gym_id=gym_id,
+            membership_id=renewed.id,
+            amount=amount,
+            payment_method=payment_method
+        )
 
-        db.session.commit()
-        return renewed, None
+      db.session.commit()
+      return renewed, None
 
     except Exception:
-        db.session.rollback()
-        return None, "Renewal failed"
+      db.session.rollback()
+      return None, "Renewal failed"
 
   @staticmethod
   def list_active_memberships(gym_id):
