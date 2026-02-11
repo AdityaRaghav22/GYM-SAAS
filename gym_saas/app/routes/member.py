@@ -81,24 +81,29 @@ def member_details(member_id):
             flash("No active membership found", "error")
             return redirect(request.url)
 
-        if membership.balance_amount <= 0:
+        total_paid = PaymentService.get_total_paid_for_membership(
+            gym_id, membership.id
+        )
+
+        balance = membership.plan.price - total_paid
+
+        if balance <= 0:
             flash("No balance to clear", "info")
             return redirect(request.url)
 
+        # 🔐 Create payment for remaining balance
         PaymentService.create_payment(
             gym_id=gym_id,
             membership_id=membership.id,
-            amount=membership.balance_amount,   # backend authority
+            amount=balance,
             payment_method=request.form.get("payment_method", "cash")
         )
-
-        membership.paid_amount += membership.balance_amount
-        membership.balance_amount = 0
 
         db.session.commit()
 
         flash("Balance cleared successfully", "success")
-        return redirect("api_v1.member.list_member")
+        return redirect(request.url)
+
 
     # --- Memberships (READ ONLY) ---
     memberships, error = MembershipService.list_active_memberships_for_member(
