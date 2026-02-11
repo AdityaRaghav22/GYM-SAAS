@@ -73,8 +73,7 @@ def member_details(member_id):
         return redirect(url_for("api_v1.member.list_member"))
 
     if not memberships:
-        flash("No active memberships found", "info")
-        return redirect(url_for("api_v1.member.list_member"))
+        return [], None
 
     payments, error = PaymentService.list_payments_by_member(gym_id, member_id)
     if error:
