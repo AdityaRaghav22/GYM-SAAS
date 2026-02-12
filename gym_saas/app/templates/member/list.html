@@ -239,6 +239,17 @@
         
         <!-- No padding on body so table borders hit the edge -->
         <div class="card-body-boxy" style="padding: 0;">
+            <div style="padding: 1rem; border-bottom: 2px solid black;">
+                <input
+                    type="text"
+                    id="memberSearch"
+                    placeholder="Search by name or phone..."
+                    class="boxy-input"
+                    style="width: 100%;"
+                    onkeyup="filterMembers()"
+                >
+            </div>
+
             <div class="table-container">
                 <table class="boxy-table">
                     <thead>
@@ -284,4 +295,24 @@
     </div>
 
 </div>
+
+<script>
+function filterMembers() {
+    const input = document.getElementById("memberSearch");
+    const filter = input.value.toLowerCase();
+    const rows = document.querySelectorAll(".boxy-table tbody tr");
+
+    rows.forEach(row => {
+        const name = row.cells[0]?.innerText.toLowerCase();
+        const phone = row.cells[1]?.innerText.toLowerCase();
+
+        if (name.includes(filter) || phone.includes(filter)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+}
+</script>
+
 {% endblock %}

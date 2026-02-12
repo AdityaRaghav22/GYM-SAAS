@@ -68,7 +68,7 @@ class MemberService:
     if not gym:
       return None, "Gym does not exist"
 
-    members = Member.query.filter_by(gym_id=gym_id).all()
+    members = Member.query.filter_by(gym_id=gym_id).order_by(Member.name.asc()).all()
 
     return members, None
 
