@@ -200,13 +200,19 @@
     }
 
     .partial-due td {
-        background: #fef9c3 !important;  /* Soft Yellow */
+        background: #fef9c3 !important;
+        /* Soft Yellow */
     }
 
     .full-due td {
-        background: #fee2e2 !important;  /* Soft Red */
+        background: #fee2e2 !important;
+        /* Soft Red */
     }
 
+    .boxy-table th,
+    .boxy-table td {
+        vertical-align: middle;
+    }
 </style>
 
 <div class="boxy-container">
@@ -255,7 +261,9 @@
                             <th>Name</th>
                             <th>Phone</th>
                             <th>Status</th>
+                            <th>Balance</th>
                             <th width="120">Action</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -299,7 +307,7 @@
 
                         {% else %}
                         <tr>
-                            <td colspan="4" style="text-align:center; padding: 3rem; color: #666;">
+                            <td colspan="5" style="text-align:center; padding: 3rem; color: #666;">
                                 -- No members found in directory --
                             </td>
                         </tr>
