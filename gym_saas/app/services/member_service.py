@@ -11,7 +11,7 @@ class MemberService:
 
   @staticmethod
   def create_member(gym_id, name, phone_number=None):
-    if not all([gym_id, name, phone_number]):
+    if not all([gym_id, name]):
       return None, "All fields are required"
 
     gym_id_valid, gym_id_error = validate_id(gym_id)
