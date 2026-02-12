@@ -209,18 +209,17 @@
                                 <span class="status-badge status-unknown">Unknown</span>
                               {% endif %}
                             </td>
-
-                        </tr>
-                        {% else %}
-                        <tr>
-                            <td colspan="5" style="text-align: center; padding: 3rem; color: #666; font-style: italic;">
-                                No memberships found in the system.
-                            </td>
                             <td>
                                 <a href="{{ url_for('api_v1.member.view_member', member_id=membership.member.id) }}"
                                    class="view-btn">
                                     View
                                 </a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 3rem; color: #666; font-style: italic;">
+                                No memberships found in the system.
                             </td>
                         </tr>
                         {% endfor %}
