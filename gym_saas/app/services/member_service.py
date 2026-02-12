@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from typing import Optional
 from gym_saas.app.models import Membership
 
+
 class MemberService:
 
   @staticmethod
@@ -26,12 +27,14 @@ class MemberService:
     if not name_valid:
       return None, name_error
 
-    phone_valid, phone_error = validate_phone_number(phone_number)
-    if not phone_valid:
-      return None, phone_error
-      
-    existing_member = Member.query.filter(
-        Member.gym_id == gym_id, Member.phone_number == phone_number, Member.is_active.is_(False)).first()
+    if phone_number:
+      phone_valid, phone_error = validate_phone_number(phone_number)
+      if not phone_valid:
+        return None, phone_error
+
+    existing_member = Member.query.filter(Member.gym_id == gym_id,
+                                          Member.phone_number == phone_number,
+                                          Member.is_active.is_(False)).first()
 
     if existing_member:
       existing_member.is_active = True
@@ -79,9 +82,10 @@ class MemberService:
     if not member_id_valid:
       return None, member_id_error
 
-    member = Member.query.filter(Member.id == member_id,
-                                 Member.gym_id == gym_id,
-                                 ).first()
+    member = Member.query.filter(
+        Member.id == member_id,
+        Member.gym_id == gym_id,
+    ).first()
 
     if not member:
       return None, "Member does not exist"
@@ -157,20 +161,16 @@ class MemberService:
     if not member:
       return None, "Member does not exist"
 
-
     try:
       member.is_active = False
-      Membership.query.filter(
-        Membership.member_id == member_id,
-        Membership.gym_id == gym_id,
-        Membership.is_active.is_(True)
-      ).update(
-        {
-            Membership.is_active: False,
-            Membership.status: "cancelled"
-        },
-        synchronize_session=False
-      )
+      Membership.query.filter(Membership.member_id == member_id,
+                              Membership.gym_id == gym_id,
+                              Membership.is_active.is_(True)).update(
+                                  {
+                                      Membership.is_active: False,
+                                      Membership.status: "cancelled"
+                                  },
+                                  synchronize_session=False)
       db.session.commit()
       return member, None
 
