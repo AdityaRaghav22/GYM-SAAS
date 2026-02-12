@@ -32,14 +32,14 @@ class MemberService:
       if not phone_valid:
         return None, phone_error
 
-    existing_member = Member.query.filter(Member.gym_id == gym_id,
-                                          Member.phone_number == phone_number,
-                                          Member.is_active.is_(False)).first()
-
-    if existing_member:
-      existing_member.is_active = True
-      db.session.commit()
-      return None, "Member reactivated successfully"
+      existing_member = Member.query.filter(Member.gym_id == gym_id,
+                                            Member.phone_number == phone_number,
+                                            Member.is_active.is_(False)).first()
+  
+      if existing_member:
+        existing_member.is_active = True
+        db.session.commit()
+        return None, "Member reactivated successfully"
 
     try:
       member = Member(id=generate_id(),
