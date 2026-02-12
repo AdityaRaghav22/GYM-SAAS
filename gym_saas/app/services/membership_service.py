@@ -75,14 +75,17 @@ class MembershipService:
       return None, "Failed to create membership"
 
   @staticmethod
-  def renew_membership(gym_id, membership_id, amount = None, payment_method = "cash"):
+  def renew_membership(gym_id,
+                       membership_id,
+                       amount=None,
+                       payment_method="cash"):
     for value in [gym_id, membership_id]:
       valid, err = validate_id(value)
       if not valid:
         return None, err
 
-    membership = Membership.query.filter(
-        Membership.id == membership_id, Membership.gym_id == gym_id).first()
+    membership = Membership.query.filter(Membership.id == membership_id,
+                                         Membership.gym_id == gym_id).first()
 
     if not membership:
       return None, "Membership not found"
@@ -114,16 +117,14 @@ class MembershipService:
     new_start = now
     new_end = new_start + relativedelta(months=plan.duration_months)
 
-    renewed = Membership(
-      id=generate_id(),
-      gym_id=gym_id,
-      member_id=membership.member_id,
-      plan_id=plan.id,
-      start_date=new_start,
-      end_date=new_end,
-      status="active",
-      is_active=True
-    )
+    renewed = Membership(id=generate_id(),
+                         gym_id=gym_id,
+                         member_id=membership.member_id,
+                         plan_id=plan.id,
+                         start_date=new_start,
+                         end_date=new_end,
+                         status="active",
+                         is_active=True)
 
     try:
       membership.is_active = False
@@ -137,14 +138,12 @@ class MembershipService:
         amount = plan.price  # default full price
 
       if amount > 0:
-         # 🔐 Create payment for the renewed membership
+        # 🔐 Create payment for the renewed membership
         amount = Decimal(amount)
-        PaymentService.create_payment(
-            gym_id=gym_id,
-            membership_id=renewed.id,
-            amount=amount,
-            payment_method=payment_method
-        )
+        PaymentService.create_payment(gym_id=gym_id,
+                                      membership_id=renewed.id,
+                                      amount=amount,
+                                      payment_method=payment_method)
 
       db.session.commit()
       return renewed, None
@@ -159,14 +158,13 @@ class MembershipService:
     if not valid:
       return None, err
 
-    status_order = case(
-      (Membership.status == "expired", 1),
-      (Membership.status == "active", 2),
-      (Membership.status == "cancelled", 3),
-      else_=4
-    )
+    status_order = case((Membership.status == "expired", 1),
+                        (Membership.status == "active", 2),
+                        (Membership.status == "cancelled", 3),
+                        else_=4)
 
-    memberships = Membership.query.filter(Membership.gym_id == gym_id).order_by(status_order).all()
+    memberships = Membership.query.filter(
+        Membership.gym_id == gym_id).order_by(status_order).all()
 
     updated = False
     for m in memberships:
@@ -186,7 +184,10 @@ class MembershipService:
         return [], err
 
     memberships = Membership.query.filter(
-        Membership.gym_id == gym_id, Membership.member_id == member_id, Membership.is_active.is_(True), ).all()
+        Membership.gym_id == gym_id,
+        Membership.member_id == member_id,
+        Membership.is_active.is_(True),
+    ).all()
 
     updated = False
     for m in memberships:
@@ -264,14 +265,19 @@ class MembershipService:
 
     return updated
 
-@staticmethod
-def get_membership_balance(gym_id, membership):
-  gym_id_valid, error = validate_id(gym_id)
-  if not gym_id_valid:
-    return None, error
-  total_paid = PaymentService.get_total_paid_for_membership(
-      gym_id, membership.id
-  )
-  return max(membership.plan.price - total_paid, 0)
+  from decimal import Decimal
+
+  @staticmethod
+  def get_membership_balance(gym_id, membership) -> Decimal:
+    gym_id_valid, gym_id_err = validate_id(gym_id)
+    if not gym_id_valid:
+      return Decimal("0")
+    total_paid = PaymentService.get_total_paid_for_membership(
+        gym_id, membership.id)
+
+    balance = membership.plan.price - total_paid
+
+    return max(balance, Decimal("0"))
+
 
 # -- ../routes/membership.py

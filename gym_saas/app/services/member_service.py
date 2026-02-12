@@ -6,7 +6,8 @@ from gym_saas.app.utils.generate_id import generate_id
 from sqlalchemy.exc import IntegrityError
 from typing import Optional
 from gym_saas.app.models import Membership
-
+from gym_saas.app.models import Payment
+from sqlalchemy import func
 
 class MemberService:
 
@@ -58,19 +59,34 @@ class MemberService:
       db.session.rollback()
       return None, str(e)
 
+  from sqlalchemy import func
+
   @staticmethod
   def list_members(gym_id):
-    gym_id_valid, gym_id_error = validate_id(gym_id)
-    if not gym_id_valid:
-      return None, gym_id_error
+      members = Member.query.filter_by(gym_id=gym_id).all()
 
-    gym = Gym.query.filter_by(id=gym_id).first()
-    if not gym:
-      return None, "Gym does not exist"
+      for member in members:
+          membership = Membership.query.filter_by(
+              member_id=member.id
+          ).first()
 
-    members = Member.query.filter_by(gym_id=gym_id).order_by(Member.name.asc()).all()
+          if membership:
+              plan_amount = membership.plan.price
 
-    return members, None
+              total_paid = db.session.query(func.sum(Payment.amount))\
+                  .filter(Payment.membership_id == membership.id)\
+                  .scalar() or 0
+
+              member.plan_amount = plan_amount
+              member.total_paid = total_paid
+              member.balance = plan_amount - total_paid
+          else:
+              member.plan_amount = 0
+              member.total_paid = 0
+              member.balance = 0
+
+      return members, None
+
 
   @staticmethod
   def get_member(gym_id, member_id):

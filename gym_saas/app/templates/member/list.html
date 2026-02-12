@@ -251,7 +251,13 @@
                     </thead>
                     <tbody>
                         {% for member in members %}
-                        <tr>
+                        <tr class="
+                            {% if member.balance > 0 and member.balance < member.plan_amount %}
+                                partial-due
+                            {% elif member.balance >= member.plan_amount and member.plan_amount > 0 %}
+                                full-due
+                            {% endif %}
+                        ">
                             <td style="font-weight: bold;">{{ member.name }}</td>
                             <td>{{ member.phone_number }}</td>
                             <td>
@@ -262,12 +268,26 @@
                                 {% endif %}
                             </td>
                             <td>
+                                {% if member.balance > 0 %}
+                                <span class="status-badge" style="background:#f87171;">
+                                    ₹ {{ member.balance }}
+                                </span>
+                                {% elif member.balance == 0 and member.plan_amount > 0 %}
+                                <span class="status-badge" style="background:#4ade80;">
+                                    Paid
+                                </span>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td>
                                 <a href="{{ url_for('api_v1.member.member_details', member_id=member.id) }}"
                                     class="btn-view">
                                     View
                                 </a>
                             </td>
                         </tr>
+
                         {% else %}
                         <tr>
                             <td colspan="4" style="text-align:center; padding: 3rem; color: #666;">
