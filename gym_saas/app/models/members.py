@@ -30,7 +30,6 @@ class Member(db.Model):
                                         index=True)
 
     __table_args__ = (db.UniqueConstraint("gym_id",
-                                        "phone_number",
                                         name="uq_member_phone_per_gym"), )
 
     memberships = db.relationship("Membership",
