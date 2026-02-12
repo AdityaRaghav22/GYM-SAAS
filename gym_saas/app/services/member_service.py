@@ -10,7 +10,7 @@ from gym_saas.app.models import Membership
 class MemberService:
 
   @staticmethod
-  def create_member(gym_id, name, phone_number):
+  def create_member(gym_id, name, phone_number=None):
     if not all([gym_id, name, phone_number]):
       return None, "All fields are required"
 

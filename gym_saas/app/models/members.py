@@ -19,7 +19,6 @@ class Member(db.Model):
                                         index=True)
 
     phone_number: Mapped[str] = mapped_column(db.String(20),
-                                        nullable=False,
                                         index=True)
 
     is_active: Mapped[bool] = mapped_column(default=True)
