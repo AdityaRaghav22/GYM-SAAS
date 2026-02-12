@@ -6,7 +6,9 @@
 <!-- Importing Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
 
 <style>
     /* --- Theme Configuration --- */
@@ -18,8 +20,10 @@
         --border-color: #000000;
         --border-width: 3px;
         --shadow-depth: 6px;
-        --success-bg: #4ade80; /* Bright Green */
-        --inactive-bg: #d1d5db; /* Grey */
+        --success-bg: #4ade80;
+        /* Bright Green */
+        --inactive-bg: #d1d5db;
+        /* Grey */
     }
 
     body {
@@ -33,7 +37,8 @@
     /* --- Layout Components --- */
     .boxy-container {
         width: 100%;
-        max-width: 900px; /* Wider for table */
+        max-width: 900px;
+        /* Wider for table */
         margin: 2rem auto;
         padding: 0 1rem;
     }
@@ -121,7 +126,8 @@
 
     /* --- Table Styling --- */
     .table-container {
-        overflow-x: auto; /* Responsive table */
+        overflow-x: auto;
+        /* Responsive table */
     }
 
     .boxy-table {
@@ -149,7 +155,8 @@
 
     /* Hover effect on rows */
     .boxy-table tr:hover td {
-        background: #fff9db; /* Light yellow hover */
+        background: #fff9db;
+        /* Light yellow hover */
     }
 
     /* --- Badges & Buttons --- */
@@ -203,20 +210,8 @@
         </div>
         <div class="card-body-boxy">
             <form method="POST" action="{{ url_for('api_v1.member.create_member') }}" class="add-member-form">
-                <input
-                    type="text"
-                    name="name"
-                    class="boxy-input"
-                    placeholder="FULL NAME"
-                    required
-                >
-                <input
-                    type="text"
-                    name="phone_number"
-                    class="boxy-input"
-                    placeholder="PHONE NUMBER"
-                    
-                >
+                <input type="text" name="name" class="boxy-input" placeholder="FULL NAME" required>
+                <input type="text" name="phone_number" class="boxy-input" placeholder="PHONE NUMBER">
                 <button class="btn-add">
                     Add Member
                 </button>
@@ -236,18 +231,12 @@
                 <div style="width:8px; height:8px; background:white;"></div>
             </div>
         </div>
-        
+
         <!-- No padding on body so table borders hit the edge -->
         <div class="card-body-boxy" style="padding: 0;">
             <div style="padding: 1rem; border-bottom: 2px solid black;">
-                <input
-                    type="text"
-                    id="memberSearch"
-                    placeholder="Search by name or phone..."
-                    class="boxy-input"
-                    style="width: 100%;"
-                    onkeyup="filterMembers()"
-                >
+                <input type="text" id="memberSearch" placeholder="Search by name or phone..." class="boxy-input"
+                    style="width: 100%;" onkeyup="filterMembers()">
             </div>
 
             <div class="table-container">
@@ -267,16 +256,14 @@
                             <td>{{ member.phone_number }}</td>
                             <td>
                                 {% if member.is_active %}
-                                    <span class="status-badge status-active">Active</span>
+                                <span class="status-badge status-active">Active</span>
                                 {% else %}
-                                    <span class="status-badge status-inactive">Inactive</span>
+                                <span class="status-badge status-inactive">Inactive</span>
                                 {% endif %}
                             </td>
                             <td>
-                                <a
-                                    href="{{ url_for('api_v1.member.member_details', member_id=member.id) }}"
-                                    class="btn-view"
-                                >
+                                <a href="{{ url_for('api_v1.member.member_details', member_id=member.id) }}"
+                                    class="btn-view">
                                     View
                                 </a>
                             </td>
@@ -297,22 +284,22 @@
 </div>
 
 <script>
-function filterMembers() {
-    const input = document.getElementById("memberSearch");
-    const filter = input.value.toLowerCase();
-    const rows = document.querySelectorAll(".boxy-table tbody tr");
+    function filterMembers() {
+        const input = document.getElementById("memberSearch");
+        const filter = input.value.toLowerCase().trim();
+        const rows = document.querySelectorAll(".boxy-table tbody tr");
 
-    rows.forEach(row => {
-        const name = row.cells[0]?.innerText.toLowerCase();
-        const phone = row.cells[1]?.innerText.toLowerCase();
+        rows.forEach(row => {
+            const name = row.cells[0]?.innerText.toLowerCase().trim() || "";
+            const phone = row.cells[1]?.innerText.toLowerCase().trim() || "";
 
-        if (name.includes(filter) || phone.includes(filter)) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-        }
-    });
-}
+            if (name.startsWith(filter) || phone.startsWith(filter)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
 </script>
 
 {% endblock %}
