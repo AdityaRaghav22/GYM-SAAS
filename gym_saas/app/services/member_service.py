@@ -45,7 +45,7 @@ class MemberService:
       member = Member(id=generate_id(),
                       gym_id=gym_id,
                       name=name,
-                      phone_number=phone_number)
+                      phone_number=phone_number or None)
       db.session.add(member)
       db.session.commit()
       return member, None

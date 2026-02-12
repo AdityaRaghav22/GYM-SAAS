@@ -23,7 +23,7 @@ def create_member():
     member, error = MemberService.create_member(
         gym_id,
         data.get("name"),
-        data.get("phone_number")
+        data.get("phone_number") or None
     )
 
     if error:
