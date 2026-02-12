@@ -7,6 +7,7 @@ from gym_saas.app.utils.generate_id import generate_id
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
 from decimal import Decimal
+from sqlalchemy import case
 
 
 class MembershipService:
@@ -158,7 +159,14 @@ class MembershipService:
     if not valid:
       return None, err
 
-    memberships = Membership.query.filter(Membership.gym_id == gym_id).all()
+    status_order = case(
+      (Membership.status == "expired", 1),
+      (Membership.status == "active", 2),
+      (Membership.status == "cancelled", 3),
+      else_=4
+    )
+
+    memberships = Membership.query.filter(Membership.gym_id == gym_id).order_by(status_order).all()
 
     updated = False
     for m in memberships:
