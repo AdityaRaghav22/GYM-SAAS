@@ -62,20 +62,25 @@ class MemberService:
 
   @staticmethod
   def list_members(gym_id, page=1, per_page=20):
+
+    payment_subquery = (db.session.query(
+        Payment.membership_id,
+        func.coalesce(func.sum(Payment.amount),
+                      0).label("total_paid")).group_by(
+                          Payment.membership_id).subquery())
+
     base_query = (db.session.query(
         Member, Membership, Plan,
-        func.coalesce(func.sum(
-            Payment.amount), 0).label("total_paid")).outerjoin(
-                Membership, Membership.member_id == Member.id).outerjoin(
-                    Plan, Plan.id == Membership.plan_id).outerjoin(
-                        Payment,
-                        Payment.membership_id == Membership.id).filter(
-                            Member.gym_id == gym_id).group_by(
-                                Member.id, Membership.id, Plan.id))
+        func.coalesce(payment_subquery.c.total_paid, 0)).outerjoin(
+            Membership, Membership.member_id == Member.id).outerjoin(
+                Plan, Plan.id == Membership.plan_id).outerjoin(
+                    payment_subquery, payment_subquery.c.membership_id ==
+                    Membership.id).filter(Member.gym_id == gym_id))
 
     total = base_query.count()
 
-    results = (base_query.limit(per_page).offset((page - 1) * per_page).all())
+    results = (base_query.limit(per_page).offset(
+        (page - 1) * per_page).all())
 
     members = []
 
