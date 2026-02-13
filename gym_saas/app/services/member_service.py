@@ -63,29 +63,37 @@ class MemberService:
 
   @staticmethod
   def list_members(gym_id):
-      members = Member.query.filter_by(gym_id=gym_id).all()
+      results = (
+          db.session.query(
+              Member,
+              Membership,
+              func.coalesce(func.sum(Payment.amount), 0).label("total_paid")
+          )
+          .outerjoin(Membership, Membership.member_id == Member.id)
+          .outerjoin(Payment, Payment.membership_id == Membership.id)
+          .filter(Member.gym_id == gym_id)
+          .group_by(Member.id, Membership.id)
+          .all()
+      )
 
-      for member in members:
-          membership = Membership.query.filter_by(
-              member_id=member.id
-          ).first()
+      members = []
 
+      for member, membership, total_paid in results:
           if membership:
               plan_amount = membership.plan.price
-
-              total_paid = db.session.query(func.sum(Payment.amount))\
-                  .filter(Payment.membership_id == membership.id)\
-                  .scalar() or 0
-
-              member.plan_amount = plan_amount
-              member.total_paid = total_paid
-              member.balance = plan_amount - total_paid
+              balance = plan_amount - total_paid
           else:
-              member.plan_amount = 0
-              member.total_paid = 0
-              member.balance = 0
+              plan_amount = 0
+              balance = 0
+
+          member.plan_amount = plan_amount
+          member.total_paid = total_paid
+          member.balance = balance
+
+          members.append(member)
 
       return members, None
+
 
 
   @staticmethod
