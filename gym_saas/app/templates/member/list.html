@@ -345,7 +345,7 @@
     function filterMembers() {
         const input = document.getElementById("memberSearch");
         const filter = input.value.toLowerCase().trim();
-        
+        const table = document.querySelector(".boxy-table");
         rows.forEach(row => {
             const name = row.cells[0]?.innerText.toLowerCase().trim() || "";
             const phone = row.cells[1]?.innerText.toLowerCase().trim() || "";
