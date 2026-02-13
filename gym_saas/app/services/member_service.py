@@ -80,8 +80,8 @@ class MemberService:
     if search:
       base_query = base_query.filter(
           db.or_(
-              Member.name.ilike(f"%{search}%"),
-              Member.phone_number.ilike(f"%{search}%")
+              Member.name.ilike(f"{search}%"),
+              Member.phone_number.ilike(f"{search}%")
           )
       )
 
