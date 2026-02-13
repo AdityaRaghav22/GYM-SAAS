@@ -52,6 +52,33 @@ def list_member():
                            page=page,
                            total_pages=total_pages)
 
+@member_bp.route("/search", methods=["GET"])
+@jwt_required()
+def search_members():
+    gym_id = get_jwt_identity()
+    query = request.args.get("q", "").strip()
+
+    members, _, _ = MemberService.list_members(
+        gym_id,
+        page=1,
+        per_page=1000,  # large enough for search
+        search=query,
+    )
+
+    data = []
+
+    for m in members:
+        data.append({
+            "id": m.id,
+            "name": m.name,
+            "phone": m.phone_number,
+            "balance": m.balance,
+            "plan_amount": m.plan_amount,
+            "is_active": m.is_active
+        })
+
+    return {"members": data}
+
 
 @member_bp.route("/<member_id>/details", methods=["GET", "POST"])
 @jwt_required()

@@ -250,10 +250,9 @@
         <!-- No padding on body so table borders hit the edge -->
         <div class="card-body-boxy" style="padding: 0;">
             <div style="padding: 1rem; border-bottom: 2px solid black;">
-                <form method="GET" action="{{ url_for('api_v1.member.list_member') }}">
-                    <input type="text" name="search" value="{{ request.args.get('search', '') }}"
-                        placeholder="Search by name or phone..." class="boxy-input" style="width: 100%;">
-                </form>
+                <input type="text" id="memberSearch" placeholder="Search by name or phone..." class="boxy-input"
+                    style="width: 100%;">
+
             </div>
 
             <div class="table-container">
@@ -348,22 +347,70 @@
 </div>
 
 <script>
-    function filterMembers() {
-        const input = document.getElementById("memberSearch");
-        const filter = input.value.toLowerCase().trim();
-        const rows = document.querySelectorAll(".boxy-table tbody tr");
+    const searchInput = document.getElementById("memberSearch");
+    const tableBody = document.querySelector(".boxy-table tbody");
 
-        rows.forEach(row => {
-            const name = row.cells[0]?.innerText.toLowerCase().trim() || "";
-            const phone = row.cells[1]?.innerText.toLowerCase().trim() || "";
+    let debounceTimer;
 
-            if (name.startsWith(filter) || phone.startsWith(filter)) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
+    searchInput.addEventListener("input", function () {
+
+        clearTimeout(debounceTimer);
+
+        debounceTimer = setTimeout(async () => {
+
+            const query = searchInput.value.trim();
+
+            const response = await fetch(`/member/search?q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+
+            tableBody.innerHTML = "";
+
+            if (data.members.length === 0) {
+                tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align:center; padding: 3rem; color: #666;">
+                        -- No members found --
+                    </td>
+                </tr>
+            `;
+                return;
             }
-        });
-    }
+
+            data.members.forEach(member => {
+
+                let balanceDisplay = "-";
+
+                if (member.balance > 0) {
+                    balanceDisplay = `<span class="status-badge" style="background:#f87171;">
+                                    ₹ ${member.balance}
+                                  </span>`;
+                } else if (member.balance === 0 && member.plan_amount > 0) {
+                    balanceDisplay = `<span class="status-badge" style="background:#4ade80;">
+                                    Paid
+                                  </span>`;
+                }
+
+                tableBody.innerHTML += `
+                <tr>
+                    <td style="font-weight: bold;">${member.name}</td>
+                    <td>${member.phone}</td>
+                    <td>
+                        <span class="status-badge ${member.is_active ? 'status-active' : 'status-inactive'}">
+                            ${member.is_active ? 'Active' : 'Inactive'}
+                        </span>
+                    </td>
+                    <td>${balanceDisplay}</td>
+                    <td>
+                        <a href="/member/${member.id}" class="btn-view">View</a>
+                    </td>
+                </tr>
+            `;
+            });
+
+        }, 300); // debounce delay
+
+    });
 </script>
+
 
 {% endblock %}
