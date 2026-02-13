@@ -32,29 +32,26 @@ def create_member():
     flash("Member created successfully", "success")
     return redirect(url_for("api_v1.dashboard.home"))
 
-
 @member_bp.route("/list", methods=["GET"])
 @jwt_required()
 def list_member():
     gym_id = get_jwt_identity()
 
     page = request.args.get("page", 1, type=int)
-    per_page = 20
+    search = request.args.get("search", "").strip()
 
     members, total, error = MemberService.list_members(gym_id,
                                                        page=page,
-                                                       per_page=per_page)
+                                                       per_page=20,
+                                                       search=search)
 
-    if error:
-        flash(error, "error")
-        return redirect(url_for("api_v1.dashboard.home"))
-
-    total_pages = (total + per_page - 1) // per_page
+    total_pages = (total + 20 - 1) // 20
 
     return render_template("member/list.html",
                            members=members,
                            page=page,
                            total_pages=total_pages)
+
 
 @member_bp.route("/<member_id>/details", methods=["GET", "POST"])
 @jwt_required()

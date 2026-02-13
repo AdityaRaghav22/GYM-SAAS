@@ -250,8 +250,10 @@
         <!-- No padding on body so table borders hit the edge -->
         <div class="card-body-boxy" style="padding: 0;">
             <div style="padding: 1rem; border-bottom: 2px solid black;">
-                <input type="text" id="memberSearch" placeholder="Search by name or phone..." class="boxy-input"
-                    style="width: 100%;" onkeyup="filterMembers()">
+                <form method="GET" action="{{ url_for('api_v1.member.list_member') }}">
+                    <input type="text" name="search" value="{{ request.args.get('search', '') }}"
+                        placeholder="Search by name or phone..." class="boxy-input" style="width: 100%;">
+                </form>
             </div>
 
             <div class="table-container">
@@ -318,7 +320,9 @@
                     style="padding:1rem; text-align:center; font-family: 'Space Mono', monospace; border-top:2px solid black;">
 
                     {% if page > 1 %}
-                    <a class="btn-view" href="{{ url_for('api_v1.member.list_member', page=page-1) }}">
+                    <a class="btn-view" href="{{ url_for('api_v1.member.list_member',
+                                        page=page-1,
+                                        search=request.args.get('search')) }}">
                         Previous
                     </a>
                     {% endif %}
@@ -327,13 +331,15 @@
                         Page {{ page }} of {{ total_pages }}
                     </span>
 
-                    {% if page < total_pages %} <a class="btn-view"
-                        href="{{ url_for('api_v1.member.list_member', page=page+1) }}">
+                    {% if page < total_pages %} <a class="btn-view" href="{{ url_for('api_v1.member.list_member',
+                                        page=page+1,
+                                        search=request.args.get('search')) }}">
                         Next
                         </a>
                         {% endif %}
 
                 </div>
+
 
             </div>
         </div>

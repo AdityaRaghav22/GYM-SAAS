@@ -61,7 +61,7 @@ class MemberService:
       return None, str(e)
 
   @staticmethod
-  def list_members(gym_id, page=1, per_page=20):
+  def list_members(gym_id, page=1, per_page=20, search = None):
 
     payment_subquery = (db.session.query(
         Payment.membership_id,
@@ -76,6 +76,14 @@ class MemberService:
                 Plan, Plan.id == Membership.plan_id).outerjoin(
                     payment_subquery, payment_subquery.c.membership_id ==
                     Membership.id).filter(Member.gym_id == gym_id))
+
+    if search:
+      base_query = base_query.filter(
+          db.or_(
+              Member.name.ilike(f"%{search}%"),
+              Member.phone_number.ilike(f"%{search}%")
+          )
+      )
 
     total = base_query.count()
 
