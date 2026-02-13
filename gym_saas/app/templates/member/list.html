@@ -227,7 +227,7 @@
             <form method="POST" action="{{ url_for('api_v1.member.create_member') }}" class="add-member-form">
                 <input type="text" name="name" class="boxy-input" placeholder="FULL NAME" required>
                 <input type="text" name="phone_number" class="boxy-input" placeholder="PHONE NUMBER">
-                <button class="btn-add">
+                <button type="submit" class="btn-add" id="addMemberBtn">
                     Add Member
                 </button>
             </form>
@@ -409,6 +409,17 @@
 
         }, 300); // debounce delay
 
+    });
+</script>
+<script>
+    const form = document.querySelector(".add-member-form");
+    const button = document.getElementById("addMemberBtn");
+
+    form.addEventListener("submit", function () {
+        if (button.disabled) return;
+
+        button.disabled = true;
+        button.innerText = "Adding...";
     });
 </script>
 
