@@ -13,6 +13,11 @@ def create_app():
     app.config.from_object(DevelopmentConfig)
     app.config.from_pyfile("config.py", silent=True)
 
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+    }
+
     # 🔐 JWT COOKIE CONFIG
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 
