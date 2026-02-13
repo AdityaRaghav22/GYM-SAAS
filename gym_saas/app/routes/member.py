@@ -10,6 +10,7 @@ from gym_saas.app.utils.validation import validate_id
 
 member_bp = Blueprint("member", __name__)
 
+
 @member_bp.route("/create", methods=["POST"])
 @jwt_required()
 def create_member():
@@ -21,10 +22,8 @@ def create_member():
 
     data = request.form
     member, error = MemberService.create_member(
-        gym_id,
-        data.get("name"),
-        data.get("phone_number") or None
-    )
+        gym_id, data.get("name"),
+        data.get("phone_number") or None)
 
     if error:
         flash(error, "error")
@@ -38,18 +37,24 @@ def create_member():
 @jwt_required()
 def list_member():
     gym_id = get_jwt_identity()
-    valid, err = validate_id(gym_id)
-    if not valid:
-        flash(err or "Invalid gym ID", "error")
-        return redirect(url_for("api_v1.dashboard.home"))
 
-    members, error = MemberService.list_members(gym_id)
+    page = request.args.get("page", 1, type=int)
+    per_page = 20
+
+    members, total, error = MemberService.list_members(gym_id,
+                                                       page=page,
+                                                       per_page=per_page)
+
     if error:
         flash(error, "error")
         return redirect(url_for("api_v1.dashboard.home"))
 
-    return render_template("member/list.html", members=members)
+    total_pages = (total + per_page - 1) // per_page
 
+    return render_template("member/list.html",
+                           members=members,
+                           page=page,
+                           total_pages=total_pages)
 
 @member_bp.route("/<member_id>/details", methods=["GET", "POST"])
 @jwt_required()
@@ -70,20 +75,18 @@ def member_details(member_id):
         return redirect(url_for("api_v1.member.list_member"))
 
     # --- CLEAR BALANCE (POST ONLY) ---
-    if request.method == "POST" and request.form.get("clear_balance") == "true":
-        membership = Membership.query.filter_by(
-            gym_id=gym_id,
-            member_id=member_id,
-            is_active=True
-        ).first()
+    if request.method == "POST" and request.form.get(
+            "clear_balance") == "true":
+        membership = Membership.query.filter_by(gym_id=gym_id,
+                                                member_id=member_id,
+                                                is_active=True).first()
 
         if not membership:
             flash("No active membership found", "error")
             return redirect(request.url)
 
         total_paid = PaymentService.get_total_paid_for_membership(
-            gym_id, membership.id
-        )
+            gym_id, membership.id)
 
         balance = membership.plan.price - total_paid
 
@@ -92,23 +95,20 @@ def member_details(member_id):
             return redirect(request.url)
 
         # 🔐 Create payment for remaining balance
-        PaymentService.create_payment(
-            gym_id=gym_id,
-            membership_id=membership.id,
-            amount=balance,
-            payment_method=request.form.get("payment_method", "cash")
-        )
+        PaymentService.create_payment(gym_id=gym_id,
+                                      membership_id=membership.id,
+                                      amount=balance,
+                                      payment_method=request.form.get(
+                                          "payment_method", "cash"))
 
         db.session.commit()
 
         flash("Balance cleared successfully", "success")
         return redirect(request.url)
 
-
     # --- Memberships (READ ONLY) ---
     memberships, error = MembershipService.list_active_memberships_for_member(
-        gym_id, member_id
-    )
+        gym_id, member_id)
     if error:
         flash(error, "error")
         return redirect(url_for("api_v1.member.list_member"))
@@ -131,16 +131,14 @@ def member_details(member_id):
     payments, _ = PaymentService.list_payments_by_member(gym_id, member_id)
     plans, _ = PlanService.list_plans(gym_id)
 
-    return render_template(
-        "member/member_details.html",
-        member=member,
-        memberships=memberships,
-        payments=payments or [],
-        plans=plans,
-        overall_plan_total=overall_plan_total,
-        overall_paid=overall_paid,
-        overall_balance=overall_balance
-    )
+    return render_template("member/member_details.html",
+                           member=member,
+                           memberships=memberships,
+                           payments=payments or [],
+                           plans=plans,
+                           overall_plan_total=overall_plan_total,
+                           overall_paid=overall_paid,
+                           overall_balance=overall_balance)
 
 
 @member_bp.route("/<member_id>/update", methods=["POST"])
@@ -153,8 +151,7 @@ def update_member(member_id):
         if not valid:
             flash(err or "Invalid ID", "error")
             return redirect(
-                url_for("api_v1.member.member_details", member_id=member_id)
-            )
+                url_for("api_v1.member.member_details", member_id=member_id))
 
     data = request.form
     member, error = MemberService.update_member(
@@ -170,8 +167,7 @@ def update_member(member_id):
         flash("Member updated successfully", "success")
 
     return redirect(
-        url_for("api_v1.member.member_details", member_id=member_id)
-    )
+        url_for("api_v1.member.member_details", member_id=member_id))
 
 
 @member_bp.route("/<member_id>/deactivate", methods=["POST"])

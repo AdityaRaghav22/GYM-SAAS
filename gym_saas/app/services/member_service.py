@@ -1,4 +1,3 @@
-from sqlalchemy import false
 from gym_saas.app.extensions import db
 from gym_saas.app.models import Gym, Member
 from gym_saas.app.utils.validation import validate_id, validate_name, validate_phone_number
@@ -7,7 +6,9 @@ from sqlalchemy.exc import IntegrityError
 from typing import Optional
 from gym_saas.app.models import Membership
 from gym_saas.app.models import Payment
+from gym_saas.app.models import Plan
 from sqlalchemy import func
+
 
 class MemberService:
 
@@ -33,10 +34,10 @@ class MemberService:
       if not phone_valid:
         return None, phone_error
 
-      existing_member = Member.query.filter(Member.gym_id == gym_id,
-                                            Member.phone_number == phone_number,
-                                            Member.is_active.is_(False)).first()
-  
+      existing_member = Member.query.filter(
+          Member.gym_id == gym_id, Member.phone_number == phone_number,
+          Member.is_active.is_(False)).first()
+
       if existing_member:
         existing_member.is_active = True
         db.session.commit()
@@ -59,42 +60,40 @@ class MemberService:
       db.session.rollback()
       return None, str(e)
 
-  from sqlalchemy import func
-
   @staticmethod
-  def list_members(gym_id):
-      results = (
-          db.session.query(
-              Member,
-              Membership,
-              func.coalesce(func.sum(Payment.amount), 0).label("total_paid")
-          )
-          .outerjoin(Membership, Membership.member_id == Member.id)
-          .outerjoin(Payment, Payment.membership_id == Membership.id)
-          .filter(Member.gym_id == gym_id)
-          .group_by(Member.id, Membership.id)
-          .all()
-      )
+  def list_members(gym_id, page=1, per_page=20):
+    base_query = (db.session.query(
+        Member, Membership, Plan,
+        func.coalesce(func.sum(
+            Payment.amount), 0).label("total_paid")).outerjoin(
+                Membership, Membership.member_id == Member.id).outerjoin(
+                    Plan, Plan.id == Membership.plan_id).outerjoin(
+                        Payment,
+                        Payment.membership_id == Membership.id).filter(
+                            Member.gym_id == gym_id).group_by(
+                                Member.id, Membership.id, Plan.id))
 
-      members = []
+    total = base_query.count()
 
-      for member, membership, total_paid in results:
-          if membership:
-              plan_amount = membership.plan.price
-              balance = plan_amount - total_paid
-          else:
-              plan_amount = 0
-              balance = 0
+    results = (base_query.limit(per_page).offset((page - 1) * per_page).all())
 
-          member.plan_amount = plan_amount
-          member.total_paid = total_paid
-          member.balance = balance
+    members = []
 
-          members.append(member)
+    for member, membership, plan, total_paid in results:
+      if membership and plan:
+        plan_amount = plan.price
+        balance = plan_amount - total_paid
+      else:
+        plan_amount = 0
+        balance = 0
 
-      return members, None
+      member.plan_amount = plan_amount
+      member.total_paid = total_paid
+      member.balance = balance
 
+      members.append(member)
 
+    return members, total, None
 
   @staticmethod
   def get_member(gym_id, member_id):

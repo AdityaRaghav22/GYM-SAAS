@@ -314,6 +314,27 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                <div
+                    style="padding:1rem; text-align:center; font-family: 'Space Mono', monospace; border-top:2px solid black;">
+
+                    {% if page > 1 %}
+                    <a class="btn-view" href="{{ url_for('api_v1.member.list_member', page=page-1) }}">
+                        Previous
+                    </a>
+                    {% endif %}
+
+                    <span style="margin: 0 1rem;">
+                        Page {{ page }} of {{ total_pages }}
+                    </span>
+
+                    {% if page < total_pages %} <a class="btn-view"
+                        href="{{ url_for('api_v1.member.list_member', page=page+1) }}">
+                        Next
+                        </a>
+                        {% endif %}
+
+                </div>
+
             </div>
         </div>
     </div>
@@ -324,8 +345,7 @@
     function filterMembers() {
         const input = document.getElementById("memberSearch");
         const filter = input.value.toLowerCase().trim();
-        const rows = document.querySelectorAll(".boxy-table tbody tr");
-
+        
         rows.forEach(row => {
             const name = row.cells[0]?.innerText.toLowerCase().trim() || "";
             const phone = row.cells[1]?.innerText.toLowerCase().trim() || "";
