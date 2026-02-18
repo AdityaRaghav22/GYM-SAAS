@@ -75,4 +75,15 @@ def create_app():
     from gym_saas.app.routes.public import public_bp
     app.register_blueprint(public_bp)
 
+    db.init_app(app)
+    
+    from sqlalchemy import text
+    with app.app_context():
+        try:
+            db.session.execute(text("DROP TABLE IF EXISTS alembic_version;"))
+            db.session.commit()
+            print("✅ Alembic version reset")
+        except Exception as e:
+            print(e)
+    
     return app
