@@ -75,13 +75,8 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
     
-    from sqlalchemy import text
     with app.app_context():
-        try:
-            db.session.execute(text("DROP TABLE IF EXISTS alembic_version;"))
-            db.session.commit()
-            print("✅ Alembic version reset")
-        except Exception as e:
-            print(e)
+        db.create_all()
+        print("Database tables created")
     
     return app
