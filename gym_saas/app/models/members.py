@@ -24,8 +24,6 @@ class Member(db.Model):
 
     is_active: Mapped[bool] = mapped_column(default=True)
 
-    image_url: Mapped[str] = mapped_column(db.String(200), nullable=True)
-
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
     join_date: Mapped[datetime] = mapped_column(DateTime,
