@@ -187,7 +187,7 @@ def generate_reset_link():
 
     return jsonify(result), 200
 
-@gym_auth_bp.route("/reset-password/<token>", methods=["GET", "POST"])
+@gym_auth_bp.route("/account-recovery/<token>", methods=["GET", "POST"])
 def reset_password(token: str):
 
     # GET  -> serve reset password page

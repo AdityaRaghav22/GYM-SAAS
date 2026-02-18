@@ -207,7 +207,7 @@ class GymAuthService:
         try:
             db.session.commit()
 
-            reset_link = f"https://gym-saas.onrender.com/gym/reset-password/{token}"
+            reset_link = f"https://gym-saas.onrender.com/gym/account-recovery/{token}"
 
             return {"reset_link": reset_link, "expires_in": "15 minutes"}, None
 
