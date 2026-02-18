@@ -17,6 +17,9 @@ class MemberService:
     if not all([gym_id, name]):
       return None, "All fields are required"
 
+    phone_number = (phone_number or "").strip() or None
+
+
     gym_id_valid, gym_id_error = validate_id(gym_id)
     if not gym_id_valid:
       return None, gym_id_error
@@ -35,13 +38,19 @@ class MemberService:
         return None, phone_error
 
       existing_member = Member.query.filter(
-          Member.gym_id == gym_id, Member.phone_number == phone_number,
-          Member.is_active.is_(False)).first()
+        Member.gym_id == gym_id,
+        Member.phone_number == phone_number
+      ).first()
 
       if existing_member:
-        existing_member.is_active = True
-        db.session.commit()
-        return None, "Member reactivated successfully"
+          # inactive → reactivate
+          if not existing_member.is_active:
+            existing_member.is_active = True
+            db.session.commit()
+            return existing_member, "Reactivated inactive member"
+
+          # already active → prevent duplicate
+          return None, "Member with this phone number already exists"
 
     try:
       member = Member(id=generate_id(),

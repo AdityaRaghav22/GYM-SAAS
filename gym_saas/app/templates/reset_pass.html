@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password | Gym SaaS</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 350px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2c7be5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1a68d1;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Reset Your Password</h2>
+
+        <form id="resetForm">
+            <input type="password" id="password" placeholder="Enter New Password" required>
+
+            <button type="submit">Reset Password</button>
+        </form>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById("resetForm");
+        const messageBox = document.getElementById("message");
+
+        // Get token from URL
+        const token = window.location.pathname.split("/").pop();
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const password = document.getElementById("password").value;
+
+            messageBox.textContent = "Processing...";
+            messageBox.className = "message";
+
+            try {
+                const response = await fetch(`/gym/reset-password/${token}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({password})
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    messageBox.textContent = data.error;
+                    messageBox.className = "message error";
+                    return;
+                }
+
+                messageBox.textContent =
+                    "✅ Password reset successful! Redirecting to login...";
+                messageBox.className = "message success";
+
+                setTimeout(() => {
+                    window.location.href = "/gym/login";
+                }, 2000);
+
+            } catch (err) {
+                messageBox.textContent = "Something went wrong.";
+                messageBox.className = "message error";
+            }
+        });
+    </script>
+
+</body>
+
+</html>

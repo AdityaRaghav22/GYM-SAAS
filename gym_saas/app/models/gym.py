@@ -24,13 +24,28 @@ class Gym(db.Model):
 
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
+    reset_token: Mapped[str] = mapped_column(db.String(255),
+                                             unique=True,
+                                             nullable=True)
+
+    reset_token_expiry: Mapped[datetime] = mapped_column(db.DateTime,
+                                                         nullable=True)
+
     users = db.relationship("User", backref="gym")
 
-    members = db.relationship("Member", backref="gym", cascade="all, delete-orphan")
-    membership = db.relationship("Membership", backref="gym", cascade="all, delete-orphan")
-    plans = db.relationship("Plan", backref="gym", cascade="all, delete-orphan")
-    payments = db.relationship("Payment", backref="gym", cascade="all, delete-orphan")
-    
+    members = db.relationship("Member",
+                              backref="gym",
+                              cascade="all, delete-orphan")
+    membership = db.relationship("Membership",
+                                 backref="gym",
+                                 cascade="all, delete-orphan")
+    plans = db.relationship("Plan",
+                            backref="gym",
+                            cascade="all, delete-orphan")
+    payments = db.relationship("Payment",
+                               backref="gym",
+                               cascade="all, delete-orphan")
+
     @property
     def currently_active(self) -> bool:
         return self.is_active

@@ -5,6 +5,7 @@ from flask_jwt_extended import (jwt_required, get_jwt_identity,
 from gym_saas.app.services.gym_auth_service import GymAuthService
 from gym_saas.app.utils.route_validation import validate_register, validate_login
 from typing import cast
+from http import HTTPStatus
 
 gym_auth_bp = Blueprint("gym_auth", __name__)
 
@@ -171,3 +172,42 @@ def refresh():
     response = make_response({"msg": "refreshed"}, 200)
     set_access_cookies(response, access_token)
     return response
+
+
+
+@gym_auth_bp.route("/admin/generate-reset-link", methods= ["POST"])
+def generate_reset_link():
+
+    email = request.json.get("email")
+
+    result, error = GymAuthService.generate_reset_link_for_admin(email)
+
+    if error:
+        return jsonify({"error": error}), 400
+
+    return jsonify(result), 200
+
+@gym_auth_bp.route("/reset-password/<token>", methods=["GET", "POST"])
+def reset_password(token: str):
+
+    # GET  -> serve reset password page
+    # POST -> set new password
+
+    # ---------- Serve HTML page ----------
+    if request.method == "GET":
+        return render_template("reset_pass.html")
+
+    # ---------- Handle password reset ----------
+    data = request.get_json(silent=True) or {}
+
+    password = data.get("password")
+
+    if not password:
+        return jsonify({"error": "Password is required"}), HTTPStatus.BAD_REQUEST
+
+    result, error = GymAuthService.set_reset_password(token, password)
+
+    if error:
+        return jsonify({"error": error}), HTTPStatus.BAD_REQUEST
+
+    return jsonify(result), HTTPStatus.OK

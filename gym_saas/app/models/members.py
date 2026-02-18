@@ -2,7 +2,7 @@ from sqlalchemy import DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 from gym_saas.app.extensions import db
 from datetime import datetime
-
+from sqlalchemy import Index, text
 
 class Member(db.Model):
     __tablename__ = "members"        
@@ -19,9 +19,12 @@ class Member(db.Model):
                                         index=True)
 
     phone_number: Mapped[str] = mapped_column(db.String(20),
-                                        index=True)
+                                        index=True,
+                                        nullable= True)
 
     is_active: Mapped[bool] = mapped_column(default=True)
+
+    image_url: Mapped[str] = mapped_column(db.String(200), nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
@@ -29,8 +32,14 @@ class Member(db.Model):
                                         default=datetime.utcnow,
                                         index=True)
 
-    __table_args__ = (db.UniqueConstraint("gym_id",
-                                        name="uq_member_phone_per_gym"), )
+    __table_args__ = (Index(
+    "uq_member_phone_per_gym",
+    "gym_id",
+    "phone_number",
+    unique=True,
+    postgresql_where=text("phone_number IS NOT NULL")
+    ),
+    )
 
     memberships = db.relationship("Membership",
                                         backref="member",

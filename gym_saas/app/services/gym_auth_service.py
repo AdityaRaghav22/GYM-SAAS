@@ -7,6 +7,8 @@ from gym_saas.app.utils.validation import (validate_email, validate_password,
                                            validate_name)
 from gym_saas.app.utils.generate_id import generate_id
 from sqlalchemy.exc import IntegrityError
+import secrets
+from datetime import datetime
 
 
 class GymAuthService:
@@ -72,6 +74,8 @@ class GymAuthService:
             return None, email_error
 
         gym = Gym.query.filter_by(email=email, is_active=True).first()
+
+        print(password)
 
         if not gym or not bcrypt.check_password_hash(gym.password_hash,
                                                      password):
@@ -176,6 +180,77 @@ class GymAuthService:
         except IntegrityError:
             db.session.rollback()
             return None, "Email or phone number already exists"
+
+        except Exception:
+            db.session.rollback()
+            return None, "Something went wrong. Please try again."
+
+    @staticmethod
+    def generate_reset_link_for_admin(email):
+
+        if not email:
+            return None, "Email is required"
+
+        email = email.strip().lower()
+
+        gym = Gym.query.filter_by(email=email, is_active=True).first()
+
+        if not gym:
+            return None, "Gym not found"
+
+        # generate secure token
+        token = secrets.token_urlsafe(32)
+
+        gym.reset_token = token
+        gym.reset_token_expiry = datetime.utcnow() + timedelta(minutes=15)
+
+        try:
+            db.session.commit()
+
+            reset_link = f"https://gym-saas-test.onrender.com/gym/reset-password/{token}"
+
+            return {"reset_link": reset_link, "expires_in": "15 minutes"}, None
+
+        except Exception:
+            db.session.rollback()
+            return None, "Something went wrong"
+
+    @staticmethod
+    def set_reset_password(token, new_password):
+
+        # 1️⃣ Find gym using token
+        gym = Gym.query.filter_by(reset_token=token).first()
+
+        if not gym:
+            return None, "Invalid reset link"
+
+        # 2️⃣ Check expiry
+        if not gym.reset_token_expiry or gym.reset_token_expiry < datetime.utcnow(
+        ):
+            return None, "Reset link expired"
+
+        # 3️⃣ Validate new password
+        password_valid, password_error = validate_password(new_password)
+        if not password_valid:
+            return None, password_error
+
+        # 4️⃣ Hash new password
+        new_hash = bcrypt.generate_password_hash(new_password).decode("utf-8")
+
+        try:
+            # password here for testing
+            print(new_password)
+
+            # 5️⃣ Update password
+            gym.password_hash = new_hash
+
+            # 6️⃣ Invalidate token (VERY IMPORTANT)
+            gym.reset_token = None
+            gym.reset_token_expiry = None
+
+            db.session.commit()
+
+            return {"message": "Password reset successful"}, None
 
         except Exception:
             db.session.rollback()
