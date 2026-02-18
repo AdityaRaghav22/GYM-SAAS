@@ -157,6 +157,7 @@ def delete():
     flash(result["message"], "success")
     return response
 
+
 @gym_auth_bp.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 def refresh():
@@ -174,8 +175,7 @@ def refresh():
     return response
 
 
-
-@gym_auth_bp.route("/admin/generate-reset-link", methods= ["POST"])
+@gym_auth_bp.route("/admin/generate-reset-link", methods=["POST"])
 def generate_reset_link():
 
     email = request.json.get("email")
@@ -187,23 +187,25 @@ def generate_reset_link():
 
     return jsonify(result), 200
 
-@gym_auth_bp.route("/account-recovery/<token>", methods=["GET", "POST"])
-def reset_password(token: str):
+@gym_auth_bp.route("/account-recovery", methods=["GET", "POST"])
+def reset_password():
 
-    # GET  -> serve reset password page
-    # POST -> set new password
+    token = request.args.get("t")
 
-    # ---------- Serve HTML page ----------
+    if not token:
+        return jsonify({"error":
+                        "Invalid reset link"}), HTTPStatus.BAD_REQUEST
+
+    # serve page
     if request.method == "GET":
         return render_template("reset_pass.html")
 
-    # ---------- Handle password reset ----------
     data = request.get_json(silent=True) or {}
-
     password = data.get("password")
 
     if not password:
-        return jsonify({"error": "Password is required"}), HTTPStatus.BAD_REQUEST
+        return jsonify({"error":
+                        "Password is required"}), HTTPStatus.BAD_REQUEST
 
     result, error = GymAuthService.set_reset_password(token, password)
 

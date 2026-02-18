@@ -207,7 +207,7 @@ class GymAuthService:
         try:
             db.session.commit()
 
-            reset_link = f"https://gym-saas.onrender.com/gym/account-recovery/{token}"
+            reset_link = f"https://gym-saas.onrender.com/gym/account-recovery/?t={token}"
 
             return {"reset_link": reset_link, "expires_in": "15 minutes"}, None
 
@@ -215,46 +215,45 @@ class GymAuthService:
             db.session.rollback()
             return None, "Something went wrong"
 
+
     @staticmethod
     def set_reset_password(token, new_password):
-
-        # 1️⃣ Find gym using token
+    
+        from urllib.parse import unquote
+        from datetime import datetime, timezone
+    
+        token = unquote(token).strip()
+    
         gym = Gym.query.filter_by(reset_token=token).first()
-
+    
         if not gym:
             return None, "Invalid reset link"
-
-        # 2️⃣ Check expiry
-        if not gym.reset_token_expiry or gym.reset_token_expiry < datetime.utcnow():
+    
+        if gym.reset_token is None:
+            return None, "Reset link already used"
+    
+        if not gym.reset_token_expiry or gym.reset_token_expiry < datetime.now(
+                timezone.utc):
             return None, "Reset link expired"
-
-        # 3️⃣ Validate new password
+    
         password_valid, password_error = validate_password(new_password)
         if not password_valid:
             return None, password_error
-
-        # 4️⃣ Hash new password
-        new_hash = bcrypt.generate_password_hash(
-            new_password
-        ).decode("utf-8")
-
+    
+        new_hash = bcrypt.generate_password_hash(new_password).decode("utf-8")
+    
         try:
-            # password here for testing
-            print(new_password)
-
-            # 5️⃣ Update password
             gym.password_hash = new_hash
-
-            # 6️⃣ Invalidate token (VERY IMPORTANT)
             gym.reset_token = None
             gym.reset_token_expiry = None
-
+    
             db.session.commit()
-
+    
             return {"message": "Password reset successful"}, None
-
-        except Exception:
+    
+        except Exception as e:
             db.session.rollback()
+            print("RESET PASSWORD ERROR:", e)
             return None, "Something went wrong. Please try again."
-
+    
 # -- ../services/membership_service.py

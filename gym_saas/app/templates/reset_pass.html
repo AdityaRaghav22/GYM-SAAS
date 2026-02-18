@@ -87,7 +87,9 @@
         const form = document.getElementById("resetForm");
         const messageBox = document.getElementById("message");
 
-        const token = window.location.pathname.split("/").pop();
+        // ✅ get token from ?t=TOKEN
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get("t");
 
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -99,7 +101,7 @@
 
             try {
                 const response = await fetch(
-                    `${window.location.origin}/gym/account-recovery/${token}`,
+                    `${window.location.origin}/gym/account-recovery?t=${token}`,
                     {
                         method: "POST",
                         headers: {
