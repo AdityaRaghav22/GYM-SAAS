@@ -207,7 +207,7 @@ class GymAuthService:
         try:
             db.session.commit()
 
-            reset_link = f"https://gym-saas-test.onrender.com/gym/reset-password/{token}"
+            reset_link = f"https://gym-saas.onrender.com/gym/reset-password/{token}"
 
             return {"reset_link": reset_link, "expires_in": "15 minutes"}, None
 
@@ -225,8 +225,7 @@ class GymAuthService:
             return None, "Invalid reset link"
 
         # 2️⃣ Check expiry
-        if not gym.reset_token_expiry or gym.reset_token_expiry < datetime.utcnow(
-        ):
+        if not gym.reset_token_expiry or gym.reset_token_expiry < datetime.utcnow():
             return None, "Reset link expired"
 
         # 3️⃣ Validate new password
@@ -235,7 +234,9 @@ class GymAuthService:
             return None, password_error
 
         # 4️⃣ Hash new password
-        new_hash = bcrypt.generate_password_hash(new_password).decode("utf-8")
+        new_hash = bcrypt.generate_password_hash(
+            new_password
+        ).decode("utf-8")
 
         try:
             # password here for testing
@@ -255,6 +256,5 @@ class GymAuthService:
         except Exception:
             db.session.rollback()
             return None, "Something went wrong. Please try again."
-
 
 # -- ../services/membership_service.py
