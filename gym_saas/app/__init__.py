@@ -40,11 +40,6 @@ def create_app():
     app.config["JWT_COOKIE_SECURE"] = True
     app.config["JWT_COOKIE_SAMESITE"] = "None"
 
-    # init extensions (ONLY once)
-    db.init_app(app)
-    migrate.init_app(app, db)
-    jwt.init_app(app)
-
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
         if is_browser():
@@ -75,7 +70,10 @@ def create_app():
     from gym_saas.app.routes.public import public_bp
     app.register_blueprint(public_bp)
 
+    # init extensions (ONLY once)
     db.init_app(app)
+    migrate.init_app(app, db)
+    jwt.init_app(app)
     
     from sqlalchemy import text
     with app.app_context():
