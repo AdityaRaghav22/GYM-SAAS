@@ -3,6 +3,7 @@ from .extensions import db, migrate, jwt
 from gym_saas.config import DevelopmentConfig
 from datetime import timedelta
 from flask import request, redirect, url_for, flash
+from sqlalchemy import text
 
 def is_browser():
     return "text/html" in request.headers.get("Accept", "")
@@ -76,7 +77,13 @@ def create_app():
     app.register_blueprint(public_bp)
 
     with app.app_context():
-        db.create_all()
-        print("Database tables created")
+        try:
+            db.session.execute(
+                text("UPDATE alembic_version SET version_num='9de9947b6f9b'")
+            )
+            db.session.commit()
+            print("✅ Alembic revision repaired")
+        except Exception as e:
+            print("Revision repair skipped:", e)
 
     return app
