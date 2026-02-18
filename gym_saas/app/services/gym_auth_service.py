@@ -215,45 +215,45 @@ class GymAuthService:
             db.session.rollback()
             return None, "Something went wrong"
 
-
     @staticmethod
     def set_reset_password(token, new_password):
-    
-        from urllib.parse import unquote
+
         from datetime import datetime, timezone
-    
-        token = unquote(token).strip()
-    
+
+        token = token.strip()
+
         gym = Gym.query.filter_by(reset_token=token).first()
-    
+
         if not gym:
             return None, "Invalid reset link"
-    
+
         if gym.reset_token is None:
             return None, "Reset link already used"
-    
-        if not gym.reset_token_expiry or gym.reset_token_expiry < datetime.now(
-                timezone.utc):
+
+        now = datetime.now(timezone.utc)
+
+        if not gym.reset_token_expiry or gym.reset_token_expiry <= now:
             return None, "Reset link expired"
-    
+
         password_valid, password_error = validate_password(new_password)
         if not password_valid:
             return None, password_error
-    
+
         new_hash = bcrypt.generate_password_hash(new_password).decode("utf-8")
-    
+
         try:
             gym.password_hash = new_hash
             gym.reset_token = None
             gym.reset_token_expiry = None
-    
+
             db.session.commit()
-    
+
             return {"message": "Password reset successful"}, None
-    
+
         except Exception as e:
             db.session.rollback()
             print("RESET PASSWORD ERROR:", e)
             return None, "Something went wrong. Please try again."
-    
+
+
 # -- ../services/membership_service.py

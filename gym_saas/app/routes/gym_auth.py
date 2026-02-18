@@ -187,14 +187,11 @@ def generate_reset_link():
 
     return jsonify(result), 200
 
-@gym_auth_bp.route("/account-recovery", methods=["GET", "POST"])
-def reset_password():
-
-    token = request.args.get("t")
+@gym_auth_bp.route("/account-recovery/<token>", methods=["GET", "POST"])
+def reset_password(token):
 
     if not token:
-        return jsonify({"error":
-                        "Invalid reset link"}), HTTPStatus.BAD_REQUEST
+        return jsonify({"error": "Invalid reset link"}), HTTPStatus.BAD_REQUEST
 
     # serve page
     if request.method == "GET":
@@ -204,8 +201,7 @@ def reset_password():
     password = data.get("password")
 
     if not password:
-        return jsonify({"error":
-                        "Password is required"}), HTTPStatus.BAD_REQUEST
+        return jsonify({"error": "Password is required"}), HTTPStatus.BAD_REQUEST
 
     result, error = GymAuthService.set_reset_password(token, password)
 
