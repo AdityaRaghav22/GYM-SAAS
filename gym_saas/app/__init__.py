@@ -76,14 +76,16 @@ def create_app():
     from gym_saas.app.routes.public import public_bp
     app.register_blueprint(public_bp)
 
-    with app.app_context():
-        try:
-            db.session.execute(
-                text("UPDATE alembic_version SET version_num='9de9947b6f9b'")
-            )
-            db.session.commit()
-            print("✅ Alembic revision repaired")
-        except Exception as e:
-            print("Revision repair skipped:", e)
+    # with app.app_context():
+    #     try:
+    #         db.session.execute(
+    #             text("UPDATE alembic_version SET version_num='9de9947b6f9b'")
+    #         )
+    #         db.session.commit()
+    #         print("✅ Alembic revision repaired")
+    #     except Exception as e:
+    #         print("Revision repair skipped:", e)
+
+    
 
     return app

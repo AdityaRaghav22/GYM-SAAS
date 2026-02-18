@@ -99,7 +99,7 @@
             messageBox.className = "message";
 
             try {
-                const response = await fetch(`/gym/reset-password/${token}`, {
+                const response = await fetch(`https://gym-saas.onrender.com/gym/reset-password/${token}`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
