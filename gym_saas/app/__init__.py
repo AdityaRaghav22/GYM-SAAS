@@ -18,6 +18,11 @@ def create_app():
         "pool_recycle": 300,
     }
 
+    # init extensions (ONLY once)
+    db.init_app(app)
+    migrate.init_app(app, db)
+    jwt.init_app(app)
+
     # 🔐 JWT COOKIE CONFIG
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 
@@ -70,13 +75,4 @@ def create_app():
     from gym_saas.app.routes.public import public_bp
     app.register_blueprint(public_bp)
 
-    # init extensions (ONLY once)
-    db.init_app(app)
-    migrate.init_app(app, db)
-    jwt.init_app(app)
-    
-    with app.app_context():
-        db.create_all()
-        print("Database tables created")
-    
     return app
