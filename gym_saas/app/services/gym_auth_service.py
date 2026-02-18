@@ -187,6 +187,7 @@ class GymAuthService:
 
     @staticmethod
     def generate_reset_link_for_admin(email):
+        from datetime import timezone, timedelta
 
         if not email:
             return None, "Email is required"
@@ -198,63 +199,74 @@ class GymAuthService:
         if not gym:
             return None, "Gym not found"
 
-        # generate secure token
+        # ✅ generate secure token
         token = secrets.token_urlsafe(32)
 
         gym.reset_token = token
-        gym.reset_token_expiry = datetime.utcnow() + timedelta(minutes=15)
+
+        # ✅ timezone-aware UTC datetime
+        gym.reset_token_expiry = (datetime.now(timezone.utc) +
+                                  timedelta(minutes=15))
 
         try:
             db.session.commit()
 
-            reset_link = f"https://gym-saas-lmee.onrender.com/gym/account-recovery/{token}"
+            reset_link = (f"https://gym-saas-lmee.onrender.com"
+                          f"/gym/account-recovery/{token}")
 
             return {"reset_link": reset_link, "expires_in": "15 minutes"}, None
 
-        except Exception:
+        except Exception as e:
             db.session.rollback()
+            print("RESET LINK ERROR:", e)
             return None, "Something went wrong"
 
 
     @staticmethod
     def set_reset_password(token, new_password):
-
+    
         from datetime import datetime, timezone
-
+    
         token = token.strip()
-
+    
         gym = Gym.query.filter_by(reset_token=token).first()
-
+    
         if not gym:
             return None, "Invalid reset link"
-
+    
         if gym.reset_token is None:
             return None, "Reset link already used"
-
+    
+        # ✅ normalize expiry timezone (handles old DB records)
+        expiry = gym.reset_token_expiry
+    
+        if expiry and expiry.tzinfo is None:
+            expiry = expiry.replace(tzinfo=timezone.utc)
+    
         now = datetime.now(timezone.utc)
-
-        if not gym.reset_token_expiry or gym.reset_token_expiry <= now:
+    
+        if not expiry or expiry <= now:
             return None, "Reset link expired"
-
+    
         password_valid, password_error = validate_password(new_password)
         if not password_valid:
             return None, password_error
-
+    
         new_hash = bcrypt.generate_password_hash(new_password).decode("utf-8")
-
+    
         try:
             gym.password_hash = new_hash
             gym.reset_token = None
             gym.reset_token_expiry = None
-
+    
             db.session.commit()
-
+    
             return {"message": "Password reset successful"}, None
-
+    
         except Exception as e:
             db.session.rollback()
             print("RESET PASSWORD ERROR:", e)
             return None, "Something went wrong. Please try again."
-
     
+
 # -- ../services/membership_service.py
