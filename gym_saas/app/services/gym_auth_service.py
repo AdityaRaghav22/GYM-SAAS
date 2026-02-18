@@ -207,13 +207,14 @@ class GymAuthService:
         try:
             db.session.commit()
 
-            reset_link = f"https://gym-saas-lmee.onrender.com/gym/account-recovery/?t={token}"
+            reset_link = f"https://gym-saas-lmee.onrender.com/gym/account-recovery/{token}"
 
             return {"reset_link": reset_link, "expires_in": "15 minutes"}, None
 
         except Exception:
             db.session.rollback()
             return None, "Something went wrong"
+
 
     @staticmethod
     def set_reset_password(token, new_password):
@@ -255,5 +256,5 @@ class GymAuthService:
             print("RESET PASSWORD ERROR:", e)
             return None, "Something went wrong. Please try again."
 
-
+    
 # -- ../services/membership_service.py
