@@ -39,7 +39,7 @@ def create_app():
 
     # 🔥 expiry
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
-    app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=1)
+    app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)
 
     # 🔥 Render-safe cookie flags
     app.config["JWT_COOKIE_SECURE"] = True
