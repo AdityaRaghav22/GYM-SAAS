@@ -5,8 +5,10 @@ from datetime import timedelta
 from flask import request, redirect, url_for, flash
 from gym_saas.app.extensions import init_cloudinary
 
+
 def is_browser():
     return "text/html" in request.headers.get("Accept", "")
+
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -59,9 +61,11 @@ def create_app():
 
     @jwt.expired_token_loader
     def expired_callback(jwt_header, jwt_payload):
+
         if is_browser():
-            flash("Session expired. Please login again.", "error")
-            return redirect(url_for("gym_auth.login_page"))
+            return redirect(
+                url_for("api_v1.gym_auth.refresh", next=request.url))
+
         return {"msg": "token expired"}, 401
 
     @jwt.invalid_token_loader
@@ -75,7 +79,8 @@ def create_app():
 
     @app.after_request
     def add_header(response):
-        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers[
+            "Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
         return response
