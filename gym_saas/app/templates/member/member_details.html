@@ -232,7 +232,69 @@
                     <span>Member Info</span>
                     <div style="width:12px; height:12px; background:white; border:2px solid black;"></div>
                 </div>
+
                 <div class="card-body-boxy">
+                    <!-- MEMBER PHOTO -->
+                    <div style="
+                        display:flex;
+                        flex-direction:column;
+                        align-items:center;
+                        justify-content:center;
+                        text-align:center;
+                        margin-bottom:1.5rem;
+                    ">
+
+                        {% if member.image_url %}
+                        <img id="photoPreview" src="{{ member.image_url if member.image_url else '' }}"
+                            alt="Member Photo" style="
+                                width:250px;
+                                height:250px;
+                                object-fit:cover;
+                                border:3px solid black;
+                                box-shadow:4px 4px 0px black;
+                                margin-bottom:1rem;
+                             ">
+
+                        {% else %}
+                        <div style="
+                                width:250px;
+                                height:250px;
+                                border:3px dashed black;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                font-family:'Space Mono';
+                                font-size:0.8rem;
+                                margin-bottom:1rem;
+                            ">
+                            NO PHOTO
+                        </div>
+                        {% endif %}
+
+                        <!-- Upload Form -->
+                        <form method="POST" action="{{ url_for('api_v1.member.upload_photo', member_id=member.id) }}"
+                            enctype="multipart/form-data" style="
+                                display:flex;
+                                flex-direction:column;
+                                align-items:center;
+                                gap:0.5rem;
+                              ">
+
+                            <!-- Camera Button -->
+                            <label class="btn-blocky btn-outline-success" style="cursor:pointer;">
+                                📷 Take / Upload Photo
+                                <input type="file" name="image" accept="image/*" capture="environment" required
+                                    style="display:none;">
+                            </label>
+
+                            <button class="btn-blocky btn-success">
+                                Upload Photo
+                            </button>
+
+                        </form>
+
+                    </div>
+
                     <form method="POST" action="{{ url_for('api_v1.member.update_member', member_id=member.id) }}">
                         <div class="form-group">
                             <label class="boxy-label">Full Name</label>
@@ -271,7 +333,7 @@
                     <span>Enrolled Plans</span>
                     <div style="border: 1px solid white; padding: 0 4px;">{{ memberships|length }}</div>
                 </div>
-                
+
                 <div class="card-body-boxy">
                     {% for m in memberships %}
                     <div class="sub-item">
@@ -455,5 +517,16 @@
 
     </div>
 </div>
+
+<script>
+    document.querySelector('input[type="file"]').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const preview = document.getElementById('photoPreview');
+        preview.src = URL.createObjectURL(file);
+    });
+</script>
+
 
 {% endblock %}

@@ -212,3 +212,31 @@ def deactivate_member(member_id):
         flash("Member deactivated successfully", "success")
 
     return redirect(url_for("api_v1.member.list_member"))
+
+@member_bp.route("/<member_id>/upload-photo", methods=["POST"])
+@jwt_required()
+def upload_photo(member_id):
+
+    gym_id = get_jwt_identity()
+    file = request.files.get("image")
+
+    if not file:
+        flash("No image selected", "error")
+        return redirect(url_for(
+            "api_v1.member.member_details",
+            member_id=member_id
+        ))
+
+    _, error = MemberService.upload_member_photo(
+        gym_id,
+        member_id,
+        file
+    )
+
+    if error:
+        flash(error, "error")
+
+    return redirect(url_for(
+        "api_v1.member.member_details",
+        member_id=member_id
+    ))
