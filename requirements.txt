@@ -1,8 +1,9 @@
 Flask
-Flask-SQLAlchemy
+Fla
 Flask-Migrate
 Flask-JWT-Extended
 python-dotenv
+cloudinary==1.41.0
 psycopg2-binary
 Flask-Bcrypt==1.0.1
 gunicorn
