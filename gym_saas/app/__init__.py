@@ -32,7 +32,7 @@ def create_app():
     app.config["JWT_REFRESH_COOKIE_NAME"] = "refresh_token"
 
     app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
-    app.config["JWT_REFRESH_COOKIE_PATH"] = "/gym/refresh"
+    app.config["JWT_REFRESH_COOKIE_PATH"] = "/"
 
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
@@ -56,7 +56,7 @@ def create_app():
     def unauthorized_callback(reason):
         if is_browser():
             flash("Please login to continue.", "warning")
-            return redirect(url_for("gym_auth.login_page"))
+            return redirect(url_for("api_v1.gym_auth.login_page"))
         return {"msg": "missing or invalid token"}, 401
 
     @jwt.expired_token_loader
@@ -72,7 +72,7 @@ def create_app():
     def invalid_token_callback(reason):
         if is_browser():
             flash("Invalid session. Please login again.", "error")
-            return redirect(url_for("gym_auth.login_page"))
+            return redirect(url_for("api_v1.gym_auth.login_page"))
         return {"msg": "invalid token"}, 401
 
     app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024  # 2MB limit
