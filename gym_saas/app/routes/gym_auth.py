@@ -16,20 +16,20 @@ gym_auth_bp = Blueprint("gym_auth", __name__)
 
 @gym_auth_bp.route("/register", methods=["GET"])
 def register_page():
-    try:
-        verify_jwt_in_request()
+    # ✅ already logged in → skip login page
+    if GymAuthService.has_valid_refresh():
         return redirect(url_for("api_v1.dashboard.home"))
-    except:
-        return render_template("gym/register.html")
+
+    return render_template("gym/register.html")
 
 
 @gym_auth_bp.route("/login", methods=["GET"])
 def login_page():
-    try:
-        verify_jwt_in_request()
+    # ✅ already logged in → skip login page
+    if GymAuthService.has_valid_refresh():
         return redirect(url_for("api_v1.dashboard.home"))
-    except:
-        return render_template("gym/login.html")
+
+    return render_template("gym/login.html")
 
 
 # =========================
@@ -63,6 +63,10 @@ def register():
 
 @gym_auth_bp.route("/login", methods=["POST"])
 def login():
+
+    if GymAuthService.has_valid_refresh():
+        return redirect(url_for("api_v1.dashboard.home"))
+
     data = request.form
     errors = validate_login(data)
 
@@ -157,6 +161,7 @@ def delete():
     flash(result["message"], "success")
     return response
 
+
 @gym_auth_bp.route("/refresh", methods=["GET", "POST"])
 @jwt_required(refresh=True)
 def refresh():
@@ -177,7 +182,8 @@ def refresh():
 
     return response
 
-@gym_auth_bp.route("/admin/generate-reset-link", methods= ["POST"])
+
+@gym_auth_bp.route("/admin/generate-reset-link", methods=["POST"])
 def generate_reset_link():
 
     email = request.json.get("email")
@@ -188,6 +194,7 @@ def generate_reset_link():
         return jsonify({"error": error}), 400
 
     return jsonify(result), 200
+
 
 @gym_auth_bp.route("/reset-password/<token>", methods=["GET", "POST"])
 def reset_password(token: str):
@@ -205,7 +212,8 @@ def reset_password(token: str):
     password = data.get("password")
 
     if not password:
-        return jsonify({"error": "Password is required"}), HTTPStatus.BAD_REQUEST
+        return jsonify({"error":
+                        "Password is required"}), HTTPStatus.BAD_REQUEST
 
     result, error = GymAuthService.set_reset_password(token, password)
 

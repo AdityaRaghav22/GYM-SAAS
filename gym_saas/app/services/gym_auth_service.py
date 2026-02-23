@@ -1,6 +1,6 @@
 from gym_saas.app.extensions import db, bcrypt
 from gym_saas.app.models import Gym
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token, create_refresh_token, verify_jwt_in_request
 from datetime import timedelta
 from gym_saas.app.utils.validation import (validate_email, validate_password,
                                            validate_phone_number,
@@ -267,6 +267,13 @@ class GymAuthService:
             db.session.rollback()
             print("RESET PASSWORD ERROR:", e)
             return None, "Something went wrong. Please try again."
-    
+
+    @staticmethod
+    def has_valid_refresh():
+        try:
+            verify_jwt_in_request(refresh=True)
+            return True
+        except Exception:
+            return False
 
 # -- ../services/membership_service.py
